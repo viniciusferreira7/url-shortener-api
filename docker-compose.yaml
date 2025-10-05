@@ -1,0 +1,27 @@
+services:
+  url-shortener-api-postgresql:
+    container_name: url-shortener-api-postgresql
+    image: postgres:17.2
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRESQL_USER: ${DATABASE_USERNAME}
+      POSTGRESQL_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRESQL_DB: ${DATABASE_NAME}
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    networks:
+      - url-shortener-api-network
+    volumes:
+      - url_shortener_api_pg_data:/bitnami/postgresql
+
+networks:
+  url-shortener-api-network:
+    driver: bridge
+
+volumes:
+  url_shortener_api_pg_data:
