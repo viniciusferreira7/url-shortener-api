@@ -1,7 +1,7 @@
 # Technical Restrictions
 
 - [ ] **Front-end**: Next.js, React Query, Tailwind, TypeScript  
-- [ ] **Back-end**: Fastify, Better Auth, Drizzle, TypeScript  
+- [ ] **Back-end**: Elysia, Better Auth, Drizzle, TypeScript  
 
 ---
 
