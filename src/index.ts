@@ -1,11 +1,20 @@
-import cors from '@elysiajs/cors';
+import { cors } from '@elysiajs/cors';
+import openapi from '@elysiajs/openapi';
 import { Elysia } from 'elysia';
 import { env } from '@/env';
-import openapi from '@elysiajs/openapi';
+import { auth } from './lib/auth';
 
 const app = new Elysia()
 	.use(openapi())
-	.use(cors())
+	.use(
+		cors({
+			origin: env.CLIENT_URL,
+			methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+			credentials: true,
+			allowedHeaders: ['Content-Type', 'Authorization'],
+		})
+	)
+	.mount(auth.handler)
 	.get('/', () => 'Hello Elysia')
 	.listen(env.PORT);
 
