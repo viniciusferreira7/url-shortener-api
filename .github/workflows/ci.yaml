@@ -95,6 +95,9 @@ jobs:
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      CLIENT_URL: ${{ secrets.CLIENT_URL }}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
       # JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
       # JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
 
@@ -161,6 +164,18 @@ jobs:
     outputs:
       image-tag: ${{ steps.generate_tag.outputs.sha }}
 
+    env:
+      NODE_ENV: "production"
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      CLIENT_URL: ${{ secrets.CLIENT_URL }}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -223,4 +238,3 @@ jobs:
       - name: App Runner check
         if: false
         run: echo "App Runner running... ${{ steps.deploy-app-runner.outputs.service-url }}"
-# TODO: fazer o build para ECMAScript modules, e adicionar Dockerfile com node node alpine
