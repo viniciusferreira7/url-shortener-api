@@ -4,6 +4,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
+    "docker:up": "docker compose --env-file .env up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:restart": "docker compose restart",
+    "docker:build": "docker build -t url-shortener-api:latest -t url-shortener-api:$(git rev-parse --short HEAD) .",
+    "docker:build:prod": "docker build --target production -t url-shortener-api:latest -t url-shortener-api:$(git rev-parse --short HEAD) .",
+    "docker:run": "docker run --env-file .env -p 3333:3333 url-shortener-api:latest",
     "lint": "biome lint src/",
     "lint:fix": "biome lint --write src/",
     "format": "biome format src/",

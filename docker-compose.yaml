@@ -5,9 +5,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRESQL_USER: ${DATABASE_USERNAME}
-      POSTGRESQL_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRESQL_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     healthcheck:
       test:
         ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
@@ -17,7 +17,23 @@ services:
     networks:
       - url-shortener-api-network
     volumes:
-      - url_shortener_api_pg_data:/bitnami/postgresql
+      - url_shortener_api_pg_data:/var/lib/postgresql/data
+
+  url-shortener-api-redis:
+    container_name: url-shortener-api-redis
+    image: redis:7.4-alpine
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    networks:
+      - url-shortener-api-network
+    volumes:
+      - url_shortener_api_redis_data:/data
 
 networks:
   url-shortener-api-network:
@@ -25,3 +41,4 @@ networks:
 
 volumes:
   url_shortener_api_pg_data:
+  url_shortener_api_redis_data:
