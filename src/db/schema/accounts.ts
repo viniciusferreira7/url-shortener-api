@@ -1,11 +1,16 @@
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { randomUUIDv7 } from 'bun';
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './users';
 
 export const accounts = pgTable('accounts', {
-	id: text('id').primaryKey(),
-	accountId: text('account_id').notNull(),
+	id: uuid('id')
+		.primaryKey()
+		.$defaultFn(() => randomUUIDv7()),
+	accountId: uuid('account_id')
+		.notNull()
+		.$defaultFn(() => randomUUIDv7()),
 	providerId: text('provider_id').notNull(),
-	userId: text('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	accessToken: text('access_token'),
