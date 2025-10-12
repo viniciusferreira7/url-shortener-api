@@ -1,6 +1,6 @@
 
 # Use Bun as base image
-FROM oven/bun:1.1-alpine AS base
+FROM oven/bun:1.2.22-alpine AS base
 
 WORKDIR /app
 
@@ -38,9 +38,6 @@ COPY --from=build /app/src ./src
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/tsconfig.json ./tsconfig.json
 COPY --from=build /app/drizzle.config.ts ./drizzle.config.ts
-
-# Copy migrations if they exist
-COPY --from=build /app/src/db/migrations ./src/db/migrations
 
 # Expose the port
 EXPOSE 3333
