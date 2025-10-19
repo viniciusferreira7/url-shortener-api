@@ -22,7 +22,15 @@ export class User extends AggregateRoot<UserProps> {
 		return this.props.password;
 	}
 
-	static create(props: UserProps, id?: UniqueEntityId) {
+	get createdAt() {
+		return this.props.createdAt;
+	}
+
+	get updatedAt() {
+		return this.props.updatedAt;
+	}
+
+	public static create(props: UserProps, id?: UniqueEntityId) {
 		return new User(props, id);
 	}
 }
