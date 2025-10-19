@@ -1,10 +1,12 @@
+import { UniqueEntityId } from './value-object/unique-entity-id';
+
 export abstract class Entity<Props> {
-	protected _id: any;
+	protected _id: UniqueEntityId;
 	protected props: Props;
 
-	protected constructor(props: Props, id?: any) {
+	protected constructor(props: Props, id?: UniqueEntityId) {
 		this.props = props;
-		this._id = id;
+		this._id = id ?? new UniqueEntityId(id);
 	}
 
 	get id() {
