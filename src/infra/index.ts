@@ -1,7 +1,7 @@
 import { cors } from '@elysiajs/cors';
 import openapi from '@elysiajs/openapi';
 import { Elysia } from 'elysia';
-import { env } from '@/env';
+import { env } from '@/infra/env';
 import { auth } from './lib/auth';
 
 const app = new Elysia()
