@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.4.0...v1.5.0) (2025-10-26)
+
+
+### Features
+
+* create value objects ([a457d30](https://github.com/viniciusferreira7/url-shortener-api/commit/a457d30fc4691334d24f93d6ba9945d1e010aa8d))
+
 # [1.4.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.3.0...v1.4.0) (2025-10-26)
 
 
