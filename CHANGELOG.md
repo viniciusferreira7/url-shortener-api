@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.3.0...v1.4.0) (2025-10-26)
+
+
+### Features
+
+* create value object core class ([9452435](https://github.com/viniciusferreira7/url-shortener-api/commit/9452435eae5f333271763be207c6b6f2da6c5bdd))
+
 # [1.3.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.2.0...v1.3.0) (2025-10-26)
 
 
