@@ -1,7 +1,7 @@
 import type { PaginationParams } from '@/core/repositories/pagination-params';
 import type { Url } from '../../enterprise/entities/url';
-import type { UrlWithAuthor } from '../../enterprise/entities/value-object/url-with-author';
 import type { AuthorWithUrls } from '../../enterprise/entities/value-object/author-with-urls';
+import type { UrlWithAuthor } from '../../enterprise/entities/value-object/url-with-author';
 
 export interface FindManyParams extends PaginationParams {
 	order:
