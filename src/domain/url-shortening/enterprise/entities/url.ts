@@ -6,6 +6,7 @@ interface UrlProps {
 	value: string;
 	isPublic: boolean;
 	description?: string | null;
+	authorId: string;
 	createdAt: Date;
 	updatedAt?: Date | null;
 }
@@ -25,6 +26,10 @@ export class Url extends Entity<UrlProps> {
 
 	get description() {
 		return this.props.description;
+	}
+
+	get authorId() {
+		return this.props.authorId;
 	}
 
 	get createdAt() {
