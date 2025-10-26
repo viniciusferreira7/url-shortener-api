@@ -3,7 +3,6 @@ import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-
 
 interface UrlProps {
 	name: string;
-	urlShortener: any; //TODO: create value object to this prop
 	value: string;
 	isPublic: boolean;
 	description?: string | null;
@@ -14,10 +13,6 @@ interface UrlProps {
 export class Url extends Entity<UrlProps> {
 	get name() {
 		return this.props.name;
-	}
-
-	get urlShortener() {
-		return this.props.urlShortener;
 	}
 
 	get value() {
