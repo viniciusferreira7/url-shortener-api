@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.2.0...v1.3.0) (2025-10-26)
+
+
+### Features
+
+* create interface to repositories ([5a9266d](https://github.com/viniciusferreira7/url-shortener-api/commit/5a9266dcfe47df2433227747aea8cd701f517ce8))
+
 # [1.2.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.1.0...v1.2.0) (2025-10-19)
 
 
