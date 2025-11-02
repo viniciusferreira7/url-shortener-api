@@ -35,17 +35,34 @@ A high-performance URL shortener API built with modern technologies including El
 
 \`\`\`
 src/
-├── db/
-│   ├── schema/           # Database schema definitions
-│   │   ├── users.ts      # User table
-│   │   ├── sessions.ts   # Session management
-│   │   ├── accounts.ts   # OAuth accounts
-│   │   └── verifications.ts
-│   ├── client.ts         # Database connection
-│   └── migrations/       # Database migrations
-├── lib/
-│   └── auth.ts          # Better Auth configuration
-├── env.ts               # Environment variables schema
+├── core/
+│   ├── entities/        # Base entities and value objects
+│   ├── errors/          # Custom error classes
+│   └── repositories/    # Base repository interfaces
+├── domain/
+│   └── url-shortening/
+│       ├── application/
+│       │   ├── repositories/      # Repository interfaces
+│       │   ├── use-cases/         # Business use cases
+│       │   └── url-code/          # URL code generation
+│       └── enterprise/
+│           ├── entities/          # Domain entities (Url, User)
+│           └── value-objects/     # Value objects
+├── infra/
+│   ├── http/
+│   │   └── controllers/   # HTTP controllers
+│   ├── db/
+│   │   ├── schema/        # Database schema definitions
+│   │   ├── client.ts      # Database connection
+│   │   └── migrations/    # Database migrations
+│   ├── lib/
+│   │   └── auth.ts        # Better Auth configuration
+│   └── env.ts             # Environment variables schema
+├── test/
+│   └── repositories/      # In-memory repository implementations
+│       ├── in-memory-urls-repository.ts
+│       ├── in-memory-users-repository.ts
+│       └── in-memory-cache-repository.ts
 └── index.ts             # Application entry point
 \`\`\`
 
@@ -209,9 +226,49 @@ API documentation is available via OpenAPI/Swagger at:
 
 ## 🧪 Testing
 
-Testing infrastructure is configured but test implementation is in progress:
-- Unit tests with Bun's test runner
-- E2E tests with database setup
+### Test Infrastructure
+
+The project uses **Bun's native test runner** with in-memory repository implementations for fast, isolated unit tests.
+
+### In-Memory Repositories
+
+Located in `src/test/repositories/`, these implementations allow testing without a database:
+
+- **InMemoryUrlsRepository** - Implements `UrlsRepository` interface
+  - Manages URL entities with full CRUD operations
+  - Supports sorting (by created_at, updated_at, title, description, value, isPublic)
+  - Implements pagination
+  - Provides methods to query public URLs and filter by author
+
+- **InMemoryUsersRepository** - Implements `UsersRepository` interface
+  - Manages user entities
+  - Supports lookup by email (for authentication)
+  - Supports lookup by ID
+
+- **InMemoryCacheRepository** - Implements `CacheRepository` interface
+  - Manages ID counter for URL code generation
+  - Provides atomic increment operations
+
+### Running Tests
+
+\`\`\`bash
+# Run all tests
+bun run test
+
+# Run tests in watch mode
+bun run test:watch
+\`\`\`
+
+Tests are located in:
+- `src/core/**/*.test.ts` - Core layer tests
+- `src/domain/**/*.test.ts` - Domain layer tests
+
+**Testing Best Practices:**
+
+1. Use in-memory repositories for unit tests to avoid database dependencies
+2. Test use cases and business logic in isolation
+3. Focus on behavior rather than implementation details
+4. Mock external dependencies
 
 ## 📄 Environment Variables
 
