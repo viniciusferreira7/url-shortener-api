@@ -7,7 +7,7 @@ interface UrlProps {
 	code: string;
 	isPublic: boolean;
 	description?: string | null;
-	authorId: string;
+	authorId: UniqueEntityId;
 	createdAt: Date;
 	updatedAt?: Date | null;
 }

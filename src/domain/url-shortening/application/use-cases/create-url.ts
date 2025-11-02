@@ -1,0 +1,60 @@
+import { type Either, left, right } from '@/core/either';
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
+import { Url } from '../../enterprise/entities/url';
+import { UrlCode } from '../../enterprise/entities/value-object/url-code';
+import type { CacheRepository } from '../repositories/cache-repository';
+import type { UrlsRepository } from '../repositories/urls-repository';
+import type { UsersRepository } from '../repositories/users-repository';
+import type { UrlCodeGenerator } from '../url-code/url-code-generator';
+
+interface CreateUrlUseCaseRequest {
+	authorId: string;
+	name: string;
+	value: string;
+	isPublic: boolean;
+	description?: string | null;
+}
+
+type CreateUrlUseCaseResponse = Either<
+	ResourceNotFoundError,
+	{
+		url: Url;
+	}
+>;
+
+export class CreateUrlUseCase {
+	constructor(
+		private usersRepositories: UsersRepository,
+		private urlsRepository: UrlsRepository,
+		private cacheRepository: CacheRepository,
+		private generator: UrlCodeGenerator
+	) {}
+	public async execute({
+		authorId,
+		...urlData
+	}: CreateUrlUseCaseRequest): Promise<CreateUrlUseCaseResponse> {
+		const author = await this.usersRepositories.findById(authorId);
+
+		if (!author) {
+			return left(new ResourceNotFoundError());
+		}
+
+		const nextId = await this.cacheRepository.increaseId();
+
+		const codeCreated = UrlCode.create(nextId, this.generator);
+
+		const url = Url.create({
+			authorId: author.id,
+			code: codeCreated.value,
+			name: urlData.name,
+			value: urlData.value,
+			description: urlData.description,
+			isPublic: urlData.isPublic,
+			createdAt: new Date(),
+		});
+
+		await this.urlsRepository.create(url);
+
+		return right({ url });
+	}
+}
