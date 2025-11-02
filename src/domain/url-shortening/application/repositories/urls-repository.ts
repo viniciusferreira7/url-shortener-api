@@ -58,5 +58,7 @@ export interface UrlsRepository {
 	findManyWhereIsPublic(
 		params: FindManyWhereIsPublicParams
 	): Promise<UrlWithAuthor[]>;
-	findManyAuthorId(params: FindManyByAuthorIdParams): Promise<AuthorWithUrls[]>;
+	findManyByAuthorId(
+		params: FindManyByAuthorIdParams
+	): Promise<AuthorWithUrls[]>;
 }

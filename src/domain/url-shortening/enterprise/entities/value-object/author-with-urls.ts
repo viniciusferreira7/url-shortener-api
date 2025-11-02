@@ -35,4 +35,8 @@ export class AuthorWithUrls extends ValueObject<AuthorWithUrlsProps> {
 	get urls(): Url[] {
 		return this.props.urls;
 	}
+
+	static create(props: AuthorWithUrlsProps) {
+		return new AuthorWithUrls(props);
+	}
 }

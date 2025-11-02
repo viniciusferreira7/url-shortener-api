@@ -49,4 +49,8 @@ export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
 	get updatedAt(): Date | null | undefined {
 		return this.props.updatedAt;
 	}
+
+	static create(props: UrlWithAuthorProps) {
+		return new UrlWithAuthor(props);
+	}
 }
