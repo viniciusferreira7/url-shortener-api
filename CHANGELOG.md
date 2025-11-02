@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.9.0...v1.10.0) (2025-11-02)
+
+
+### Features
+
+* create in memory repositories ([e8c2705](https://github.com/viniciusferreira7/url-shortener-api/commit/e8c27053102cadd5c39b4b77e4b7baa9b260e673))
+
 # [1.9.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.8.0...v1.9.0) (2025-11-02)
 
 
