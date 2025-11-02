@@ -1,7 +1,6 @@
 import { type Either, left, right } from '@/core/either';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { Url } from '../../enterprise/entities/url';
-import { UrlCode } from '../../enterprise/entities/value-object/url-code';
 import type { CacheRepository } from '../repositories/cache-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
 import type { UsersRepository } from '../repositories/users-repository';
@@ -27,7 +26,7 @@ export class CreateUrlUseCase {
 		private usersRepositories: UsersRepository,
 		private urlsRepository: UrlsRepository,
 		private cacheRepository: CacheRepository,
-		private generator: UrlCodeGenerator
+		private urlCodeGenerator: UrlCodeGenerator
 	) {}
 	public async execute({
 		authorId,
@@ -41,11 +40,11 @@ export class CreateUrlUseCase {
 
 		const nextId = await this.cacheRepository.increaseId();
 
-		const codeCreated = UrlCode.create(nextId, this.generator);
+		const codeCreated = this.urlCodeGenerator.encode(nextId);
 
 		const url = Url.create({
 			authorId: author.id,
-			code: codeCreated.value,
+			code: codeCreated,
 			name: urlData.name,
 			value: urlData.value,
 			description: urlData.description,
