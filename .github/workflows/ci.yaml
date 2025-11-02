@@ -43,7 +43,6 @@ jobs:
 
   test-unit:
     name: Run unit tests
-    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -63,7 +62,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Run unit tests
-        run: bun test
+        run: bun run test
 
   test-e2e:
     name: E2E Tests
@@ -124,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # needs: [quality, test-unit, test-e2e] FIXME:
-    needs: [quality]
+    needs: [quality, test-unit]
     if: github.ref == 'refs/heads/main'
 
     permissions:
