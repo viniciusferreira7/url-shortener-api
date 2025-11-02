@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.6.0...v1.7.0) (2025-11-02)
+
+
+### Features
+
+* create getters to value objects ([8d379b5](https://github.com/viniciusferreira7/url-shortener-api/commit/8d379b5074317c19e09e93cb71ff25705e165ec6))
+
 # [1.6.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.5.0...v1.6.0) (2025-11-02)
 
 
