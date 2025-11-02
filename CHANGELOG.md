@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.5.0...v1.6.0) (2025-11-02)
+
+
+### Features
+
+* create url code class ([7ba8730](https://github.com/viniciusferreira7/url-shortener-api/commit/7ba873063a9324fe02d599b74307ee128faf9539))
+
 # [1.5.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.4.0...v1.5.0) (2025-10-26)
 
 
