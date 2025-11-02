@@ -13,5 +13,40 @@ export interface UrlWithAuthorProps {
 	updatedAt?: Date | null;
 }
 
-export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {}
-//TODO: create methods
+export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
+	get urlId(): UniqueEntityId {
+		return this.props.urlId;
+	}
+
+	get urlName(): string {
+		return this.props.urlName;
+	}
+
+	get urlValue(): string {
+		return this.props.UrlValue;
+	}
+
+	get urlDescription(): string {
+		return this.props.UrlDescription;
+	}
+
+	get urlIsPublic(): boolean {
+		return this.props.UrlIsPublic;
+	}
+
+	get authorId(): UniqueEntityId {
+		return this.props.authorId;
+	}
+
+	get authorName(): string {
+		return this.props.authorName;
+	}
+
+	get createdAt(): Date {
+		return this.props.createdAt;
+	}
+
+	get updatedAt(): Date | null | undefined {
+		return this.props.updatedAt;
+	}
+}

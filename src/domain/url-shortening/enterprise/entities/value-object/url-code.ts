@@ -7,8 +7,8 @@ interface UrlCodeProps {
 }
 
 export class UrlCode extends ValueObject<UrlCodeProps> {
-	private constructor(props: UrlCodeProps) {
-		super(props);
+	get value(): string {
+		return this.props.value;
 	}
 
 	static create(numb: number, generator: UrlCodeGenerator): UrlCode {
@@ -18,10 +18,6 @@ export class UrlCode extends ValueObject<UrlCodeProps> {
 
 	static from(code: string): UrlCode {
 		return new UrlCode({ value: code });
-	}
-
-	get value(): string {
-		return this.props.value;
 	}
 
 	static decode(code: string, generator: UrlCodeGenerator): number {

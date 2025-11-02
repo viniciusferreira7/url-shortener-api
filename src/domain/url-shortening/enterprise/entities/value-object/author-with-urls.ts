@@ -11,5 +11,28 @@ export interface AuthorWithUrlsProps {
 	urls: Url[];
 }
 
-export class AuthorWithUrls extends ValueObject<AuthorWithUrlsProps> {}
-//TODO: create methods
+export class AuthorWithUrls extends ValueObject<AuthorWithUrlsProps> {
+	get authorId(): UniqueEntityId {
+		return this.props.authorId;
+	}
+
+	get name(): string {
+		return this.props.authorName;
+	}
+
+	get email(): string {
+		return this.props.authorEmail;
+	}
+
+	get createdAt(): Date {
+		return this.props.createdAt;
+	}
+
+	get updatedAt(): Date | null | undefined {
+		return this.props.updatedAt;
+	}
+
+	get urls(): Url[] {
+		return this.props.urls;
+	}
+}
