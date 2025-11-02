@@ -4,6 +4,7 @@ import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-
 interface UrlProps {
 	name: string;
 	value: string;
+	code: string;
 	isPublic: boolean;
 	description?: string | null;
 	authorId: string;
@@ -18,6 +19,10 @@ export class Url extends Entity<UrlProps> {
 
 	get value() {
 		return this.props.value;
+	}
+
+	get code() {
+		return this.props.code;
 	}
 
 	get isPublic() {

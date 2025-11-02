@@ -12,3 +12,4 @@ export interface AuthorWithUrlsProps {
 }
 
 export class AuthorWithUrls extends ValueObject<AuthorWithUrlsProps> {}
+//TODO: create methods

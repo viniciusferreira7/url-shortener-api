@@ -14,3 +14,4 @@ export interface UrlWithAuthorProps {
 }
 
 export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {}
+//TODO: create methods
