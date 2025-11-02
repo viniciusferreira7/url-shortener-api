@@ -1,26 +1,30 @@
-import base62 from 'base62';
+// domain/entities/url-code.ts
 import { ValueObject } from '@/core/entities/value-object/value-object';
+import type { UrlCodeGenerator } from '@/domain/url-shortening/application/url-code/url-code-generator';
 
 interface UrlCodeProps {
 	value: string;
 }
 
 export class UrlCode extends ValueObject<UrlCodeProps> {
-	constructor(numb: number) {
-		const code = UrlCode.createCode(numb);
-
-		super({
-			value: code,
-		});
+	private constructor(props: UrlCodeProps) {
+		super(props);
 	}
 
-	private static createCode(num: number) {
-		// ✅ Usa a lib base62 para converter número → base62
-		return base62.encode(num);
+	static create(numb: number, generator: UrlCodeGenerator): UrlCode {
+		const code = generator.encode(numb);
+		return new UrlCode({ value: code });
 	}
 
-	public static decode(code: string): number {
-		// ✅ Método extra opcional para reverter base62 → número
-		return base62.decode(code);
+	static from(code: string): UrlCode {
+		return new UrlCode({ value: code });
+	}
+
+	get value(): string {
+		return this.props.value;
+	}
+
+	static decode(code: string, generator: UrlCodeGenerator): number {
+		return generator.decode(code);
 	}
 }

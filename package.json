@@ -19,7 +19,9 @@
 		"format": "biome format src/",
 		"format:fix": "biome format --write src/",
 		"check": "biome check src/",
-		"check:fix": "biome check --write src/"
+		"check:fix": "biome check --write src/",
+		"test": "bun test src/domain",
+		"test:watch": "bun test src/domain --watch"
 	},
 	"dependencies": {
 		"@elysiajs/cors": "^1.4.0",
