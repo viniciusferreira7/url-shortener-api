@@ -1,3 +1,11 @@
+# [1.9.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.8.0...v1.9.0) (2025-11-02)
+
+
+### Features
+
+* create use case error ([0388e66](https://github.com/viniciusferreira7/url-shortener-api/commit/0388e66cd1379ff9828e48399e4c6609505c084f))
+* create use case to create url ([361d795](https://github.com/viniciusferreira7/url-shortener-api/commit/361d795465840fcf49e0a5ac00dec93cb15163f5))
+
 # [1.8.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.7.0...v1.8.0) (2025-11-02)
 
 
