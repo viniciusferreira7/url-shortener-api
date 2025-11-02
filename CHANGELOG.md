@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.7.0...v1.8.0) (2025-11-02)
+
+
+### Features
+
+* create either response ([b53adde](https://github.com/viniciusferreira7/url-shortener-api/commit/b53addee34d4fa53df1aa5fbcf980d012b8290ce))
+
 # [1.7.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.6.0...v1.7.0) (2025-11-02)
 
 
