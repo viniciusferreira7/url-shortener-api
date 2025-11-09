@@ -10,14 +10,12 @@ import type {
 
 interface FetchAuthorUrlsUseCaseRequest {
 	authorId: string;
-	params: FindManyByAuthorIdParams;
+	params?: Omit<FindManyByAuthorIdParams, 'authorId'>;
 }
 
 type FetchAuthorUrlsUseCaseResponse = Either<
 	ResourceNotFoundError,
-	{
-		urls: Pagination<Url>;
-	}
+	Pagination<Url>
 >;
 
 export class FetchAuthorUrlsUseCase {
@@ -40,8 +38,13 @@ export class FetchAuthorUrlsUseCase {
 			authorId: author.id.toString(),
 			page: params?.page ?? 1,
 			perPage: params?.perPage ?? 10,
+			search: params?.search,
+			isPublic: params?.isPublic,
+			createdAtGte: params?.createdAtGte,
+			updatedAtGte: params?.updatedAtGte,
+			order: params?.order,
 		});
 
-		return right({ urls: urls });
+		return right(urls);
 	}
 }

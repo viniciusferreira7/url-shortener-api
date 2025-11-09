@@ -18,7 +18,6 @@
 - [ ] The system must support 2FA login.  
 - [ ] The system must allow access to the public listing even without being logged in.  
 - [ ] The system must have low latency and high throughput.
-- [ ] Master slave
 
 ---
 
