@@ -3,7 +3,7 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { Url } from '../../enterprise/entities/url';
 import type { CacheRepository } from '../repositories/cache-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
-import type { UsersRepository } from '../repositories/users-repository';
+import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { UrlCodeGenerator } from '../url-code/url-code-generator';
 
 interface CreateUrlUseCaseRequest {
@@ -23,7 +23,7 @@ type CreateUrlUseCaseResponse = Either<
 
 export class CreateUrlUseCase {
 	constructor(
-		private usersRepositories: UsersRepository,
+		private authorsRepository: AuthorsRepository,
 		private urlsRepository: UrlsRepository,
 		private cacheRepository: CacheRepository,
 		private urlCodeGenerator: UrlCodeGenerator
@@ -32,7 +32,7 @@ export class CreateUrlUseCase {
 		authorId,
 		...urlData
 	}: CreateUrlUseCaseRequest): Promise<CreateUrlUseCaseResponse> {
-		const author = await this.usersRepositories.findById(authorId);
+		const author = await this.authorsRepository.findById(authorId);
 
 		if (!author) {
 			return left(new ResourceNotFoundError());
