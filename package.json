@@ -20,6 +20,7 @@
 		"format:fix": "biome format --write src/",
 		"check": "biome check src/",
 		"check:fix": "biome check --write src/",
+		"check:type": "bunx tsc --noEmit",
 		"test": "bun test src/core src/domain",
 		"test:watch": "bun test src/core src/domain --watch"
 	},
@@ -35,6 +36,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.4",
+		"@faker-js/faker": "^10.1.0",
 		"@semantic-release/changelog": "^6.0.3",
 		"@semantic-release/commit-analyzer": "^13.0.1",
 		"@semantic-release/git": "^10.0.1",

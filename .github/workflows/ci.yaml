@@ -41,6 +41,9 @@ jobs:
       - name: Run Biome lint
         run: bun run lint
 
+      - name: TypeScript type check
+        run: bun run check:type
+
   test-unit:
     name: Run unit tests
     runs-on: ubuntu-latest
