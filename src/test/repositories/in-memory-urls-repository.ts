@@ -5,7 +5,6 @@ import type {
 	UrlsRepository,
 } from '@/domain/url-shortening/application/repositories/urls-repository';
 import type { Url } from '@/domain/url-shortening/enterprise/entities/url';
-import { AuthorWithUrls } from '@/domain/url-shortening/enterprise/entities/value-object/author-with-urls';
 import { UrlWithAuthor } from '@/domain/url-shortening/enterprise/entities/value-object/url-with-author';
 
 export class InMemoryUrlsRepository implements UrlsRepository {
@@ -44,131 +43,41 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 	}
 
 	async findMany(params: FindManyParams): Promise<Url[]> {
-		const items = [...this.items];
+		let items = [...this.items];
 
-		const isDescending = params.order.startsWith('-');
-		const sortField = isDescending ? params.order.slice(1) : params.order;
-
-		items.sort((a, b) => {
-			let aValue: string | number | Date | boolean;
-			let bValue: string | number | Date | boolean;
-
-			switch (sortField) {
-				case 'created_at':
-					aValue = a.createdAt;
-					bValue = b.createdAt;
-					break;
-				case 'updated_at':
-					aValue = a.updatedAt || a.createdAt;
-					bValue = b.updatedAt || b.createdAt;
-					break;
-				case 'title':
-					aValue = a.name;
-					bValue = b.name;
-					break;
-				case 'description':
-					aValue = a.description || '';
-					bValue = b.description || '';
-					break;
-				case 'value':
-					aValue = a.value;
-					bValue = b.value;
-					break;
-				case 'isPublic':
-					aValue = a.isPublic ? 1 : 0;
-					bValue = b.isPublic ? 1 : 0;
-					break;
-				default:
-					return 0;
-			}
-
-			const comparison = aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-			return isDescending ? -comparison : comparison;
-		});
-
-		const startIndex = (params.page - 1) * params.pageSize;
-		const endIndex = startIndex + params.pageSize;
-
-		return items.slice(startIndex, endIndex);
-	}
-
-	async findManyWhereIsPublic(
-		params: FindManyWhereIsPublicParams
-	): Promise<UrlWithAuthor[]> {
-		const items = this.items.filter((item) => item.isPublic);
-
-		const isDescending = params.order.startsWith('-');
-		const sortField = isDescending ? params.order.slice(1) : params.order;
-
-		items.sort((a, b) => {
-			let aValue: string | number | Date | boolean;
-			let bValue: string | number | Date | boolean;
-
-			switch (sortField) {
-				case 'created_at':
-					aValue = a.createdAt;
-					bValue = b.createdAt;
-					break;
-				case 'updated_at':
-					aValue = a.updatedAt || a.createdAt;
-					bValue = b.updatedAt || b.createdAt;
-					break;
-				case 'title':
-					aValue = a.name;
-					bValue = b.name;
-					break;
-				case 'description':
-					aValue = a.description || '';
-					bValue = b.description || '';
-					break;
-				case 'value':
-					aValue = a.value;
-					bValue = b.value;
-					break;
-				default:
-					return 0;
-			}
-
-			const comparison = aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-			return isDescending ? -comparison : comparison;
-		});
-
-		const startIndex = (params.page - 1) * params.pageSize;
-		const endIndex = startIndex + params.pageSize;
-
-		return items.slice(startIndex, endIndex).map((url) =>
-			UrlWithAuthor.create({
-				urlId: url.id,
-				urlName: url.name,
-				UrlValue: url.value,
-				UrlDescription: url.description || '',
-				UrlIsPublic: url.isPublic,
-				authorId: url.authorId,
-				authorName: '',
-				createdAt: url.createdAt,
-				updatedAt: url.updatedAt,
-			})
-		);
-	}
-
-	async findManyByAuthorId(
-		params: FindManyByAuthorIdParams
-	): Promise<AuthorWithUrls[]> {
-		const authorMap = new Map<string, Url[]>();
-
-		for (const url of this.items) {
-			const authorId = url.authorId.toString();
-			if (!authorMap.has(authorId)) {
-				authorMap.set(authorId, []);
-			}
-			authorMap.get(authorId)?.push(url);
+		// Filter by search (title, description, value)
+		if (params.search) {
+			const searchLower = params.search.toLowerCase();
+			items = items.filter(
+				(url) =>
+					url.name.toLowerCase().includes(searchLower) ||
+					(url.description?.toLowerCase().includes(searchLower) ?? false) ||
+					url.value.toLowerCase().includes(searchLower)
+			);
 		}
 
-		const isDescending = params.order.startsWith('-');
-		const sortField = isDescending ? params.order.slice(1) : params.order;
+		// Filter by isPublic (optional)
+		if (params.isPublic !== undefined) {
+			items = items.filter((url) => url.isPublic === params.isPublic);
+		}
 
-		for (const [, urls] of authorMap) {
-			urls.sort((a, b) => {
+		// Filter by createdAtGte (optional)
+		if (params.createdAtGte) {
+			const createdAtGte = params.createdAtGte;
+			items = items.filter((url) => url.createdAt >= createdAtGte);
+		}
+
+		// Filter by updatedAtGte (optional)
+		if (params.updatedAtGte) {
+			const updatedAtGte = params.updatedAtGte;
+			items = items.filter((url) => (url.updatedAt ? url.updatedAt >= updatedAtGte : false));
+		}
+
+		const isDescending = params.order?.startsWith('-') ?? false;
+		const sortField = isDescending ? params.order?.slice(1) : params.order;
+
+		if (sortField) {
+			items.sort((a, b) => {
 				let aValue: string | number | Date | boolean;
 				let bValue: string | number | Date | boolean;
 
@@ -209,15 +118,174 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 		const startIndex = (params.page - 1) * params.pageSize;
 		const endIndex = startIndex + params.pageSize;
 
-		return Array.from(authorMap.entries()).map(([, urls]) =>
-			AuthorWithUrls.create({
-				authorId: urls[0]?.authorId,
+		return items.slice(startIndex, endIndex);
+	}
+
+	async findManyWhereIsPublic(
+		params: FindManyWhereIsPublicParams
+	): Promise<UrlWithAuthor[]> {
+		let items = this.items.filter((item) => item.isPublic);
+
+		// Filter by search (title, description, value)
+		if (params.search) {
+			const searchLower = params.search.toLowerCase();
+			items = items.filter(
+				(url) =>
+					url.name.toLowerCase().includes(searchLower) ||
+					(url.description?.toLowerCase().includes(searchLower) ?? false) ||
+					url.value.toLowerCase().includes(searchLower)
+			);
+		}
+
+		// Filter by createdAtGte (optional)
+		if (params.createdAtGte) {
+			const createdAtGte = params.createdAtGte;
+			items = items.filter((url) => url.createdAt >= createdAtGte);
+		}
+
+		// Filter by updatedAtGte (optional)
+		if (params.updatedAtGte) {
+			const updatedAtGte = params.updatedAtGte;
+			items = items.filter((url) => (url.updatedAt ? url.updatedAt >= updatedAtGte : false));
+		}
+
+		const isDescending = params.order?.startsWith('-') ?? false;
+		const sortField = isDescending ? params.order?.slice(1) : params.order;
+
+		if (sortField) {
+			items.sort((a, b) => {
+				let aValue: string | number | Date | boolean;
+				let bValue: string | number | Date | boolean;
+
+				switch (sortField) {
+					case 'created_at':
+						aValue = a.createdAt;
+						bValue = b.createdAt;
+						break;
+					case 'updated_at':
+						aValue = a.updatedAt || a.createdAt;
+						bValue = b.updatedAt || b.createdAt;
+						break;
+					case 'title':
+						aValue = a.name;
+						bValue = b.name;
+						break;
+					case 'description':
+						aValue = a.description || '';
+						bValue = b.description || '';
+						break;
+					case 'value':
+						aValue = a.value;
+						bValue = b.value;
+						break;
+					default:
+						return 0;
+				}
+
+				const comparison = aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+				return isDescending ? -comparison : comparison;
+			});
+		}
+
+		const startIndex = (params.page - 1) * params.pageSize;
+		const endIndex = startIndex + params.pageSize;
+
+		return items.slice(startIndex, endIndex).map((url) =>
+			UrlWithAuthor.create({
+				urlId: url.id,
+				urlName: url.name,
+				UrlValue: url.value,
+				UrlDescription: url.description || '',
+				UrlIsPublic: url.isPublic,
+				authorId: url.authorId,
 				authorName: '',
-				authorEmail: '',
-				createdAt: urls[0]?.createdAt || new Date(),
-				updatedAt: urls[0]?.updatedAt,
-				urls: urls.slice(startIndex, endIndex),
+				createdAt: url.createdAt,
+				updatedAt: url.updatedAt,
 			})
 		);
+	}
+
+	async findManyByAuthorId(
+		params: FindManyByAuthorIdParams
+	): Promise<Url[]> {
+		const items = [...this.items];
+
+		// Filter by authorId
+		let filtered = items.filter((url) => url.authorId.toString() === params.authorId);
+
+		// Filter by search (title, description, value)
+		if (params.search) {
+			const searchLower = params.search.toLowerCase();
+			filtered = filtered.filter(
+				(url) =>
+					url.name.toLowerCase().includes(searchLower) ||
+					(url.description?.toLowerCase().includes(searchLower) ?? false) ||
+					url.value.toLowerCase().includes(searchLower)
+			);
+		}
+
+		// Filter by isPublic (optional)
+		if (params.isPublic !== undefined) {
+			filtered = filtered.filter((url) => url.isPublic === params.isPublic);
+		}
+
+		// Filter by createdAtGte (optional)
+		if (params.createdAtGte) {
+			const createdAtGte = params.createdAtGte;
+			filtered = filtered.filter((url) => url.createdAt >= createdAtGte);
+		}
+
+		// Filter by updatedAtGte (optional)
+		if (params.updatedAtGte) {
+			const updatedAtGte = params.updatedAtGte;
+			filtered = filtered.filter((url) => (url.updatedAt ? url.updatedAt >= updatedAtGte : false));
+		}
+
+		const isDescending = params.order?.startsWith('-') ?? false;
+		const sortField = isDescending ? params.order?.slice(1) : params.order;
+
+		if (sortField) {
+			filtered.sort((a, b) => {
+				let aValue: string | number | Date | boolean;
+				let bValue: string | number | Date | boolean;
+
+				switch (sortField) {
+					case 'created_at':
+						aValue = a.createdAt;
+						bValue = b.createdAt;
+						break;
+					case 'updated_at':
+						aValue = a.updatedAt || a.createdAt;
+						bValue = b.updatedAt || b.createdAt;
+						break;
+					case 'title':
+						aValue = a.name;
+						bValue = b.name;
+						break;
+					case 'description':
+						aValue = a.description || '';
+						bValue = b.description || '';
+						break;
+					case 'value':
+						aValue = a.value;
+						bValue = b.value;
+						break;
+					case 'isPublic':
+						aValue = a.isPublic ? 1 : 0;
+						bValue = b.isPublic ? 1 : 0;
+						break;
+					default:
+						return 0;
+				}
+
+				const comparison = aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+				return isDescending ? -comparison : comparison;
+			});
+		}
+
+		const startIndex = (params.page - 1) * params.pageSize;
+		const endIndex = startIndex + params.pageSize;
+
+		return filtered.slice(startIndex, endIndex);
 	}
 }

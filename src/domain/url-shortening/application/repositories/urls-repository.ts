@@ -1,10 +1,13 @@
 import type { PaginationParams } from '@/core/repositories/pagination-params';
 import type { Url } from '../../enterprise/entities/url';
-import type { AuthorWithUrls } from '../../enterprise/entities/value-object/author-with-urls';
 import type { UrlWithAuthor } from '../../enterprise/entities/value-object/url-with-author';
 
 export interface FindManyParams extends PaginationParams {
-	order:
+	search?: string;
+	isPublic?: boolean;
+	createdAtGte?: Date;
+	updatedAtGte?: Date;
+	order?:
 		| 'created_at'
 		| 'updated_at'
 		| 'title'
@@ -20,7 +23,11 @@ export interface FindManyParams extends PaginationParams {
 }
 
 export interface FindManyWhereIsPublicParams extends PaginationParams {
-	order:
+	search?: string;
+	isPublic?: boolean;
+	createdAtGte?: Date;
+	updatedAtGte?: Date;
+	order?:
 		| 'created_at'
 		| 'updated_at'
 		| 'title'
@@ -34,7 +41,12 @@ export interface FindManyWhereIsPublicParams extends PaginationParams {
 }
 
 export interface FindManyByAuthorIdParams extends PaginationParams {
-	order:
+	authorId: string;
+	search?: string;
+	isPublic?: boolean;
+	createdAtGte?: Date;
+	updatedAtGte?: Date;
+	order?:
 		| 'created_at'
 		| 'updated_at'
 		| 'title'
@@ -58,7 +70,5 @@ export interface UrlsRepository {
 	findManyWhereIsPublic(
 		params: FindManyWhereIsPublicParams
 	): Promise<UrlWithAuthor[]>;
-	findManyByAuthorId(
-		params: FindManyByAuthorIdParams
-	): Promise<AuthorWithUrls[]>;
+	findManyByAuthorId(params: FindManyByAuthorIdParams): Promise<Url[]>;
 }
