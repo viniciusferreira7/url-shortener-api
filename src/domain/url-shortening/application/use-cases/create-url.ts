@@ -23,10 +23,10 @@ type CreateUrlUseCaseResponse = Either<
 
 export class CreateUrlUseCase {
 	constructor(
-		private authorsRepository: AuthorsRepository,
-		private urlsRepository: UrlsRepository,
-		private cacheRepository: CacheRepository,
-		private urlCodeGenerator: UrlCodeGenerator
+		private readonly authorsRepository: AuthorsRepository,
+		private readonly urlsRepository: UrlsRepository,
+		private readonly cacheRepository: CacheRepository,
+		private readonly urlCodeGenerator: UrlCodeGenerator
 	) {}
 	public async execute({
 		authorId,

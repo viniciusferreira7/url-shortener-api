@@ -1,3 +1,4 @@
+import { Pagination } from '@/core/entities/value-object/pagination';
 import type {
 	FindManyByAuthorIdParams,
 	FindManyParams,
@@ -42,7 +43,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 		return url;
 	}
 
-	async findMany(params: FindManyParams): Promise<Url[]> {
+	async findMany(params: FindManyParams): Promise<Pagination<Url>> {
 		let items = [...this.items];
 
 		// Filter by search (title, description, value)
@@ -70,7 +71,9 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 		// Filter by updatedAtGte (optional)
 		if (params.updatedAtGte) {
 			const updatedAtGte = params.updatedAtGte;
-			items = items.filter((url) => (url.updatedAt ? url.updatedAt >= updatedAtGte : false));
+			items = items.filter((url) =>
+				url.updatedAt ? url.updatedAt >= updatedAtGte : false
+			);
 		}
 
 		const isDescending = params.order?.startsWith('-') ?? false;
@@ -115,15 +118,25 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 			});
 		}
 
-		const startIndex = (params.page - 1) * params.pageSize;
-		const endIndex = startIndex + params.pageSize;
+		const page = params.page ?? 1;
+		const perPage = params.perPage ?? 10;
+		const startIndex = (page - 1) * perPage;
+		const endIndex = startIndex + perPage;
 
-		return items.slice(startIndex, endIndex);
+		const result = items.slice(startIndex, endIndex);
+		const totalPages = Math.ceil(items.length / perPage);
+
+		return Pagination.create({
+			page,
+			perPage,
+			totalPages,
+			result,
+		});
 	}
 
 	async findManyWhereIsPublic(
 		params: FindManyWhereIsPublicParams
-	): Promise<UrlWithAuthor[]> {
+	): Promise<Pagination<UrlWithAuthor>> {
 		let items = this.items.filter((item) => item.isPublic);
 
 		// Filter by search (title, description, value)
@@ -146,7 +159,9 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 		// Filter by updatedAtGte (optional)
 		if (params.updatedAtGte) {
 			const updatedAtGte = params.updatedAtGte;
-			items = items.filter((url) => (url.updatedAt ? url.updatedAt >= updatedAtGte : false));
+			items = items.filter((url) =>
+				url.updatedAt ? url.updatedAt >= updatedAtGte : false
+			);
 		}
 
 		const isDescending = params.order?.startsWith('-') ?? false;
@@ -187,10 +202,12 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 			});
 		}
 
-		const startIndex = (params.page - 1) * params.pageSize;
-		const endIndex = startIndex + params.pageSize;
+		const page = params.page ?? 1;
+		const perPage = params.perPage ?? 10;
+		const startIndex = (page - 1) * perPage;
+		const endIndex = startIndex + perPage;
 
-		return items.slice(startIndex, endIndex).map((url) =>
+		const result = items.slice(startIndex, endIndex).map((url) =>
 			UrlWithAuthor.create({
 				urlId: url.id,
 				urlName: url.name,
@@ -203,15 +220,26 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 				updatedAt: url.updatedAt,
 			})
 		);
+
+		const totalPages = Math.ceil(items.length / perPage);
+
+		return Pagination.create({
+			page,
+			perPage,
+			totalPages,
+			result,
+		});
 	}
 
 	async findManyByAuthorId(
 		params: FindManyByAuthorIdParams
-	): Promise<Url[]> {
+	): Promise<Pagination<Url>> {
 		const items = [...this.items];
 
 		// Filter by authorId
-		let filtered = items.filter((url) => url.authorId.toString() === params.authorId);
+		let filtered = items.filter(
+			(url) => url.authorId.toString() === params.authorId
+		);
 
 		// Filter by search (title, description, value)
 		if (params.search) {
@@ -238,7 +266,9 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 		// Filter by updatedAtGte (optional)
 		if (params.updatedAtGte) {
 			const updatedAtGte = params.updatedAtGte;
-			filtered = filtered.filter((url) => (url.updatedAt ? url.updatedAt >= updatedAtGte : false));
+			filtered = filtered.filter((url) =>
+				url.updatedAt ? url.updatedAt >= updatedAtGte : false
+			);
 		}
 
 		const isDescending = params.order?.startsWith('-') ?? false;
@@ -283,9 +313,19 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 			});
 		}
 
-		const startIndex = (params.page - 1) * params.pageSize;
-		const endIndex = startIndex + params.pageSize;
+		const page = params.page ?? 1;
+		const perPage = params.perPage ?? 10;
+		const startIndex = (page - 1) * perPage;
+		const endIndex = startIndex + perPage;
 
-		return filtered.slice(startIndex, endIndex);
+		const result = filtered.slice(startIndex, endIndex);
+		const totalPages = Math.ceil(filtered.length / perPage);
+
+		return Pagination.create({
+			page,
+			perPage,
+			totalPages,
+			result,
+		});
 	}
 }

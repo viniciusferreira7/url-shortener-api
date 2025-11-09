@@ -1,3 +1,4 @@
+import type { Pagination } from '@/core/entities/value-object/pagination';
 import type { PaginationParams } from '@/core/repositories/pagination-params';
 import type { Url } from '../../enterprise/entities/url';
 import type { UrlWithAuthor } from '../../enterprise/entities/value-object/url-with-author';
@@ -66,9 +67,11 @@ export interface UrlsRepository {
 	findById(id: string): Promise<Url | null>;
 	save(url: Url): Promise<Url>;
 	delete(url: Url): Promise<Url>;
-	findMany(params: FindManyParams): Promise<Url[]>;
+	findMany(params: FindManyParams): Promise<Pagination<Url>>;
 	findManyWhereIsPublic(
 		params: FindManyWhereIsPublicParams
-	): Promise<UrlWithAuthor[]>;
-	findManyByAuthorId(params: FindManyByAuthorIdParams): Promise<Url[]>;
+	): Promise<Pagination<UrlWithAuthor>>;
+	findManyByAuthorId(
+		params: FindManyByAuthorIdParams
+	): Promise<Pagination<Url>>;
 }

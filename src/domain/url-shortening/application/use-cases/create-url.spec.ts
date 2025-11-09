@@ -58,6 +58,10 @@ describe('Create url use case', () => {
 				}),
 			})
 		);
+
+		const codeId = await cacheRepository.getCurrentId();
+
+		expect(codeId).toEqual(1);
 	});
 
 	it('should not be able to create url shortener without author', async () => {
