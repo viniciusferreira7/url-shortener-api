@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/correctness/noUndeclaredVariables: It`s a global variable provide by bun */
+
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '@/infra/db/client';
@@ -12,6 +14,11 @@ export const auth = betterAuth({
 	}),
 	emailAndPassword: {
 		enabled: true,
+		autoSignIn: true,
+		password: {
+			hash: (password: string) => Bun.password.hash(password),
+			verify: ({ password, hash }) => Bun.password.verify(password, hash),
+		},
 	},
 	advanced: {
 		database: {

@@ -1,9 +1,9 @@
 import { type Either, left, right } from '@/core/either';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { Url } from '../../enterprise/entities/url';
+import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { CacheRepository } from '../repositories/cache-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
-import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { UrlCodeGenerator } from '../url-code/url-code-generator';
 
 interface CreateUrlUseCaseRequest {
