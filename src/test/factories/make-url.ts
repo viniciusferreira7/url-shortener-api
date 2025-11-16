@@ -12,6 +12,7 @@ export function makeUrl(
 		authorId: UniqueEntityId;
 		createdAt: Date;
 		updatedAt?: Date | null;
+		likes?: number;
 	}> = {},
 	id?: UniqueEntityId
 ) {
@@ -27,6 +28,7 @@ export function makeUrl(
 				(faker.string.uuid() as unknown as UniqueEntityId),
 			createdAt: override?.createdAt ?? new Date(),
 			updatedAt: override?.updatedAt ?? null,
+			likes: override?.likes ?? 0,
 		},
 		id
 	);

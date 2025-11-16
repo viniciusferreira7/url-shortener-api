@@ -19,27 +19,27 @@ type DeleteUrlResponse = Either<
 
 export class DeleteUrlUseCase {
 	constructor(
-		private readonly authorsRepositories: AuthorsRepository,
-		private readonly urlsRepositories: UrlsRepository
+		private readonly authorsRepository: AuthorsRepository,
+		private readonly urlsRepository: UrlsRepository
 	) {}
 
 	public async execute({
 		authorId,
 		urlId,
 	}: DeleteUrlRequest): Promise<DeleteUrlResponse> {
-		const author = await this.authorsRepositories.findById(authorId);
+		const author = await this.authorsRepository.findById(authorId);
 
 		if (!author) {
 			return left(new ResourceNotFoundError());
 		}
 
-		const url = await this.urlsRepositories.findById(urlId);
+		const url = await this.urlsRepository.findById(urlId);
 
 		if (!url) {
 			return left(new ResourceNotFoundError());
 		}
 
-		await this.urlsRepositories.delete(urlId);
+		await this.urlsRepository.delete(urlId);
 
 		return right({ url });
 	}

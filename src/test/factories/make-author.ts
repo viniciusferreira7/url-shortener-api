@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
 import { Author } from '@/domain/url-shortening/enterprise/entities/author';
+import { UrlsLikedList } from '@/domain/url-shortening/enterprise/entities/urls-liked-list';
 
 export function makeAuthor(
 	override: Partial<{
@@ -9,6 +10,7 @@ export function makeAuthor(
 		password: string;
 		createdAt: Date;
 		updatedAt?: Date | null;
+		urlsLiked?: UrlsLikedList;
 	}> = {},
 	id?: UniqueEntityId
 ) {
@@ -26,6 +28,7 @@ export function makeAuthor(
 			password: override?.password ?? faker.internet.password({}),
 			createdAt: override?.createdAt ?? new Date(),
 			updatedAt: override?.updatedAt ?? null,
+			urlsLiked: override?.urlsLiked ?? new UrlsLikedList(),
 		},
 		id
 	);
