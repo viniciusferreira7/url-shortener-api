@@ -55,7 +55,6 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 	async findMany(params: FindManyParams): Promise<Pagination<Url>> {
 		let items = [...this.items];
 
-		// Filter by search (title, description, value)
 		if (params.search) {
 			const searchLower = params.search.toLowerCase();
 			items = items.filter(
@@ -66,18 +65,15 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 			);
 		}
 
-		// Filter by isPublic (optional)
 		if (params.isPublic !== undefined) {
 			items = items.filter((url) => url.isPublic === params.isPublic);
 		}
 
-		// Filter by createdAtGte (optional)
 		if (params.createdAtGte) {
 			const createdAtGte = params.createdAtGte;
 			items = items.filter((url) => url.createdAt >= createdAtGte);
 		}
 
-		// Filter by updatedAtGte (optional)
 		if (params.updatedAtGte) {
 			const updatedAtGte = params.updatedAtGte;
 			items = items.filter((url) =>
@@ -148,7 +144,6 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 	): Promise<Pagination<UrlWithAuthor>> {
 		let items = this.items.filter((item) => item.isPublic);
 
-		// Filter by search (title, description, value)
 		if (params.search) {
 			const searchLower = params.search.toLowerCase();
 			items = items.filter(
@@ -159,13 +154,11 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 			);
 		}
 
-		// Filter by createdAtGte (optional)
 		if (params.createdAtGte) {
 			const createdAtGte = params.createdAtGte;
 			items = items.filter((url) => url.createdAt >= createdAtGte);
 		}
 
-		// Filter by updatedAtGte (optional)
 		if (params.updatedAtGte) {
 			const updatedAtGte = params.updatedAtGte;
 			items = items.filter((url) =>
@@ -252,12 +245,10 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 	): Promise<Pagination<Url>> {
 		const items = [...this.items];
 
-		// Filter by authorId
 		let filtered = items.filter(
 			(url) => url.authorId.toString() === params.authorId
 		);
 
-		// Filter by search (title, description, value)
 		if (params.search) {
 			const searchLower = params.search.toLowerCase();
 			filtered = filtered.filter(
@@ -268,18 +259,15 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 			);
 		}
 
-		// Filter by isPublic (optional)
 		if (params.isPublic !== undefined) {
 			filtered = filtered.filter((url) => url.isPublic === params.isPublic);
 		}
 
-		// Filter by createdAtGte (optional)
 		if (params.createdAtGte) {
 			const createdAtGte = params.createdAtGte;
 			filtered = filtered.filter((url) => url.createdAt >= createdAtGte);
 		}
 
-		// Filter by updatedAtGte (optional)
 		if (params.updatedAtGte) {
 			const updatedAtGte = params.updatedAtGte;
 			filtered = filtered.filter((url) =>
