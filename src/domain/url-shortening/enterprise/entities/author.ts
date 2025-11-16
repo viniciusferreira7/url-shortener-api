@@ -1,12 +1,14 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root';
 import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
+import type { UrlsLikedList } from './urls-liked-list';
 
 interface AuthorProps {
 	name: string;
 	email: string;
-	password: string; //TODO: Verify how better auth works with password
+	password: string;
 	createdAt: Date;
 	updatedAt?: Date | null;
+	urlsLiked: UrlsLikedList;
 }
 
 export class Author extends AggregateRoot<AuthorProps> {
@@ -28,6 +30,10 @@ export class Author extends AggregateRoot<AuthorProps> {
 
 	get updatedAt() {
 		return this.props.updatedAt;
+	}
+
+	get urlsLikedList() {
+		return this.props.urlsLiked;
 	}
 
 	public static create(props: AuthorProps, id?: UniqueEntityId) {

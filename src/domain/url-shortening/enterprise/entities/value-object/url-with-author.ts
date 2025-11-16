@@ -1,5 +1,6 @@
 import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
 import { ValueObject } from '@/core/entities/value-object/value-object';
+import type { UrlsLikedList } from '../urls-liked-list';
 
 export interface UrlWithAuthorProps {
 	urlId: UniqueEntityId;
@@ -11,6 +12,7 @@ export interface UrlWithAuthorProps {
 	authorName: string;
 	createdAt: Date;
 	updatedAt?: Date | null;
+	urlsLiked: UrlsLikedList;
 }
 
 export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
@@ -48,6 +50,10 @@ export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
 
 	get updatedAt(): Date | null | undefined {
 		return this.props.updatedAt;
+	}
+
+	get urlsLiked() {
+		return this.props.urlsLiked;
 	}
 
 	static create(props: UrlWithAuthorProps) {

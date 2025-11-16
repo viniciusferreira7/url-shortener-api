@@ -10,6 +10,7 @@ interface UrlProps {
 	authorId: UniqueEntityId;
 	createdAt: Date;
 	updatedAt?: Date | null;
+	likes: number;
 }
 
 export class Url extends Entity<UrlProps> {
@@ -37,6 +38,10 @@ export class Url extends Entity<UrlProps> {
 		return this.props.authorId;
 	}
 
+	get likes() {
+		return this.props.likes;
+	}
+
 	get createdAt() {
 		return this.props.createdAt;
 	}
@@ -46,6 +51,16 @@ export class Url extends Entity<UrlProps> {
 	}
 
 	public static create(props: UrlProps, id?: UniqueEntityId) {
+		if (!id) {
+			return new Url(
+				{
+					...props,
+					likes: 0,
+				},
+				id
+			);
+		}
+
 		return new Url(props, id);
 	}
 }
