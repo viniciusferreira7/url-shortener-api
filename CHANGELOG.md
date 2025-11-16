@@ -1,3 +1,12 @@
+# [1.11.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.10.0...v1.11.0) (2025-11-16)
+
+
+### Features
+
+* add custom config for openapi ([401b6e3](https://github.com/viniciusferreira7/url-shortener-api/commit/401b6e305e1dc9be4a063571e98983d87140403d))
+* apply new params on urls repository methods ([9825bff](https://github.com/viniciusferreira7/url-shortener-api/commit/9825bff3ec538b3f3ea7288179fbe11a71448d6e))
+* create use case to fetch author urls ([ac9c208](https://github.com/viniciusferreira7/url-shortener-api/commit/ac9c2088301f42b58443c6988c49b6294ce291ec))
+
 # [1.11.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.10.0...v1.11.0) (2025-11-09)
 
 
