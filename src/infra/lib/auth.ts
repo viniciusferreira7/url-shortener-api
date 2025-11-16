@@ -2,6 +2,8 @@
 
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { openAPI } from 'better-auth/plugins';
+
 import { db } from '@/infra/db/client';
 import { env } from '@/infra/env';
 
@@ -12,6 +14,7 @@ export const auth = betterAuth({
 		camelCase: false,
 		debugLogs: env.NODE_ENV === 'development',
 	}),
+	plugins: [openAPI()],
 	emailAndPassword: {
 		enabled: true,
 		autoSignIn: true,

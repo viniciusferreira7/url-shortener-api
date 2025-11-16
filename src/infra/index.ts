@@ -5,7 +5,7 @@ import { env } from '@/infra/env';
 import { auth } from './lib/auth';
 
 const app = new Elysia()
-	.use(openapi())
+	.use(openapi()) //FIXME: add better auth config to work with openapi
 	.use(
 		cors({
 			origin: env.CLIENT_URL,
