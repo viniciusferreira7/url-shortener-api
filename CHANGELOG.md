@@ -13,6 +13,23 @@
 * apply new params on urls repository methods ([9825bff](https://github.com/viniciusferreira7/url-shortener-api/commit/9825bff3ec538b3f3ea7288179fbe11a71448d6e))
 * create use case to delete url ([179f881](https://github.com/viniciusferreira7/url-shortener-api/commit/179f881e874c2c22cdb631f6d58d976446d47910))
 * create use case to fetch author urls ([ac9c208](https://github.com/viniciusferreira7/url-shortener-api/commit/ac9c2088301f42b58443c6988c49b6294ce291ec))
+* create use case to fetch many public urls ([b41d8f8](https://github.com/viniciusferreira7/url-shortener-api/commit/b41d8f853b5a3861a7e9655aba4c5392199d8080))
+
+# [1.11.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.10.0...v1.11.0) (2025-11-16)
+
+
+### Bug Fixes
+
+* correct in memory urls repository ([d20fd04](https://github.com/viniciusferreira7/url-shortener-api/commit/d20fd04e1878c80eec84d1ea2a5b0a0835283929))
+
+
+### Features
+
+* add custom config for openapi ([401b6e3](https://github.com/viniciusferreira7/url-shortener-api/commit/401b6e305e1dc9be4a063571e98983d87140403d))
+* add watched list to urls liked ([456f794](https://github.com/viniciusferreira7/url-shortener-api/commit/456f794fec171db1c266468d4e3d743995cd16bb))
+* apply new params on urls repository methods ([9825bff](https://github.com/viniciusferreira7/url-shortener-api/commit/9825bff3ec538b3f3ea7288179fbe11a71448d6e))
+* create use case to delete url ([179f881](https://github.com/viniciusferreira7/url-shortener-api/commit/179f881e874c2c22cdb631f6d58d976446d47910))
+* create use case to fetch author urls ([ac9c208](https://github.com/viniciusferreira7/url-shortener-api/commit/ac9c2088301f42b58443c6988c49b6294ce291ec))
 
 # [1.11.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.10.0...v1.11.0) (2025-11-16)
 
