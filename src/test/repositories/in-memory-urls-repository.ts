@@ -1,4 +1,6 @@
+import { url } from 'zod';
 import { Pagination } from '@/core/entities/value-object/pagination';
+import { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
 import type {
 	FindManyByAuthorIdParams,
 	FindManyParams,
@@ -33,8 +35,10 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 		return url;
 	}
 
-	async delete(url: Url): Promise<Url> {
-		const index = this.items.findIndex((item) => item.id.equals(url.id));
+	async delete(urlId: string): Promise<Url> {
+		const index = this.items.findIndex((item) =>
+			item.id.equals(new UniqueEntityId(urlId))
+		);
 
 		if (index !== -1) {
 			this.items.splice(index, 1);

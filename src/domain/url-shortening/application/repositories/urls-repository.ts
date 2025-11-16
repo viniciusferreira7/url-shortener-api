@@ -66,7 +66,7 @@ export interface UrlsRepository {
 	create(url: Url): Promise<Url>;
 	findById(id: string): Promise<Url | null>;
 	save(url: Url): Promise<Url>;
-	delete(url: Url): Promise<Url>;
+	delete(urlId: string): Promise<Url>;
 	findMany(params: FindManyParams): Promise<Pagination<Url>>;
 	findManyWhereIsPublic(
 		params: FindManyWhereIsPublicParams
