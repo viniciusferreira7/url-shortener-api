@@ -18,9 +18,8 @@ let sut: CreateUrlUseCase;
 describe('Create url use case', () => {
 	beforeEach(() => {
 		authorsRepository = new InMemoryAuthorsRepository();
-		urlsRepository = new InMemoryUrlsRepository();
+		urlsRepository = new InMemoryUrlsRepository(authorsRepository);
 		cacheRepository = new InMemoryCacheRepository();
-		urlsRepository = new InMemoryUrlsRepository();
 		urlCodeGenerator = new Base62UrlCodeGenerator();
 		sut = new CreateUrlUseCase(
 			authorsRepository,

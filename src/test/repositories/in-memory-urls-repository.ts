@@ -1,6 +1,6 @@
-import { url } from 'zod';
 import { Pagination } from '@/core/entities/value-object/pagination';
 import { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
+import type { AuthorsRepository } from '@/domain/url-shortening/application/repositories/authors-repository';
 import type {
 	FindManyByAuthorIdParams,
 	FindManyParams,
@@ -8,10 +8,13 @@ import type {
 	UrlsRepository,
 } from '@/domain/url-shortening/application/repositories/urls-repository';
 import type { Url } from '@/domain/url-shortening/enterprise/entities/url';
+import { UrlsLikedList } from '@/domain/url-shortening/enterprise/entities/urls-liked-list';
 import { UrlWithAuthor } from '@/domain/url-shortening/enterprise/entities/value-object/url-with-author';
 
 export class InMemoryUrlsRepository implements UrlsRepository {
 	public items: Url[] = [];
+
+	constructor(private readonly authorsRepository: AuthorsRepository) {}
 
 	async create(url: Url): Promise<Url> {
 		this.items.push(url);
@@ -35,16 +38,18 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 		return url;
 	}
 
-	async delete(urlId: string): Promise<Url> {
+	async delete(urlId: string): Promise<Url | null> {
 		const index = this.items.findIndex((item) =>
 			item.id.equals(new UniqueEntityId(urlId))
 		);
 
 		if (index !== -1) {
 			this.items.splice(index, 1);
+
+			return null;
 		}
 
-		return url;
+		return this.items[index];
 	}
 
 	async findMany(params: FindManyParams): Promise<Pagination<Url>> {
@@ -211,17 +216,24 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 		const startIndex = (page - 1) * perPage;
 		const endIndex = startIndex + perPage;
 
-		const result = items.slice(startIndex, endIndex).map((url) =>
-			UrlWithAuthor.create({
-				urlId: url.id,
-				urlName: url.name,
-				UrlValue: url.value,
-				UrlDescription: url.description || '',
-				UrlIsPublic: url.isPublic,
-				authorId: url.authorId,
-				authorName: '',
-				createdAt: url.createdAt,
-				updatedAt: url.updatedAt,
+		const result = await Promise.all(
+			items.slice(startIndex, endIndex).map(async (url) => {
+				const author = await this.authorsRepository.findById(
+					url.authorId.toString()
+				);
+
+				return UrlWithAuthor.create({
+					urlId: url.id,
+					urlName: url.name,
+					UrlValue: url.value,
+					UrlDescription: url.description || '',
+					UrlIsPublic: url.isPublic,
+					authorId: url.authorId,
+					authorName: author?.name || '',
+					createdAt: url.createdAt,
+					updatedAt: url.updatedAt,
+					urlsLiked: author?.urlsLikedList || new UrlsLikedList(),
+				});
 			})
 		);
 

@@ -14,7 +14,7 @@ let sut: FetchAuthorUrlsUseCase;
 describe('Fetch author urls use case', () => {
 	beforeEach(() => {
 		authorsRepository = new InMemoryAuthorsRepository();
-		urlsRepository = new InMemoryUrlsRepository();
+		urlsRepository = new InMemoryUrlsRepository(authorsRepository);
 		sut = new FetchAuthorUrlsUseCase(authorsRepository, urlsRepository);
 	});
 
