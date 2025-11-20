@@ -160,6 +160,9 @@ bun run dev
 - \`bun run docker:build\` - Build application Docker image
 - \`bun run docker:build:prod\` - Build optimized production image
 - \`bun run docker:run\` - Run application in Docker
+- \`bun run docker:tag:hub\` - Tag images for Docker Hub (viniciusaf/url-shortener-api)
+- \`bun run docker:push\` - Push images to Docker Hub
+- \`bun run docker:build:push\` - Build production image, tag, and push to Docker Hub
 
 ### Code Quality
 - \`bun run lint\` - Lint code with Biome
@@ -207,6 +210,28 @@ bun run docker:build:prod
 # Run the container
 bun run docker:run
 \`\`\`
+
+## Publishing to Docker Hub
+
+The project includes scripts to build, tag, and push Docker images to Docker Hub under the \`viniciusaf\` username:
+
+\`\`\`bash
+# Tag images for Docker Hub
+bun run docker:tag:hub
+
+# Push images to Docker Hub (requires authentication)
+bun run docker:push
+
+# One-command build, tag, and push
+bun run docker:build:push
+\`\`\`
+
+**Requirements:**
+- Docker Hub account (username: \`viniciusaf\`)
+- Logged in to Docker: \`docker login\`
+- Images are tagged with:
+  - \`latest\` - Current production build
+  - Git short SHA - Specific commit version
 
 ## 🔄 CI/CD Pipeline
 
