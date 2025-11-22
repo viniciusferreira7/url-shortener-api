@@ -22,9 +22,6 @@ FROM base AS build
 COPY --from=build-deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Drizzle types if needed
-RUN bun run drizzle-kit generate || true
-
 # Production stage
 FROM base AS production
 
