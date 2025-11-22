@@ -45,4 +45,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 # Start the application
 # Bun can run TypeScript directly with ESM support
-CMD ["bun", "run", "src/index.ts"]
+CMD ["bun", "run", "src/infra/index.ts"]

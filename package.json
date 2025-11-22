@@ -2,7 +2,7 @@
 	"name": "url-shortener-api",
 	"version": "1.11.0",
 	"scripts": {
-		"dev": "bun run --watch src/index.ts",
+		"dev": "bun run --watch src/infra/index.ts",
 		"db:generate": "bun --env-file .env --bun drizzle-kit generate",
 		"db:migrate": "bun --env-file .env --bun drizzle-kit migrate",
 		"db:push": "bun --env-file .env --bun drizzle-kit push",
