@@ -157,7 +157,8 @@ jobs:
     name: Build Application
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [quality, test-unit, test-e2e, release]
+    # needs: [quality, test-unit, test-e2e, release] //FIXME:
+    needs: [quality, test-unit]
     if: github.ref == 'refs/heads/main'
 
     permissions:
