@@ -235,14 +235,26 @@ bun run docker:build:push
 
 ## 🔄 CI/CD Pipeline
 
-The project includes a GitHub Actions workflow that:
-- ✅ Runs code quality checks (Biome)
+The project includes a GitHub Actions workflow (`.github/workflows/ci.yaml`) that automatically:
+- ✅ Runs code quality checks (Biome linting & formatting)
+- ✅ Runs unit tests (Bun test runner)
 - ✅ Builds the application
+- ✅ Builds production Docker image with multi-stage build
+- ✅ Pushes Docker images to Docker Hub with tags:
+  - `latest` - Current production build
+  - Git commit SHA - Specific version
 - ✅ Handles semantic versioning and releases
-- 🚧 Unit tests (coming soon)
-- 🚧 E2E tests (coming soon)
-- 🚧 Docker image publishing (configured, not enabled)
 - 🚧 AWS deployment (configured, not enabled)
+
+### Docker Hub Integration
+
+Images are automatically published to Docker Hub under:
+- **Registry**: `viniciusaf/url-shortener-api`
+- **Authentication**: Uses GitHub secret `DOCKER_HUB_TOKEN` (personal access token)
+- **Variables Used**:
+  - `DOCKER_HUB_USERNAME` - GitHub repository variable
+  - `SERVICE_NAME` - GitHub repository variable
+  - `DOCKER_HUB_TOKEN` - GitHub secret (personal access token)
 
 ## 🌐 API Documentation
 
