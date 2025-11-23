@@ -1,3 +1,11 @@
+# [1.13.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.12.0...v1.13.0) (2025-11-23)
+
+
+### Features
+
+* create use case to get url by code ([c6e528a](https://github.com/viniciusferreira7/url-shortener-api/commit/c6e528a655765d08d69beeb91a8d14c37bfc3d75))
+* create use case to get url by id ([1f9f5e6](https://github.com/viniciusferreira7/url-shortener-api/commit/1f9f5e63b5fd20457fdd461836c27eea129cfb49))
+
 # [1.12.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.11.0...v1.12.0) (2025-11-23)
 
 
