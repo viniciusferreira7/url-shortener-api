@@ -65,6 +65,7 @@ export interface FindManyByAuthorIdParams extends PaginationParams {
 export interface UrlsRepository {
 	create(url: Url): Promise<Url>;
 	findById(id: string): Promise<Url | null>;
+	findByCode(code: string): Promise<Url | null>;
 	save(url: Url): Promise<Url>;
 	delete(urlId: string): Promise<Url | null>;
 	findMany(params: FindManyParams): Promise<Pagination<Url>>;
