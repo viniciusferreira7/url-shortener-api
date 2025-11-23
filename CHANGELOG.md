@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.13.0...v1.14.0) (2025-11-23)
+
+
+### Features
+
+* apply cache logic into fetch many public urls use case ([1a2652f](https://github.com/viniciusferreira7/url-shortener-api/commit/1a2652fbc758d7bc73966f2fcf2fb5150f5d7db8))
+
 # [1.13.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.12.0...v1.13.0) (2025-11-23)
 
 
