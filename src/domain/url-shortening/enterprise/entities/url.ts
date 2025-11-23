@@ -50,6 +50,26 @@ export class Url extends Entity<UrlProps> {
 		return this.props.updatedAt;
 	}
 
+	set name(value: string) {
+		this.props.name = value;
+	}
+
+	set value(val: string) {
+		this.props.value = val;
+	}
+
+	set description(value: string | null | undefined) {
+		this.props.description = value;
+	}
+
+	set isPublic(value: boolean) {
+		this.props.isPublic = value;
+	}
+
+	set updatedAt(value: Date | null | undefined) {
+		this.props.updatedAt = value;
+	}
+
 	public static create(props: UrlProps, id?: UniqueEntityId) {
 		if (!id) {
 			return new Url(
