@@ -70,17 +70,11 @@ export class Url extends Entity<UrlProps> {
 		this.props.updatedAt = value;
 	}
 
-	public static create(props: UrlProps, id?: UniqueEntityId) {
-		if (!id) {
-			return new Url(
-				{
-					...props,
-					likes: 0,
-				},
-				id
-			);
-		}
+	set likes(value: number) {
+		this.props.likes = value;
+	}
 
+	public static create(props: UrlProps, id?: UniqueEntityId) {
 		return new Url(props, id);
 	}
 }
