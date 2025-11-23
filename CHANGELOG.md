@@ -1,3 +1,11 @@
+# [1.15.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.14.0...v1.15.0) (2025-11-23)
+
+
+### Features
+
+* create use case to like url ([37fc6c1](https://github.com/viniciusferreira7/url-shortener-api/commit/37fc6c16f42409c619dc3f32758dd6d50665d155))
+* create use case to remove like ([6a42987](https://github.com/viniciusferreira7/url-shortener-api/commit/6a42987d10b885d779de132e4a0662997e6a71e4))
+
 # [1.14.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.13.0...v1.14.0) (2025-11-23)
 
 
