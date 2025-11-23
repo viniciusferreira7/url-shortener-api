@@ -21,14 +21,17 @@ A high-performance URL shortener API built with modern technologies including El
 
 - ✅ User authentication with Better Auth
 - ✅ PostgreSQL database with Drizzle ORM
-- ✅ Redis caching support
+- ✅ Redis caching support with cache invalidation
 - ✅ UUIDv7 for sortable, time-ordered IDs
 - ✅ OpenAPI/Swagger documentation
 - ✅ CORS configuration
-- ✅ Docker & Docker Compose support
+- ✅ Docker & Docker Compose support with multi-arch builds
 - ✅ Automated CI/CD pipeline
 - ✅ Semantic versioning and releases
-- 🚧 URL shortening functionality (coming soon)
+- ✅ URL shortening with public/private access control
+- ✅ Like/Unlike public URLs with duplicate prevention
+- ✅ Fetch public URLs with filtering, sorting, and pagination
+- ✅ Cache layer for public URL fetching
 - 🚧 Analytics and tracking (coming soon)
 
 ## 🏗️ Project Structure
@@ -261,6 +264,38 @@ Images are automatically published to Docker Hub under:
 API documentation is available via OpenAPI/Swagger at:
 - Development: [http://localhost:3333/swagger](http://localhost:3333/swagger)
 
+## 📚 Use Cases
+
+The application implements domain-driven design with comprehensive use cases for URL management:
+
+### URL Management
+- **CreateUrlUseCase** - Create shortened URLs with unique codes
+- **UpdateUrlUseCase** - Update URL properties (name, value, description, visibility)
+- **DeleteUrlUseCase** - Delete URLs with ownership verification
+- **GetUrlByIdUseCase** - Retrieve URL by ID
+- **GetUrlByCodeUseCase** - Retrieve URL by shortening code (for redirects)
+- **FetchManyPublicUrlsUseCase** - Browse public URLs with:
+  - Pagination (page, perPage)
+  - Search by name
+  - Sorting (by created_at, updated_at)
+  - Date filtering (createdAtGte, updatedAtGte)
+  - Built-in caching with cache invalidation
+
+### User Interactions
+- **LikeUrlUseCase** - Like public URLs (prevents:
+  - Liking private URLs (NotAllowedError)
+  - Duplicate likes (UrlAlreadyLikedError)
+  - Non-existent URLs (ResourceNotFoundError)
+- **UnlikeUrlUseCase** - Unlike URLs with automatic count management
+
+### Key Features
+- ✅ Authorization checks (verify user ownership)
+- ✅ Type-safe error handling with Either pattern
+- ✅ Pagination with metadata
+- ✅ Cache layer with TTL support
+- ✅ Atomic operations for likes/unlikes
+- ✅ Comprehensive test coverage (78+ tests)
+
 ## 🧪 Testing
 
 ### Test Infrastructure
@@ -285,6 +320,8 @@ Located in `src/test/repositories/`, these implementations allow testing without
 - **InMemoryCacheRepository** - Implements `CacheRepository` interface
   - Manages ID counter for URL code generation
   - Provides atomic increment operations
+  - Stores and retrieves cached data with TTL support
+  - Supports cache expiration and invalidation
 
 ### Running Tests
 
