@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.11.0...v1.12.0) (2025-11-23)
+
+
+### Features
+
+* create use case to update url ([1a9bf61](https://github.com/viniciusferreira7/url-shortener-api/commit/1a9bf61a36b67bbbf509a822550fb34ad4f8c5c4))
+
 # [1.11.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.10.0...v1.11.0) (2025-11-16)
 
 
