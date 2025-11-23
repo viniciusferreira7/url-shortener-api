@@ -1,7 +1,7 @@
 import { type Either, left, right } from '@/core/either';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import type { UrlsRepository } from '../repositories/urls-repository';
 import type { Url } from '../../enterprise/entities/url';
+import type { UrlsRepository } from '../repositories/urls-repository';
 
 interface GetUrlByIdUseCaseRequest {
 	urlId: string;
