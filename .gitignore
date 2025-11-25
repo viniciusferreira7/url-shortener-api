@@ -43,3 +43,6 @@ package-lock.json
 **/*.bun
 
 TODO.md
+
+# K8s
+k8s/secret.yml

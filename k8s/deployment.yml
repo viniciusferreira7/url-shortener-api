@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata: 
-  name: url-shortener-api
+  name: url-shortener
   namespace: url-shortener
 
 spec:
@@ -17,9 +17,14 @@ spec:
     spec:
       containers:
         - name: url-shortener-api
-          image: vinciusaf/url-shortener-api:a8dd4f1
+          image: vinciusaf/url-shortener-api:4dacc42
           ports:
             - containerPort: 3333
+
+          envFrom:
+          - secretRef:
+              name: url-shortener-secret
+          
           resources:
             requests:
               cpu: 100m
