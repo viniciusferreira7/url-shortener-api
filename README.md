@@ -36,7 +36,7 @@ A high-performance URL shortener API built with modern technologies including El
 
 ## 🏗️ Project Structure
 
-\`\`\`
+```
 src/
 ├── core/
 │   ├── entities/        # Base entities and value objects
@@ -67,7 +67,7 @@ src/
 │       ├── in-memory-users-repository.ts
 │       └── in-memory-cache-repository.ts
 └── index.ts             # Application entry point
-\`\`\`
+```
 
 ## 🛠️ Prerequisites
 
@@ -79,23 +79,23 @@ src/
 ## 📦 Installation
 
 1. Clone the repository:
-\`\`\`bash
+```bash
 git clone <repository-url>
 cd url-shortener-api
-\`\`\`
+```
 
 2. Install dependencies:
-\`\`\`bash
+```bash
 bun install
-\`\`\`
+```
 
 3. Copy environment variables:
-\`\`\`bash
+```bash
 cp .env.example .env
-\`\`\`
+```
 
 4. Configure your \`.env\` file with the required values:
-\`\`\`env
+```env
 NODE_ENV=development
 PORT=3333
 
@@ -111,27 +111,27 @@ CLIENT_URL=http://localhost:3000
 
 BETTER_AUTH_SECRET=your_secret_key
 BETTER_AUTH_URL=http://localhost:3333
-\`\`\`
+```
 
 ## 🚀 Quick Start
 
 ### Using Docker (Recommended)
 
 1. Start database services (PostgreSQL & Redis):
-\`\`\`bash
+```bash
 bun run docker:up
-\`\`\`
+```
 
 2. Generate and run database migrations:
-\`\`\`bash
+```bash
 bun run db:generate
 bun run db:migrate
-\`\`\`
+```
 
 3. Start the development server:
-\`\`\`bash
+```bash
 bun run dev
-\`\`\`
+```
 
 4. Open [http://localhost:3333](http://localhost:3333) in your browser.
 
@@ -139,10 +139,10 @@ bun run dev
 
 Ensure PostgreSQL and Redis are running locally, then:
 
-\`\`\`bash
+```bash
 bun run db:migrate
 bun run dev
-\`\`\`
+```
 
 ## 📝 Available Scripts
 
@@ -206,19 +206,19 @@ The \`docker-compose.yaml\` includes:
 
 ### Building the Application
 
-\`\`\`bash
+```bash
 # Build with latest tag and git SHA
 bun run docker:build:prod
 
 # Run the container
 bun run docker:run
-\`\`\`
+```
 
 ## Publishing to Docker Hub
 
 The project includes scripts to build, tag, and push Docker images to Docker Hub under the \`viniciusaf\` username:
 
-\`\`\`bash
+```bash
 # Tag images for Docker Hub
 bun run docker:tag:hub
 
@@ -227,7 +227,7 @@ bun run docker:push
 
 # One-command build, tag, and push
 bun run docker:build:push
-\`\`\`
+```
 
 **Requirements:**
 - Docker Hub account (username: \`viniciusaf\`)
@@ -325,13 +325,13 @@ Located in `src/test/repositories/`, these implementations allow testing without
 
 ### Running Tests
 
-\`\`\`bash
+```bash
 # Run all tests
 bun run test
 
 # Run tests in watch mode
 bun run test:watch
-\`\`\`
+```
 
 Tests are located in:
 - `src/core/**/*.test.ts` - Core layer tests
