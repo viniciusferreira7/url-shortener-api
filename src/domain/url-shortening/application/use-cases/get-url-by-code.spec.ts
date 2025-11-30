@@ -3,11 +3,13 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
 import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { InMemoryCacheRepository } from '@/test/repositories/in-memory-cache-repository';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
 import { GetUrlByCodeUseCase } from './get-url-by-code';
 
 let authorsRepository: InMemoryAuthorsRepository;
 let urlsRepository: InMemoryUrlsRepository;
+let cacheRepository: InMemoryCacheRepository;
 
 let sut: GetUrlByCodeUseCase;
 
@@ -15,7 +17,8 @@ describe('Get url by code use case', () => {
 	beforeEach(() => {
 		authorsRepository = new InMemoryAuthorsRepository();
 		urlsRepository = new InMemoryUrlsRepository(authorsRepository);
-		sut = new GetUrlByCodeUseCase(urlsRepository);
+		cacheRepository = new InMemoryCacheRepository();
+		sut = new GetUrlByCodeUseCase(urlsRepository, cacheRepository);
 	});
 
 	it('should be able to get url by code', async () => {

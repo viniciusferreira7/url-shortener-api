@@ -42,6 +42,16 @@ export class InMemoryCacheRepository implements CacheRepository {
 		});
 	}
 
+	async incrementBy(key: string, id: string, amount: number): Promise<void> {
+		const entry = this.cache.get(key);
+		const currentValue = entry ? (entry.value as Record<string, number>)[id] ?? 0 : 0;
+
+		const cacheData = (entry?.value as Record<string, number>) || {};
+		cacheData[id] = currentValue + amount;
+
+		await this.set(key, cacheData as unknown, entry?.expiresAt ? entry.expiresAt - Date.now() : undefined);
+	}
+
 	async delete(key: string): Promise<void> {
 		this.cache.delete(key);
 	}
