@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.16.0...v1.17.0) (2025-12-07)
+
+
+### Features
+
+* create use case to get ranking by most liked urls ([d2752a8](https://github.com/viniciusferreira7/url-shortener-api/commit/d2752a84832c0d365436c81ae10d3920833a3a04))
+
 # [1.16.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.15.0...v1.16.0) (2025-12-07)
 
 
