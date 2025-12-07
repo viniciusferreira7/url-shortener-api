@@ -76,4 +76,5 @@ export interface UrlsRepository {
 		params: FindManyByAuthorIdParams
 	): Promise<Pagination<Url>>;
 	findManyByIds(ids: string[]): Promise<Array<UrlWithAuthor>>;
+	findManyByMostLiked(limit: number): Promise<Array<UrlWithAuthor>>;
 }

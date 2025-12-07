@@ -364,4 +364,34 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 
 		return result;
 	}
+
+	async findManyByMostLiked(limit: number): Promise<Array<UrlWithAuthor>> {
+		const publicUrls = this.items
+			.filter((url) => url.isPublic)
+			.sort((a, b) => b.likes - a.likes)
+			.slice(0, limit);
+
+		const result = await Promise.all(
+			publicUrls.map(async (url) => {
+				const author = await this.authorsRepository.findById(
+					url.authorId.toString()
+				);
+
+				return UrlWithAuthor.create({
+					urlId: url.id,
+					urlName: url.name,
+					UrlValue: url.value,
+					UrlDescription: url.description || '',
+					UrlIsPublic: url.isPublic,
+					authorId: url.authorId,
+					authorName: author?.name || '',
+					createdAt: url.createdAt,
+					updatedAt: url.updatedAt,
+					urlsLiked: author?.urlsLikedList || new UrlsLikedList(),
+				});
+			})
+		);
+
+		return result;
+	}
 }
