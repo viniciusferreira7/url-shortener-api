@@ -22,7 +22,7 @@ export class GetRankingUseCase {
 
 		const urlIds = scores
 			.filter((value, index) => {
-				return index % 2 !== 0 && typeof value === 'string';
+				return index % 2 === 0 && typeof value === 'string';
 			})
 			.map(String);
 
@@ -30,7 +30,7 @@ export class GetRankingUseCase {
 
 		const ranking = scores.reduce<UrlWithAuthor[]>((acc, current, index) => {
 			const urlWithAuthor = urls.find((item) => {
-				if (typeof current === 'string') {
+				if (typeof current === 'string' && index % 2 === 0) {
 					return item.urlId.equals(new UniqueEntityId(current));
 				}
 
