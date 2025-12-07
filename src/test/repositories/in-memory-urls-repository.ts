@@ -339,9 +339,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 	}
 
 	async findManyByIds(ids: string[]): Promise<Array<UrlWithAuthor>> {
-		const urls = this.items.filter((url) =>
-			ids.includes(url.id.toString())
-		);
+		const urls = this.items.filter((url) => ids.includes(url.id.toString()));
 
 		const result = await Promise.all(
 			urls.map(async (url) => {
