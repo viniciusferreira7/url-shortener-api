@@ -31,8 +31,10 @@ A high-performance URL shortener API built with modern technologies including El
 - ✅ URL shortening with public/private access control
 - ✅ Like/Unlike public URLs with duplicate prevention
 - ✅ Fetch public URLs with filtering, sorting, and pagination
-- ✅ Cache layer for public URL fetching
-- 🚧 Analytics and tracking (coming soon)
+- ✅ URL access tracking with Redis
+- ✅ Dual ranking system (most viewed & most liked URLs)
+- ✅ Real-time analytics with Redis-based view counter
+- ✅ Comprehensive test coverage (97+ tests)
 
 ## 🏗️ Project Structure
 
@@ -288,13 +290,27 @@ The application implements domain-driven design with comprehensive use cases for
   - Non-existent URLs (ResourceNotFoundError)
 - **UnlikeUrlUseCase** - Unlike URLs with automatic count management
 
+### Analytics & Ranking
+- **GetRankingUseCase** - Get top 10 most accessed URLs
+  - Tracks URL access count via Redis cache
+  - Returns URLs sorted by view count (descending)
+  - Automatically increments on each URL access via `GetUrlByCodeUseCase`
+  - Uses Redis ZREVRANGE format for efficient ranking
+- **GetRankingByMostLikedUseCase** - Get top most liked URLs
+  - Returns public URLs sorted by like count (descending)
+  - Configurable limit (default: 10)
+  - Only includes public URLs in ranking
+  - Real-time data from database
+
 ### Key Features
 - ✅ Authorization checks (verify user ownership)
 - ✅ Type-safe error handling with Either pattern
 - ✅ Pagination with metadata
 - ✅ Cache layer with TTL support
 - ✅ Atomic operations for likes/unlikes
-- ✅ Comprehensive test coverage (78+ tests)
+- ✅ URL access tracking with Redis
+- ✅ Dual ranking system (by views and by likes)
+- ✅ Comprehensive test coverage (97+ tests)
 
 ## 🧪 Testing
 
@@ -311,6 +327,8 @@ Located in `src/test/repositories/`, these implementations allow testing without
   - Supports sorting (by created_at, updated_at, title, description, value, isPublic)
   - Implements pagination
   - Provides methods to query public URLs and filter by author
+  - `findManyByIds` - Bulk fetch URLs with author information
+  - `findManyByMostLiked` - Get top URLs sorted by like count
 
 - **InMemoryUsersRepository** - Implements `UsersRepository` interface
   - Manages user entities
@@ -322,6 +340,8 @@ Located in `src/test/repositories/`, these implementations allow testing without
   - Provides atomic increment operations
   - Stores and retrieves cached data with TTL support
   - Supports cache expiration and invalidation
+  - `incrementBy` - Atomic increment for URL view tracking
+  - `getUrlRanking` - Retrieve top URLs in Redis ZREVRANGE format
 
 ### Running Tests
 
