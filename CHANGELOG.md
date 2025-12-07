@@ -1,3 +1,18 @@
+# [1.16.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.15.0...v1.16.0) (2025-12-07)
+
+
+### Bug Fixes
+
+* correct filter of url ids ([2dc3020](https://github.com/viniciusferreira7/url-shortener-api/commit/2dc302067b5fbfdf59e418147cd17221d7580132))
+* correct setter from url with author ([42b3cf1](https://github.com/viniciusferreira7/url-shortener-api/commit/42b3cf1c60ea95ba3b3e3f6c051627c56ec31497))
+
+
+### Features
+
+* add missing methods into in memory urls and cache repository ([60147cc](https://github.com/viniciusferreira7/url-shortener-api/commit/60147cc09707c402f0fbe66c2da9d09752d8a517))
+* add url into ranking ([8a26001](https://github.com/viniciusferreira7/url-shortener-api/commit/8a260011ff49cc5e447363efe773fe14b8c8cf63))
+* create use case to get url ranking ([4481b13](https://github.com/viniciusferreira7/url-shortener-api/commit/4481b13a52f5ec710314736aca18a174ed1dc6ff))
+
 # [1.15.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.14.0...v1.15.0) (2025-11-23)
 
 
