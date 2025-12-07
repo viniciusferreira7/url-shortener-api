@@ -44,12 +44,39 @@ export class InMemoryCacheRepository implements CacheRepository {
 
 	async incrementBy(key: string, id: string, amount: number): Promise<void> {
 		const entry = this.cache.get(key);
-		const currentValue = entry ? (entry.value as Record<string, number>)[id] ?? 0 : 0;
+		const currentValue = entry
+			? ((entry.value as Record<string, number>)[id] ?? 0)
+			: 0;
 
 		const cacheData = (entry?.value as Record<string, number>) || {};
 		cacheData[id] = currentValue + amount;
 
-		await this.set(key, cacheData as unknown, entry?.expiresAt ? entry.expiresAt - Date.now() : undefined);
+		await this.set(
+			key,
+			cacheData as unknown,
+			entry?.expiresAt ? entry.expiresAt - Date.now() : undefined
+		);
+	}
+
+	async getUrlRanking(limit: number): Promise<Array<string | number>> {
+		const entry = this.cache.get('url-ranking');
+
+		if (!entry) {
+			return [];
+		}
+
+		const ranking = entry.value as Record<string, number>;
+
+		const sortedEntries = Object.entries(ranking)
+			.sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+			.slice(0, limit);
+
+		const result: Array<string | number> = [];
+		for (const [id, score] of sortedEntries) {
+			result.push(id, score);
+		}
+
+		return result;
 	}
 
 	async delete(key: string): Promise<void> {

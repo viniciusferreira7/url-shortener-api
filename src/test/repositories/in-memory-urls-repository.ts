@@ -337,4 +337,33 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 			result,
 		});
 	}
+
+	async findManyByIds(ids: string[]): Promise<Array<UrlWithAuthor>> {
+		const urls = this.items.filter((url) =>
+			ids.includes(url.id.toString())
+		);
+
+		const result = await Promise.all(
+			urls.map(async (url) => {
+				const author = await this.authorsRepository.findById(
+					url.authorId.toString()
+				);
+
+				return UrlWithAuthor.create({
+					urlId: url.id,
+					urlName: url.name,
+					UrlValue: url.value,
+					UrlDescription: url.description || '',
+					UrlIsPublic: url.isPublic,
+					authorId: url.authorId,
+					authorName: author?.name || '',
+					createdAt: url.createdAt,
+					updatedAt: url.updatedAt,
+					urlsLiked: author?.urlsLikedList || new UrlsLikedList(),
+				});
+			})
+		);
+
+		return result;
+	}
 }
