@@ -30,13 +30,9 @@ export class GetUrlByCodeUseCase {
 			return left(new ResourceNotFoundError());
 		}
 
-		const cacheKey = `url-ranking`;
+		const cacheKey = 'url-ranking';
 
-		const isUrlsInCache = await this.cacheRepository.get(cacheKey);
-
-		if (!isUrlsInCache && url.isPublic) {
-			await this.cacheRepository.incrementBy(cacheKey, url.id.toString(), 1);
-		}
+		await this.cacheRepository.incrementBy(cacheKey, url.id.toString(), 1);
 
 		return right({ url });
 	}

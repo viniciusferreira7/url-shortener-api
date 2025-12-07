@@ -10,6 +10,7 @@ export interface UrlWithAuthorProps {
 	UrlIsPublic: boolean;
 	authorId: UniqueEntityId;
 	authorName: string;
+	score?: number;
 	createdAt: Date;
 	updatedAt?: Date | null;
 	urlsLiked: UrlsLikedList;
@@ -44,6 +45,10 @@ export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
 		return this.props.authorName;
 	}
 
+	get score(): number | undefined {
+		return this.props.score;
+	}
+
 	get createdAt(): Date {
 		return this.props.createdAt;
 	}
@@ -54,6 +59,10 @@ export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
 
 	get urlsLiked() {
 		return this.props.urlsLiked;
+	}
+
+	set score(score: number | undefined) {
+		this.score = score;
 	}
 
 	static create(props: UrlWithAuthorProps) {
