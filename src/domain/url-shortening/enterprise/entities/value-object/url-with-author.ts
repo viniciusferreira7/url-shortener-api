@@ -62,7 +62,7 @@ export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
 	}
 
 	set score(score: number | undefined) {
-		this.score = score;
+		this.props.score = score;
 	}
 
 	static create(props: UrlWithAuthorProps) {
