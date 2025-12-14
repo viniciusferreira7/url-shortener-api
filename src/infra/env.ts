@@ -14,6 +14,12 @@ const envSchema = z.object({
 	REDIS_URL: z.url(),
 	REDIS_PASSWORD: z.string(),
 
+	CASSANDRA_CLUSTER_NAME: z.string().optional().default('url-shortener-cluster'),
+	CASSANDRA_DC: z.string().optional().default('dc1'),
+	CASSANDRA_RACK: z.string().optional().default('rack1'),
+	CASSANDRA_ENDPOINT_SNITCH: z.string().optional().default('GossipingPropertyFileSnitch'),
+	CASSANDRA_NUM_TOKENS: z.coerce.number().optional().default(256),
+
 	CLIENT_URL: z.url(),
 });
 
