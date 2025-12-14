@@ -20,7 +20,7 @@
 		"format:fix": "biome format --write src/",
 		"check": "biome check src/",
 		"check:fix": "biome check --write src/",
-		"check:type": "bunx tsc --noEmit",
+		"check:type": "bunx tsc --noEmit --skipLibCheck",
 		"test": "bun test src/core src/domain",
 		"test:watch": "bun test src/core src/domain --watch"
 	},

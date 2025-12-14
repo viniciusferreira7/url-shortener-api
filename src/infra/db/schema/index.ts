@@ -9,8 +9,8 @@ import { users } from './users';
 import { verifications } from './verifications';
 
 export const schema = {
-	accounts,
-	sessions,
-	users,
-	verifications,
+  accounts,
+  sessions,
+  users,
+  verifications,
 };

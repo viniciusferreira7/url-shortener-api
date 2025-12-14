@@ -14,245 +14,245 @@ let cacheRepository: InMemoryCacheRepository;
 let sut: GetUrlByCodeUseCase;
 
 describe('Get url by code use case', () => {
-	beforeEach(() => {
-		authorsRepository = new InMemoryAuthorsRepository();
-		urlsRepository = new InMemoryUrlsRepository(authorsRepository);
-		cacheRepository = new InMemoryCacheRepository();
-		sut = new GetUrlByCodeUseCase(urlsRepository, cacheRepository);
-	});
+  beforeEach(() => {
+    authorsRepository = new InMemoryAuthorsRepository();
+    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
+    cacheRepository = new InMemoryCacheRepository();
+    sut = new GetUrlByCodeUseCase(urlsRepository, cacheRepository);
+  });
 
-	it('should be able to get url by code', async () => {
-		const author = makeAuthor();
+  it('should be able to get url by code', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl({ authorId: author.id, code: 'abc123' });
+    const url = makeUrl({ authorId: author.id, code: 'abc123' });
 
-		await urlsRepository.create(url);
+    await urlsRepository.create(url);
 
-		const result = await sut.execute({
-			code: 'abc123',
-		});
+    const result = await sut.execute({
+      code: 'abc123',
+    });
 
-		expect(result.isRight()).toBe(true);
+    expect(result.isRight()).toBe(true);
 
-		if (result.isRight()) {
-			expect(result.value.url.code).toBe('abc123');
-			expect(result.value.url.id.toString()).toBe(url.id.toString());
-			expect(result.value.url.name).toBe(url.name);
-			expect(result.value.url.value).toBe(url.value);
-		}
-	});
+    if (result.isRight()) {
+      expect(result.value.url.code).toBe('abc123');
+      expect(result.value.url.id.toString()).toBe(url.id.toString());
+      expect(result.value.url.name).toBe(url.name);
+      expect(result.value.url.value).toBe(url.value);
+    }
+  });
 
-	it('should be able to get public url by code', async () => {
-		const author = makeAuthor();
+  it('should be able to get public url by code', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl({
-			authorId: author.id,
-			code: 'pub123',
-			isPublic: true,
-		});
+    const url = makeUrl({
+      authorId: author.id,
+      code: 'pub123',
+      isPublic: true,
+    });
 
-		await urlsRepository.create(url);
+    await urlsRepository.create(url);
 
-		const result = await sut.execute({
-			code: 'pub123',
-		});
+    const result = await sut.execute({
+      code: 'pub123',
+    });
 
-		expect(result.isRight()).toBe(true);
+    expect(result.isRight()).toBe(true);
 
-		if (result.isRight()) {
-			expect(result.value.url.isPublic).toBe(true);
-			expect(result.value.url.code).toBe('pub123');
-		}
-	});
+    if (result.isRight()) {
+      expect(result.value.url.isPublic).toBe(true);
+      expect(result.value.url.code).toBe('pub123');
+    }
+  });
 
-	it('should be able to get private url by code', async () => {
-		const author = makeAuthor();
+  it('should be able to get private url by code', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl({
-			authorId: author.id,
-			code: 'priv456',
-			isPublic: false,
-		});
+    const url = makeUrl({
+      authorId: author.id,
+      code: 'priv456',
+      isPublic: false,
+    });
 
-		await urlsRepository.create(url);
+    await urlsRepository.create(url);
 
-		const result = await sut.execute({
-			code: 'priv456',
-		});
+    const result = await sut.execute({
+      code: 'priv456',
+    });
 
-		expect(result.isRight()).toBe(true);
+    expect(result.isRight()).toBe(true);
 
-		if (result.isRight()) {
-			expect(result.value.url.isPublic).toBe(false);
-			expect(result.value.url.code).toBe('priv456');
-		}
-	});
+    if (result.isRight()) {
+      expect(result.value.url.isPublic).toBe(false);
+      expect(result.value.url.code).toBe('priv456');
+    }
+  });
 
-	it('should return ResourceNotFoundError when url code does not exist', async () => {
-		const result = await sut.execute({
-			code: 'non-existent-code',
-		});
+  it('should return ResourceNotFoundError when url code does not exist', async () => {
+    const result = await sut.execute({
+      code: 'non-existent-code',
+    });
 
-		expect(result.isLeft()).toBe(true);
-		expect(result.value).toBeInstanceOf(ResourceNotFoundError);
-	});
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+  });
 
-	it('should be case-sensitive when finding by code', async () => {
-		const author = makeAuthor();
+  it('should be case-sensitive when finding by code', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl({ authorId: author.id, code: 'AbC123' });
+    const url = makeUrl({ authorId: author.id, code: 'AbC123' });
 
-		await urlsRepository.create(url);
+    await urlsRepository.create(url);
 
-		const resultLowercase = await sut.execute({
-			code: 'abc123',
-		});
+    const resultLowercase = await sut.execute({
+      code: 'abc123',
+    });
 
-		expect(resultLowercase.isLeft()).toBe(true);
+    expect(resultLowercase.isLeft()).toBe(true);
 
-		const resultCorrect = await sut.execute({
-			code: 'AbC123',
-		});
+    const resultCorrect = await sut.execute({
+      code: 'AbC123',
+    });
 
-		expect(resultCorrect.isRight()).toBe(true);
-	});
+    expect(resultCorrect.isRight()).toBe(true);
+  });
 
-	it('should return correct url data with all properties', async () => {
-		const author = makeAuthor();
+  it('should return correct url data with all properties', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl({
-			authorId: author.id,
-			code: 'xyz789',
-			name: 'My Shortened URL',
-			description: 'This URL has been shortened',
-			isPublic: true,
-		});
+    const url = makeUrl({
+      authorId: author.id,
+      code: 'xyz789',
+      name: 'My Shortened URL',
+      description: 'This URL has been shortened',
+      isPublic: true,
+    });
 
-		await urlsRepository.create(url);
+    await urlsRepository.create(url);
 
-		const result = await sut.execute({
-			code: 'xyz789',
-		});
+    const result = await sut.execute({
+      code: 'xyz789',
+    });
 
-		expect(result.isRight()).toBe(true);
+    expect(result.isRight()).toBe(true);
 
-		if (result.isRight()) {
-			const retrievedUrl = result.value.url;
-			expect(retrievedUrl.code).toBe('xyz789');
-			expect(retrievedUrl.name).toBe('My Shortened URL');
-			expect(retrievedUrl.description).toBe('This URL has been shortened');
-			expect(retrievedUrl.isPublic).toBe(true);
-			expect(retrievedUrl.authorId.toString()).toBe(author.id.toString());
-			expect(retrievedUrl.createdAt).toBeInstanceOf(Date);
-		}
-	});
+    if (result.isRight()) {
+      const retrievedUrl = result.value.url;
+      expect(retrievedUrl.code).toBe('xyz789');
+      expect(retrievedUrl.name).toBe('My Shortened URL');
+      expect(retrievedUrl.description).toBe('This URL has been shortened');
+      expect(retrievedUrl.isPublic).toBe(true);
+      expect(retrievedUrl.authorId.toString()).toBe(author.id.toString());
+      expect(retrievedUrl.createdAt).toBeInstanceOf(Date);
+    }
+  });
 
-	it('should be able to get multiple urls with different codes', async () => {
-		const author = makeAuthor();
+  it('should be able to get multiple urls with different codes', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url1 = makeUrl({ authorId: author.id, code: 'code1' });
-		const url2 = makeUrl({ authorId: author.id, code: 'code2' });
-		const url3 = makeUrl({ authorId: author.id, code: 'code3' });
+    const url1 = makeUrl({ authorId: author.id, code: 'code1' });
+    const url2 = makeUrl({ authorId: author.id, code: 'code2' });
+    const url3 = makeUrl({ authorId: author.id, code: 'code3' });
 
-		await urlsRepository.create(url1);
-		await urlsRepository.create(url2);
-		await urlsRepository.create(url3);
+    await urlsRepository.create(url1);
+    await urlsRepository.create(url2);
+    await urlsRepository.create(url3);
 
-		const result1 = await sut.execute({ code: 'code1' });
-		const result2 = await sut.execute({ code: 'code2' });
-		const result3 = await sut.execute({ code: 'code3' });
+    const result1 = await sut.execute({ code: 'code1' });
+    const result2 = await sut.execute({ code: 'code2' });
+    const result3 = await sut.execute({ code: 'code3' });
 
-		expect(result1.isRight()).toBe(true);
-		expect(result2.isRight()).toBe(true);
-		expect(result3.isRight()).toBe(true);
+    expect(result1.isRight()).toBe(true);
+    expect(result2.isRight()).toBe(true);
+    expect(result3.isRight()).toBe(true);
 
-		if (result1.isRight() && result2.isRight() && result3.isRight()) {
-			expect(result1.value.url.code).toBe('code1');
-			expect(result2.value.url.code).toBe('code2');
-			expect(result3.value.url.code).toBe('code3');
-		}
-	});
+    if (result1.isRight() && result2.isRight() && result3.isRight()) {
+      expect(result1.value.url.code).toBe('code1');
+      expect(result2.value.url.code).toBe('code2');
+      expect(result3.value.url.code).toBe('code3');
+    }
+  });
 
-	it('should retrieve url even after update', async () => {
-		const author = makeAuthor();
+  it('should retrieve url even after update', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl({
-			authorId: author.id,
-			code: 'upd123',
-			name: 'Original Name',
-		});
+    const url = makeUrl({
+      authorId: author.id,
+      code: 'upd123',
+      name: 'Original Name',
+    });
 
-		await urlsRepository.create(url);
+    await urlsRepository.create(url);
 
-		url.name = 'Updated Name';
-		url.updatedAt = new Date();
-		await urlsRepository.save(url);
+    url.name = 'Updated Name';
+    url.updatedAt = new Date();
+    await urlsRepository.save(url);
 
-		const result = await sut.execute({
-			code: 'upd123',
-		});
+    const result = await sut.execute({
+      code: 'upd123',
+    });
 
-		expect(result.isRight()).toBe(true);
+    expect(result.isRight()).toBe(true);
 
-		if (result.isRight()) {
-			expect(result.value.url.name).toBe('Updated Name');
-			expect(result.value.url.code).toBe('upd123');
-		}
-	});
+    if (result.isRight()) {
+      expect(result.value.url.name).toBe('Updated Name');
+      expect(result.value.url.code).toBe('upd123');
+    }
+  });
 
-	it('should return ResourceNotFoundError when url has been deleted', async () => {
-		const author = makeAuthor();
+  it('should return ResourceNotFoundError when url has been deleted', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl({ authorId: author.id, code: 'del123' });
+    const url = makeUrl({ authorId: author.id, code: 'del123' });
 
-		await urlsRepository.create(url);
+    await urlsRepository.create(url);
 
-		await urlsRepository.delete(url.id.toString());
+    await urlsRepository.delete(url.id.toString());
 
-		const result = await sut.execute({
-			code: 'del123',
-		});
+    const result = await sut.execute({
+      code: 'del123',
+    });
 
-		expect(result.isLeft()).toBe(true);
-		expect(result.value).toBeInstanceOf(ResourceNotFoundError);
-	});
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+  });
 
-	it('should find url by code even with special characters', async () => {
-		const author = makeAuthor();
+  it('should find url by code even with special characters', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl({
-			authorId: author.id,
-			code: 'a1b2_c3-d4',
-		});
+    const url = makeUrl({
+      authorId: author.id,
+      code: 'a1b2_c3-d4',
+    });
 
-		await urlsRepository.create(url);
+    await urlsRepository.create(url);
 
-		const result = await sut.execute({
-			code: 'a1b2_c3-d4',
-		});
+    const result = await sut.execute({
+      code: 'a1b2_c3-d4',
+    });
 
-		expect(result.isRight()).toBe(true);
+    expect(result.isRight()).toBe(true);
 
-		if (result.isRight()) {
-			expect(result.value.url.code).toBe('a1b2_c3-d4');
-		}
-	});
+    if (result.isRight()) {
+      expect(result.value.url.code).toBe('a1b2_c3-d4');
+    }
+  });
 });

@@ -5,35 +5,35 @@ import type { CacheRepository } from '../repositories/cache-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
 
 interface GetUrlByCodeUseCaseRequest {
-	code: string;
+  code: string;
 }
 
 type GetUrlByCodeUseCaseResponse = Either<
-	ResourceNotFoundError,
-	{
-		url: Url;
-	}
+  ResourceNotFoundError,
+  {
+    url: Url;
+  }
 >;
 
 export class GetUrlByCodeUseCase {
-	constructor(
-		private readonly urlsRepository: UrlsRepository,
-		private readonly cacheRepository: CacheRepository
-	) {}
+  constructor(
+    private readonly urlsRepository: UrlsRepository,
+    private readonly cacheRepository: CacheRepository
+  ) {}
 
-	public async execute({
-		code,
-	}: GetUrlByCodeUseCaseRequest): Promise<GetUrlByCodeUseCaseResponse> {
-		const url = await this.urlsRepository.findByCode(code);
+  public async execute({
+    code,
+  }: GetUrlByCodeUseCaseRequest): Promise<GetUrlByCodeUseCaseResponse> {
+    const url = await this.urlsRepository.findByCode(code);
 
-		if (!url) {
-			return left(new ResourceNotFoundError());
-		}
+    if (!url) {
+      return left(new ResourceNotFoundError());
+    }
 
-		const cacheKey = 'url-ranking';
+    const cacheKey = 'url-ranking';
 
-		await this.cacheRepository.incrementBy(cacheKey, url.id.toString(), 1);
+    await this.cacheRepository.incrementBy(cacheKey, url.id.toString(), 1);
 
-		return right({ url });
-	}
+    return right({ url });
+  }
 }

@@ -3,24 +3,24 @@ import type { UrlWithAuthor } from '../../enterprise/entities/value-object/url-w
 import type { UrlsRepository } from '../repositories/urls-repository';
 
 interface GetRankingByMostLikedRequest {
-	limit?: number;
+  limit?: number;
 }
 
 export type GetRankingByMostLikedResponse = Either<
-	null,
-	{
-		ranking: UrlWithAuthor[];
-	}
+  null,
+  {
+    ranking: UrlWithAuthor[];
+  }
 >;
 
 export class GetRankingByMostLikedUseCase {
-	constructor(private readonly urlsRepository: UrlsRepository) {}
+  constructor(private readonly urlsRepository: UrlsRepository) {}
 
-	public async execute({
-		limit = 10,
-	}: GetRankingByMostLikedRequest = {}): Promise<GetRankingByMostLikedResponse> {
-		const result = await this.urlsRepository.findManyByMostLiked(limit);
+  public async execute({
+    limit = 10,
+  }: GetRankingByMostLikedRequest = {}): Promise<GetRankingByMostLikedResponse> {
+    const result = await this.urlsRepository.findManyByMostLiked(limit);
 
-		return right({ ranking: result });
-	}
+    return right({ ranking: result });
+  }
 }

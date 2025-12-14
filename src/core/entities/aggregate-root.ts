@@ -1,5 +1,5 @@
 import { Entity } from './entity';
 
 export abstract class AggregateRoot<
-	AggregateRootProps,
+  AggregateRootProps,
 > extends Entity<AggregateRootProps> {}

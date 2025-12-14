@@ -16,65 +16,65 @@ let urlCodeGenerator: Base62UrlCodeGenerator;
 let sut: CreateUrlUseCase;
 
 describe('Create url use case', () => {
-	beforeEach(() => {
-		authorsRepository = new InMemoryAuthorsRepository();
-		urlsRepository = new InMemoryUrlsRepository(authorsRepository);
-		cacheRepository = new InMemoryCacheRepository();
-		urlCodeGenerator = new Base62UrlCodeGenerator();
-		sut = new CreateUrlUseCase(
-			authorsRepository,
-			urlsRepository,
-			cacheRepository,
-			urlCodeGenerator
-		);
-	});
+  beforeEach(() => {
+    authorsRepository = new InMemoryAuthorsRepository();
+    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
+    cacheRepository = new InMemoryCacheRepository();
+    urlCodeGenerator = new Base62UrlCodeGenerator();
+    sut = new CreateUrlUseCase(
+      authorsRepository,
+      urlsRepository,
+      cacheRepository,
+      urlCodeGenerator
+    );
+  });
 
-	it('should be able to create url shortener', async () => {
-		const author = makeAuthor();
+  it('should be able to create url shortener', async () => {
+    const author = makeAuthor();
 
-		await authorsRepository.create(author);
+    await authorsRepository.create(author);
 
-		const url = makeUrl();
+    const url = makeUrl();
 
-		const result = await sut.execute({
-			authorId: author.id.toString(),
-			name: url.name,
-			value: url.value,
-			description: url.description,
-			isPublic: false,
-		});
+    const result = await sut.execute({
+      authorId: author.id.toString(),
+      name: url.name,
+      value: url.value,
+      description: url.description,
+      isPublic: false,
+    });
 
-		expect(result.isRight()).toBe(true);
-		expect(result.value).toEqual(
-			expect.objectContaining({
-				url: expect.objectContaining({
-					authorId: author.id,
-					name: url.name,
-					value: url.value,
-					description: url.description,
-					isPublic: false,
-					code: expect.any(String),
-				}),
-			})
-		);
+    expect(result.isRight()).toBe(true);
+    expect(result.value).toEqual(
+      expect.objectContaining({
+        url: expect.objectContaining({
+          authorId: author.id,
+          name: url.name,
+          value: url.value,
+          description: url.description,
+          isPublic: false,
+          code: expect.any(String),
+        }),
+      })
+    );
 
-		const codeId = await cacheRepository.getCurrentId();
+    const codeId = await cacheRepository.getCurrentId();
 
-		expect(codeId).toEqual(1);
-	});
+    expect(codeId).toEqual(1);
+  });
 
-	it('should not be able to create url shortener without author', async () => {
-		const url = makeUrl();
+  it('should not be able to create url shortener without author', async () => {
+    const url = makeUrl();
 
-		const result = await sut.execute({
-			authorId: 'non-author',
-			name: url.name,
-			value: url.value,
-			description: url.description,
-			isPublic: false,
-		});
+    const result = await sut.execute({
+      authorId: 'non-author',
+      name: url.name,
+      value: url.value,
+      description: url.description,
+      isPublic: false,
+    });
 
-		expect(result.isLeft()).toBe(true);
-		expect(result.value).toBeInstanceOf(ResourceNotFoundError);
-	});
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+  });
 });

@@ -7,54 +7,54 @@ import type { UrlsRepository } from '../repositories/urls-repository';
 import type { UrlCodeGenerator } from '../url-code/url-code-generator';
 
 interface CreateUrlUseCaseRequest {
-	authorId: string;
-	name: string;
-	value: string;
-	isPublic: boolean;
-	description?: string | null;
+  authorId: string;
+  name: string;
+  value: string;
+  isPublic: boolean;
+  description?: string | null;
 }
 
 type CreateUrlUseCaseResponse = Either<
-	ResourceNotFoundError,
-	{
-		url: Url;
-	}
+  ResourceNotFoundError,
+  {
+    url: Url;
+  }
 >;
 
 export class CreateUrlUseCase {
-	constructor(
-		private readonly authorsRepository: AuthorsRepository,
-		private readonly urlsRepository: UrlsRepository,
-		private readonly cacheRepository: CacheRepository,
-		private readonly urlCodeGenerator: UrlCodeGenerator
-	) {}
-	public async execute({
-		authorId,
-		...urlData
-	}: CreateUrlUseCaseRequest): Promise<CreateUrlUseCaseResponse> {
-		const author = await this.authorsRepository.findById(authorId);
+  constructor(
+    private readonly authorsRepository: AuthorsRepository,
+    private readonly urlsRepository: UrlsRepository,
+    private readonly cacheRepository: CacheRepository,
+    private readonly urlCodeGenerator: UrlCodeGenerator
+  ) {}
+  public async execute({
+    authorId,
+    ...urlData
+  }: CreateUrlUseCaseRequest): Promise<CreateUrlUseCaseResponse> {
+    const author = await this.authorsRepository.findById(authorId);
 
-		if (!author) {
-			return left(new ResourceNotFoundError());
-		}
+    if (!author) {
+      return left(new ResourceNotFoundError());
+    }
 
-		const nextId = await this.cacheRepository.increaseId();
+    const nextId = await this.cacheRepository.increaseId();
 
-		const codeCreated = this.urlCodeGenerator.encode(nextId);
+    const codeCreated = this.urlCodeGenerator.encode(nextId);
 
-		const url = Url.create({
-			authorId: author.id,
-			code: codeCreated,
-			name: urlData.name,
-			value: urlData.value,
-			description: urlData.description,
-			isPublic: urlData.isPublic,
-			createdAt: new Date(),
-			likes: 0,
-		});
+    const url = Url.create({
+      authorId: author.id,
+      code: codeCreated,
+      name: urlData.name,
+      value: urlData.value,
+      description: urlData.description,
+      isPublic: urlData.isPublic,
+      createdAt: new Date(),
+      likes: 0,
+    });
 
-		await this.urlsRepository.create(url);
+    await this.urlsRepository.create(url);
 
-		return right({ url });
-	}
+    return right({ url });
+  }
 }

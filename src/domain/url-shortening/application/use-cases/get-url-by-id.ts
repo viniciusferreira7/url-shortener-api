@@ -4,28 +4,28 @@ import type { Url } from '../../enterprise/entities/url';
 import type { UrlsRepository } from '../repositories/urls-repository';
 
 interface GetUrlByIdUseCaseRequest {
-	urlId: string;
+  urlId: string;
 }
 
 type GetUrlByIdUseCaseResponse = Either<
-	ResourceNotFoundError,
-	{
-		url: Url;
-	}
+  ResourceNotFoundError,
+  {
+    url: Url;
+  }
 >;
 
 export class GetUrlByIdUseCase {
-	constructor(private readonly urlsRepository: UrlsRepository) {}
+  constructor(private readonly urlsRepository: UrlsRepository) {}
 
-	public async execute({
-		urlId,
-	}: GetUrlByIdUseCaseRequest): Promise<GetUrlByIdUseCaseResponse> {
-		const url = await this.urlsRepository.findById(urlId);
+  public async execute({
+    urlId,
+  }: GetUrlByIdUseCaseRequest): Promise<GetUrlByIdUseCaseResponse> {
+    const url = await this.urlsRepository.findById(urlId);
 
-		if (!url) {
-			return left(new ResourceNotFoundError());
-		}
+    if (!url) {
+      return left(new ResourceNotFoundError());
+    }
 
-		return right({ url });
-	}
+    return right({ url });
+  }
 }

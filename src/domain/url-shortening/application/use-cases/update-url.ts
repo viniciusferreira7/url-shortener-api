@@ -6,68 +6,68 @@ import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
 
 interface UpdateUrlUseCaseRequest {
-	urlId: string;
-	authorId: string;
-	name?: string;
-	value?: string;
-	description?: string | null;
-	isPublic?: boolean;
+  urlId: string;
+  authorId: string;
+  name?: string;
+  value?: string;
+  description?: string | null;
+  isPublic?: boolean;
 }
 
 type UpdateUrlUseCaseResponse = Either<
-	ResourceNotFoundError | NotAllowedError,
-	{
-		url: Url;
-	}
+  ResourceNotFoundError | NotAllowedError,
+  {
+    url: Url;
+  }
 >;
 
 export class UpdateUrlUseCase {
-	constructor(
-		private readonly authorsRepository: AuthorsRepository,
-		private readonly urlsRepository: UrlsRepository
-	) {}
+  constructor(
+    private readonly authorsRepository: AuthorsRepository,
+    private readonly urlsRepository: UrlsRepository
+  ) {}
 
-	public async execute({
-		urlId,
-		authorId,
-		...updateData
-	}: UpdateUrlUseCaseRequest): Promise<UpdateUrlUseCaseResponse> {
-		const author = await this.authorsRepository.findById(authorId);
+  public async execute({
+    urlId,
+    authorId,
+    ...updateData
+  }: UpdateUrlUseCaseRequest): Promise<UpdateUrlUseCaseResponse> {
+    const author = await this.authorsRepository.findById(authorId);
 
-		if (!author) {
-			return left(new ResourceNotFoundError());
-		}
+    if (!author) {
+      return left(new ResourceNotFoundError());
+    }
 
-		const url = await this.urlsRepository.findById(urlId);
+    const url = await this.urlsRepository.findById(urlId);
 
-		if (!url) {
-			return left(new ResourceNotFoundError());
-		}
+    if (!url) {
+      return left(new ResourceNotFoundError());
+    }
 
-		if (!url.authorId.equals(author.id)) {
-			return left(new NotAllowedError());
-		}
+    if (!url.authorId.equals(author.id)) {
+      return left(new NotAllowedError());
+    }
 
-		if (updateData.name) {
-			url.name = updateData.name;
-		}
+    if (updateData.name) {
+      url.name = updateData.name;
+    }
 
-		if (updateData.value) {
-			url.value = updateData.value;
-		}
+    if (updateData.value) {
+      url.value = updateData.value;
+    }
 
-		if (updateData.description !== undefined) {
-			url.description = updateData.description;
-		}
+    if (updateData.description !== undefined) {
+      url.description = updateData.description;
+    }
 
-		if (updateData.isPublic !== undefined) {
-			url.isPublic = updateData.isPublic;
-		}
+    if (updateData.isPublic !== undefined) {
+      url.isPublic = updateData.isPublic;
+    }
 
-		url.updatedAt = new Date();
+    url.updatedAt = new Date();
 
-		await this.urlsRepository.save(url);
+    await this.urlsRepository.save(url);
 
-		return right({ url });
-	}
+    return right({ url });
+  }
 }
