@@ -2,15 +2,17 @@
 
 > ⚠️ **Work In Progress** - This project is currently under active development.
 
-A high-performance URL shortener API built with modern technologies including Elysia, Bun runtime, PostgreSQL, Redis, and Better Auth.
+A high-performance URL shortener API built with modern technologies including Elysia, Bun runtime, PostgreSQL, Redis, Cassandra, and Better Auth.
 
 ## 🚀 Tech Stack
 
 - **Runtime**: [Bun](https://bun.sh) v1.2.22
 - **Framework**: [Elysia](https://elysiajs.com) - Fast and ergonomic web framework
-- **Database**: PostgreSQL 17.2
-- **Cache**: Redis 7.4
-- **ORM**: [Drizzle ORM](https://orm.drizzle.team) - TypeScript ORM
+- **Databases**:
+  - PostgreSQL 17.2 - User management and authentication
+  - Apache Cassandra 5.0 - URL storage and high-performance reads
+- **Cache**: Redis 7.4 - Caching and analytics
+- **ORM**: [Drizzle ORM](https://orm.drizzle.team) - TypeScript ORM for PostgreSQL
 - **Authentication**: [Better Auth](https://www.better-auth.com)
 - **Validation**: Zod
 - **API Documentation**: OpenAPI/Swagger
@@ -19,8 +21,9 @@ A high-performance URL shortener API built with modern technologies including El
 
 ## 📋 Features
 
+### Core Features
 - ✅ User authentication with Better Auth
-- ✅ PostgreSQL database with Drizzle ORM
+- ✅ Dual-database architecture (PostgreSQL + Cassandra)
 - ✅ Redis caching support with cache invalidation
 - ✅ UUIDv7 for sortable, time-ordered IDs
 - ✅ OpenAPI/Swagger documentation
@@ -28,13 +31,23 @@ A high-performance URL shortener API built with modern technologies including El
 - ✅ Docker & Docker Compose support with multi-arch builds
 - ✅ Automated CI/CD pipeline
 - ✅ Semantic versioning and releases
+
+### URL Management
 - ✅ URL shortening with public/private access control
+- ✅ High-performance URL storage in Cassandra
 - ✅ Like/Unlike public URLs with duplicate prevention
 - ✅ Fetch public URLs with filtering, sorting, and pagination
 - ✅ URL access tracking with Redis
+
+### Analytics & Ranking
 - ✅ Dual ranking system (most viewed & most liked URLs)
 - ✅ Real-time analytics with Redis-based view counter
+- ✅ Cassandra for scalable URL read operations
+
+### Quality Assurance
 - ✅ Comprehensive test coverage (97+ tests)
+- ✅ Type-safe error handling
+- ✅ Domain-driven design architecture
 
 ## 🏗️ Project Structure
 
@@ -74,8 +87,9 @@ src/
 ## 🛠️ Prerequisites
 
 - [Bun](https://bun.sh) >= 1.2.22
-- [Docker](https://www.docker.com/) & Docker Compose (for database services)
+- [Docker](https://www.docker.com/) & Docker Compose (recommended)
 - PostgreSQL 17+ (or use Docker)
+- Apache Cassandra 5.0+ (or use Docker)
 - Redis 7+ (or use Docker)
 
 ## 📦 Installation
@@ -119,27 +133,33 @@ BETTER_AUTH_URL=http://localhost:3333
 
 ### Using Docker (Recommended)
 
-1. Start database services (PostgreSQL & Redis):
+1. Start all database services (PostgreSQL, Cassandra & Redis):
 ```bash
 bun run docker:up
 ```
 
-2. Generate and run database migrations:
+2. Wait for Cassandra to be ready (this may take 1-2 minutes on first start):
+```bash
+docker logs -f url-shortener-api-cassandra
+# Wait for "Created default superuser role 'cassandra'"
+```
+
+3. Generate and run PostgreSQL migrations:
 ```bash
 bun run db:generate
 bun run db:migrate
 ```
 
-3. Start the development server:
+4. Start the development server:
 ```bash
 bun run dev
 ```
 
-4. Open [http://localhost:3333](http://localhost:3333) in your browser.
+5. Open [http://localhost:3333](http://localhost:3333) in your browser.
 
 ### Without Docker
 
-Ensure PostgreSQL and Redis are running locally, then:
+Ensure PostgreSQL, Cassandra, and Redis are running locally, then:
 
 ```bash
 bun run db:migrate
@@ -158,7 +178,7 @@ bun run dev
 - \`bun run db:push\` - Push schema changes directly (dev only)
 
 ### Docker
-- \`bun run docker:up\` - Start PostgreSQL and Redis containers
+- \`bun run docker:up\` - Start PostgreSQL, Cassandra, and Redis containers
 - \`bun run docker:down\` - Stop and remove containers
 - \`bun run docker:logs\` - View container logs
 - \`bun run docker:restart\` - Restart containers
@@ -177,9 +197,12 @@ bun run dev
 - \`bun run check\` - Run all checks (lint + format)
 - \`bun run check:fix\` - Fix all issues
 
-## 🗄️ Database Schema
+## 🗄️ Database Architecture
 
-The project uses Drizzle ORM with the following tables:
+The application uses a dual-database architecture for optimal performance:
+
+### PostgreSQL (via Drizzle ORM)
+Handles user management and authentication with the following tables:
 
 - **users** - User accounts with email/password authentication
 - **sessions** - Active user sessions
@@ -190,6 +213,39 @@ All tables use UUIDv7 for primary keys, providing:
 - Time-ordered IDs for better indexing
 - Sortable by creation time
 - Better database performance
+
+### Apache Cassandra
+Handles URL storage and high-performance read operations:
+
+- **urls** - Shortened URLs with metadata
+- Optimized for:
+  - High-throughput writes
+  - Fast read operations by URL code
+  - Horizontal scalability
+  - Time-series data (URL access patterns)
+
+## 🏛️ Why Dual-Database Architecture?
+
+The application uses both PostgreSQL and Cassandra to leverage the strengths of each database:
+
+### PostgreSQL
+- **Strong consistency** - ACID transactions for user accounts and authentication
+- **Complex queries** - Joins and relationships for user management
+- **Data integrity** - Foreign keys and constraints for sensitive data
+
+### Cassandra
+- **High throughput** - Handles millions of URL shortening requests
+- **Linear scalability** - Easily scales horizontally across multiple nodes
+- **Fast reads** - Optimized for retrieving URLs by code (primary use case)
+- **Write performance** - Efficient for high-frequency URL creation
+- **No single point of failure** - Distributed architecture ensures high availability
+
+### Redis
+- **Caching** - Reduces database load for frequently accessed data
+- **Analytics** - Real-time URL access tracking and ranking
+- **Session storage** - Fast session lookups
+
+This architecture follows the **Polyglot Persistence** pattern, using the right database for each specific requirement.
 
 ## 🔐 Authentication
 
@@ -203,8 +259,9 @@ Authentication is handled by [Better Auth](https://www.better-auth.com) with:
 ### Services
 
 The \`docker-compose.yaml\` includes:
-- **PostgreSQL 17.2** - Main database
-- **Redis 7.4** - Caching layer
+- **PostgreSQL 17.2** - User management and authentication data
+- **Apache Cassandra 5.0** - URL storage and high-performance reads
+- **Redis 7.4** - Caching layer and URL access tracking
 
 ### Building the Application
 
@@ -366,19 +423,24 @@ Tests are located in:
 
 ## 📄 Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| \`NODE_ENV\` | Environment (development/production/test) | Yes |
-| \`PORT\` | Server port | Yes |
-| \`DATABASE_URL\` | PostgreSQL connection string | Yes |
-| \`DATABASE_USERNAME\` | Database username | Yes |
-| \`DATABASE_PASSWORD\` | Database password | Yes |
-| \`DATABASE_NAME\` | Database name | Yes |
-| \`REDIS_URL\` | Redis connection string | Yes |
-| \`REDIS_PASSWORD\` | Redis password | Yes |
-| \`CLIENT_URL\` | Frontend URL for CORS | Yes |
-| \`BETTER_AUTH_SECRET\` | Secret key for auth tokens | Yes |
-| \`BETTER_AUTH_URL\` | Base URL of the API | Yes |
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| \`NODE_ENV\` | Environment (development/production/test) | Yes | development |
+| \`PORT\` | Server port | Yes | 3333 |
+| \`DATABASE_URL\` | PostgreSQL connection string | Yes | - |
+| \`DATABASE_USERNAME\` | Database username | Yes | - |
+| \`DATABASE_PASSWORD\` | Database password | Yes | - |
+| \`DATABASE_NAME\` | Database name | Yes | - |
+| \`REDIS_URL\` | Redis connection string | Yes | - |
+| \`REDIS_PASSWORD\` | Redis password | Yes | - |
+| \`CASSANDRA_CLUSTER_NAME\` | Cassandra cluster name (URL storage) | No | url-shortener-cluster |
+| \`CASSANDRA_DC\` | Cassandra datacenter | No | dc1 |
+| \`CASSANDRA_RACK\` | Cassandra rack | No | rack1 |
+| \`CASSANDRA_ENDPOINT_SNITCH\` | Cassandra snitch strategy | No | GossipingPropertyFileSnitch |
+| \`CASSANDRA_NUM_TOKENS\` | Cassandra num tokens | No | 256 |
+| \`CLIENT_URL\` | Frontend URL for CORS | Yes | - |
+| \`BETTER_AUTH_SECRET\` | Secret key for auth tokens | Yes | - |
+| \`BETTER_AUTH_URL\` | Base URL of the API | Yes | - |
 
 ## 🤝 Contributing
 
