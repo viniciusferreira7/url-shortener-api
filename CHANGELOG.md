@@ -1,3 +1,12 @@
+# [1.18.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.17.0...v1.18.0) (2025-12-14)
+
+
+### Features
+
+* add cassandra driver ([b8944b2](https://github.com/viniciusferreira7/url-shortener-api/commit/b8944b22330a45da78b9713e78add11fe7e45001))
+* add cassandra service ([0009cf7](https://github.com/viniciusferreira7/url-shortener-api/commit/0009cf7544f33b218dd0fa1c9aa6ed8a2f40cf8e))
+* add plugins for elysia ([21b56cd](https://github.com/viniciusferreira7/url-shortener-api/commit/21b56cde9783074140b8e41c8fbc9da14abcc30f))
+
 # [1.17.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.16.0...v1.17.0) (2025-12-07)
 
 
