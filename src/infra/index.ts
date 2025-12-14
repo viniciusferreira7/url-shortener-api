@@ -1,11 +1,13 @@
-import { cors } from '@elysiajs/cors';
-import openapi from '@elysiajs/openapi';
+import cors from '@elysiajs/cors';
 import { Elysia } from 'elysia';
 import { env } from '@/infra/env';
+import { betterAuthPlugin } from './http/plugins/better-auth';
+import { openApiPlugin } from './http/plugins/openapi';
 import { auth } from './lib/auth';
 
 const app = new Elysia()
-  .use(openapi()) //FIXME: add better auth config to work with openapi
+  .use(openApiPlugin)
+  .use(betterAuthPlugin)
   .use(
     cors({
       origin: env.CLIENT_URL,
