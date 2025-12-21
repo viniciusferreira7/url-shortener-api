@@ -46,8 +46,14 @@ services:
       CASSANDRA_RACK: ${CASSANDRA_RACK}
       CASSANDRA_ENDPOINT_SNITCH: ${CASSANDRA_ENDPOINT_SNITCH}
       CASSANDRA_NUM_TOKENS: ${CASSANDRA_NUM_TOKENS}
+      CASSANDRA_AUTHENTICATOR: PasswordAuthenticator
+      CASSANDRA_AUTHORIZER: CassandraAuthorizer
     healthcheck:
-      test: ["CMD-SHELL", "cqlsh -e 'describe cluster'"]
+      test:
+        [
+          "CMD-SHELL",
+          "cqlsh -u ${CASSANDRA_USERNAME} -p ${CASSANDRA_PASSWORD} -e 'describe cluster'",
+        ]
       interval: 30s
       timeout: 10s
       retries: 10
