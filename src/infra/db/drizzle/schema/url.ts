@@ -27,10 +27,7 @@ export const urls = pgTable(
     createdAt: timestamp('created_at')
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: timestamp('updated_at')
-      .notNull()
-      .$defaultFn(() => new Date())
-      .$onUpdate(() => new Date()),
+    updatedAt: timestamp('updated_at').$onUpdate(() => new Date()),
 
     authorId: uuid('user_id')
       .notNull()
