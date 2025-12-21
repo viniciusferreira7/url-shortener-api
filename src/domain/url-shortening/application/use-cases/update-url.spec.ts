@@ -38,7 +38,7 @@ describe('Update url use case', () => {
 
     if (result.isRight()) {
       expect(result.value.url.name).toBe('Updated URL Name');
-      expect(result.value.url.value).toBe(url.value);
+      expect(result.value.url.destinationUrl).toBe(url.destinationUrl);
       expect(result.value.url.updatedAt).toBeTruthy();
     }
   });
@@ -57,13 +57,13 @@ describe('Update url use case', () => {
     const result = await sut.execute({
       urlId: url.id.toString(),
       authorId: author.id.toString(),
-      value: newValue,
+      destinationUrl: newValue,
     });
 
     expect(result.isRight()).toBe(true);
 
     if (result.isRight()) {
-      expect(result.value.url.value).toBe(newValue);
+      expect(result.value.url.destinationUrl).toBe(newValue);
       expect(result.value.url.name).toBe(url.name);
     }
   });
@@ -127,7 +127,7 @@ describe('Update url use case', () => {
       urlId: url.id.toString(),
       authorId: author.id.toString(),
       name: 'New Name',
-      value: 'https://example.com/new',
+      destinationUrl: 'https://example.com/new',
       description: 'New description',
       isPublic: true,
     });
@@ -136,7 +136,7 @@ describe('Update url use case', () => {
 
     if (result.isRight()) {
       expect(result.value.url.name).toBe('New Name');
-      expect(result.value.url.value).toBe('https://example.com/new');
+      expect(result.value.url.destinationUrl).toBe('https://example.com/new');
       expect(result.value.url.description).toBe('New description');
       expect(result.value.url.isPublic).toBe(true);
     }
@@ -263,7 +263,7 @@ describe('Update url use case', () => {
       urlId: url.id.toString(),
       authorId: author.id.toString(),
       name: 'Updated Name',
-      value: 'https://updated.example.com',
+      destinationUrl: 'https://updated.example.com',
     });
 
     expect(result.isRight()).toBe(true);
@@ -272,6 +272,6 @@ describe('Update url use case', () => {
 
     expect(savedUrl).toBeTruthy();
     expect(savedUrl?.name).toBe('Updated Name');
-    expect(savedUrl?.value).toBe('https://updated.example.com');
+    expect(savedUrl?.destinationUrl).toBe('https://updated.example.com');
   });
 });

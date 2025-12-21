@@ -36,7 +36,7 @@ describe('Get url by ID use case', () => {
     if (result.isRight()) {
       expect(result.value.url.id.toString()).toBe(url.id.toString());
       expect(result.value.url.name).toBe(url.name);
-      expect(result.value.url.value).toBe(url.value);
+      expect(result.value.url.destinationUrl).toBe(url.destinationUrl);
       expect(result.value.url.code).toBe(url.code);
       expect(result.value.url.isPublic).toBe(url.isPublic);
     }

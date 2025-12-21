@@ -3,14 +3,14 @@ import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-
 
 interface UrlProps {
   name: string;
-  value: string;
+  destinationUrl: string;
   code: string;
   isPublic: boolean;
   description?: string | null;
   authorId: UniqueEntityId;
+  likes: number;
   createdAt: Date;
   updatedAt?: Date | null;
-  likes: number;
 }
 
 export class Url extends Entity<UrlProps> {
@@ -18,8 +18,8 @@ export class Url extends Entity<UrlProps> {
     return this.props.name;
   }
 
-  get value() {
-    return this.props.value;
+  get destinationUrl() {
+    return this.props.destinationUrl;
   }
 
   get code() {
@@ -54,8 +54,8 @@ export class Url extends Entity<UrlProps> {
     this.props.name = value;
   }
 
-  set value(val: string) {
-    this.props.value = val;
+  set destinationUrl(val: string) {
+    this.props.destinationUrl = val;
   }
 
   set description(value: string | null | undefined) {
@@ -75,6 +75,12 @@ export class Url extends Entity<UrlProps> {
   }
 
   public static create(props: UrlProps, id?: UniqueEntityId) {
-    return new Url(props, id);
+    return new Url(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id
+    );
   }
 }

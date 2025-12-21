@@ -9,7 +9,7 @@ interface UpdateUrlUseCaseRequest {
   urlId: string;
   authorId: string;
   name?: string;
-  value?: string;
+  destinationUrl?: string;
   description?: string | null;
   isPublic?: boolean;
 }
@@ -52,8 +52,8 @@ export class UpdateUrlUseCase {
       url.name = updateData.name;
     }
 
-    if (updateData.value) {
-      url.value = updateData.value;
+    if (updateData.destinationUrl) {
+      url.destinationUrl = updateData.destinationUrl;
     }
 
     if (updateData.description !== undefined) {

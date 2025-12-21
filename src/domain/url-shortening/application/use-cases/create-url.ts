@@ -9,7 +9,7 @@ import type { UrlCodeGenerator } from '../url-code/url-code-generator';
 interface CreateUrlUseCaseRequest {
   authorId: string;
   name: string;
-  value: string;
+  destinationUrl: string;
   isPublic: boolean;
   description?: string | null;
 }
@@ -46,7 +46,7 @@ export class CreateUrlUseCase {
       authorId: author.id,
       code: codeCreated,
       name: urlData.name,
-      value: urlData.value,
+      destinationUrl: urlData.destinationUrl,
       description: urlData.description,
       isPublic: urlData.isPublic,
       createdAt: new Date(),

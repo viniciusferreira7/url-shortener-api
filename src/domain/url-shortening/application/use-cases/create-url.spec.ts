@@ -39,7 +39,7 @@ describe('Create url use case', () => {
     const result = await sut.execute({
       authorId: author.id.toString(),
       name: url.name,
-      value: url.value,
+      destinationUrl: url.destinationUrl,
       description: url.description,
       isPublic: false,
     });
@@ -50,7 +50,7 @@ describe('Create url use case', () => {
         url: expect.objectContaining({
           authorId: author.id,
           name: url.name,
-          value: url.value,
+          destinationUrl: url.destinationUrl,
           description: url.description,
           isPublic: false,
           code: expect.any(String),
@@ -69,7 +69,7 @@ describe('Create url use case', () => {
     const result = await sut.execute({
       authorId: 'non-author',
       name: url.name,
-      value: url.value,
+      destinationUrl: url.destinationUrl,
       description: url.description,
       isPublic: false,
     });

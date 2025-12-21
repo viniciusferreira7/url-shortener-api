@@ -38,7 +38,7 @@ describe('Delete url use case', () => {
         url: expect.objectContaining({
           authorId: author.id,
           name: url.name,
-          value: url.value,
+          destinationUrl: url.destinationUrl,
           description: url.description,
           isPublic: url.isPublic,
         }),

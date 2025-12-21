@@ -66,7 +66,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
         (url) =>
           url.name.toLowerCase().includes(searchLower) ||
           (url.description?.toLowerCase().includes(searchLower) ?? false) ||
-          url.value.toLowerCase().includes(searchLower)
+          url.destinationUrl.toLowerCase().includes(searchLower)
       );
     }
 
@@ -155,7 +155,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
         (url) =>
           url.name.toLowerCase().includes(searchLower) ||
           (url.description?.toLowerCase().includes(searchLower) ?? false) ||
-          url.value.toLowerCase().includes(searchLower)
+          url.destinationUrl.toLowerCase().includes(searchLower)
       );
     }
 
@@ -223,7 +223,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
         return UrlWithAuthor.create({
           urlId: url.id,
           urlName: url.name,
-          UrlValue: url.value,
+          UrlValue: url.destinationUrl,
           UrlDescription: url.description || '',
           UrlIsPublic: url.isPublic,
           authorId: url.authorId,
@@ -260,7 +260,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
         (url) =>
           url.name.toLowerCase().includes(searchLower) ||
           (url.description?.toLowerCase().includes(searchLower) ?? false) ||
-          url.value.toLowerCase().includes(searchLower)
+          url.destinationUrl.toLowerCase().includes(searchLower)
       );
     }
 
@@ -350,7 +350,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
         return UrlWithAuthor.create({
           urlId: url.id,
           urlName: url.name,
-          UrlValue: url.value,
+          UrlValue: url.destinationUrl,
           UrlDescription: url.description || '',
           UrlIsPublic: url.isPublic,
           authorId: url.authorId,
@@ -380,7 +380,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
         return UrlWithAuthor.create({
           urlId: url.id,
           urlName: url.name,
-          UrlValue: url.value,
+          UrlValue: url.destinationUrl,
           UrlDescription: url.description || '',
           UrlIsPublic: url.isPublic,
           authorId: url.authorId,

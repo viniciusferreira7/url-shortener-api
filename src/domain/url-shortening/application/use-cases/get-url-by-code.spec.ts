@@ -40,7 +40,7 @@ describe('Get url by code use case', () => {
       expect(result.value.url.code).toBe('abc123');
       expect(result.value.url.id.toString()).toBe(url.id.toString());
       expect(result.value.url.name).toBe(url.name);
-      expect(result.value.url.value).toBe(url.value);
+      expect(result.value.url.destinationUrl).toBe(url.destinationUrl);
     }
   });
 

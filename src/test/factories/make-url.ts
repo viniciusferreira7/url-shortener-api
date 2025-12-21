@@ -5,7 +5,7 @@ import { Url } from '@/domain/url-shortening/enterprise/entities/url';
 export function makeUrl(
   override: Partial<{
     name: string;
-    value: string;
+    destinationUrl: string;
     code: string;
     isPublic: boolean;
     description?: string | null;
@@ -19,7 +19,7 @@ export function makeUrl(
   const url = Url.create(
     {
       name: override?.name ?? faker.lorem.words(3),
-      value: override?.value ?? faker.internet.url(),
+      destinationUrl: override?.destinationUrl ?? faker.internet.url(),
       code: override?.code ?? faker.string.alphanumeric(6),
       isPublic: override?.isPublic ?? faker.datatype.boolean(),
       description: override?.description ?? faker.lorem.sentence(),
