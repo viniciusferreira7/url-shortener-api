@@ -29,7 +29,6 @@
 		"@elysiajs/openapi": "^1.4.11",
 		"base62": "^2.0.2",
 		"better-auth": "^1.3.26",
-		"cassandra-driver": "^4.8.0",
 		"drizzle-orm": "^0.44.6",
 		"elysia": "latest",
 		"pg": "^8.16.3",

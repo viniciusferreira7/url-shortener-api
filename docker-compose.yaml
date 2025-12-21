@@ -35,34 +35,6 @@ services:
     volumes:
       - url_shortener_api_redis_data:/data
 
-  url-shortener-api-cassandra:
-    container_name: url-shortener-api-cassandra
-    image: cassandra:5.0
-    ports:
-      - 9042:9042
-    environment:
-      CASSANDRA_CLUSTER_NAME: ${CASSANDRA_CLUSTER_NAME}
-      CASSANDRA_DC: ${CASSANDRA_DC}
-      CASSANDRA_RACK: ${CASSANDRA_RACK}
-      CASSANDRA_ENDPOINT_SNITCH: ${CASSANDRA_ENDPOINT_SNITCH}
-      CASSANDRA_NUM_TOKENS: ${CASSANDRA_NUM_TOKENS}
-      CASSANDRA_AUTHENTICATOR: PasswordAuthenticator
-      CASSANDRA_AUTHORIZER: CassandraAuthorizer
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "cqlsh -u ${CASSANDRA_USERNAME} -p ${CASSANDRA_PASSWORD} -e 'describe cluster'",
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-      start_period: 60s
-    networks:
-      - url-shortener-api-network
-    volumes:
-      - url_shortener_api_cassandra_data:/var/lib/cassandra
-
 networks:
   url-shortener-api-network:
     driver: bridge
@@ -70,4 +42,3 @@ networks:
 volumes:
   url_shortener_api_pg_data:
   url_shortener_api_redis_data:
-  url_shortener_api_cassandra_data:

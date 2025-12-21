@@ -14,16 +14,6 @@ const envSchema = z.object({
   REDIS_URL: z.url(),
   REDIS_PASSWORD: z.string(),
 
-  CASSANDRA_CONTACT_POINTS: z.string(),
-  CASSANDRA_KEYSPACE: z.string(),
-  CASSANDRA_USERNAME: z.string(),
-  CASSANDRA_PASSWORD: z.string(),
-  CASSANDRA_CLUSTER_NAME: z.string(),
-  CASSANDRA_DC: z.string(),
-  CASSANDRA_RACK: z.string(),
-  CASSANDRA_ENDPOINT_SNITCH: z.string(),
-  CASSANDRA_NUM_TOKENS: z.coerce.number(),
-
   CLIENT_URL: z.url(),
 });
 
