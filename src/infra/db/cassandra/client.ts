@@ -13,8 +13,8 @@ export const cassandraClient = new Client({
   },
   pooling: {
     coreConnectionsPerHost: {
-      [0]: 2,
-      [1]: 1,
+      0: 2,
+      1: 1,
     },
   },
   socketOptions: {

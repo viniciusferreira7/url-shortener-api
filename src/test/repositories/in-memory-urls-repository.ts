@@ -112,8 +112,8 @@ export class InMemoryUrlsRepository implements UrlsRepository {
             bValue = b.description || '';
             break;
           case 'value':
-            aValue = a.value;
-            bValue = b.value;
+            aValue = a.destinationUrl;
+            bValue = b.destinationUrl;
             break;
           case 'isPublic':
             aValue = a.isPublic ? 1 : 0;
@@ -197,8 +197,8 @@ export class InMemoryUrlsRepository implements UrlsRepository {
             bValue = b.description || '';
             break;
           case 'value':
-            aValue = a.value;
-            bValue = b.value;
+            aValue = a.destinationUrl;
+            bValue = b.destinationUrl;
             break;
           default:
             return 0;
@@ -306,8 +306,8 @@ export class InMemoryUrlsRepository implements UrlsRepository {
             bValue = b.description || '';
             break;
           case 'value':
-            aValue = a.value;
-            bValue = b.value;
+            aValue = a.destinationUrl;
+            bValue = b.destinationUrl;
             break;
           case 'isPublic':
             aValue = a.isPublic ? 1 : 0;
