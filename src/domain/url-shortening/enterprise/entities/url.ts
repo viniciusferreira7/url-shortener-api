@@ -1,5 +1,6 @@
 import { Entity } from '@/core/entities/entity';
 import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
+import type { Optional } from '@/core/types/optional';
 
 interface UrlProps {
   name: string;
@@ -74,11 +75,14 @@ export class Url extends Entity<UrlProps> {
     this.props.likes = value;
   }
 
-  public static create(props: UrlProps, id?: UniqueEntityId) {
+  public static create(
+    props: Optional<UrlProps, 'createdAt'>,
+    id?: UniqueEntityId
+  ) {
     return new Url(
       {
         ...props,
-        createdAt: props.createdAt ?? new Date(),
+        createdAt: props?.createdAt ?? new Date(),
       },
       id
     );

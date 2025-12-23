@@ -1,5 +1,6 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root';
 import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
+import type { Optional } from '@/core/types/optional';
 import type { UrlsLikedList } from './urls-liked-list';
 
 interface AuthorProps {
@@ -36,7 +37,16 @@ export class Author extends AggregateRoot<AuthorProps> {
     return this.props.urlsLiked;
   }
 
-  public static create(props: AuthorProps, id?: UniqueEntityId) {
-    return new Author(props, id);
+  public static create(
+    props: Optional<AuthorProps, 'createdAt'>,
+    id?: UniqueEntityId
+  ) {
+    return new Author(
+      {
+        ...props,
+        createdAt: props?.createdAt ?? new Date(),
+      },
+      id
+    );
   }
 }
