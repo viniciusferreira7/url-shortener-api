@@ -356,4 +356,36 @@ export class DrizzleUrlsRepository implements UrlsRepository {
       );
     });
   }
+
+  async findManyLikedByUserId(userId: string): Promise<Array<UrlWithAuthor>> {
+    const [urlsWithAuthors, urlRanking] = await Promise.all([
+      this.db
+        .select({
+          urls: schema.urls,
+          users: schema.users,
+        })
+        .from(schema.userUrlLikes)
+        .innerJoin(schema.urls, eq(schema.userUrlLikes.urlId, schema.urls.id))
+        .innerJoin(schema.users, eq(schema.urls.authorId, schema.users.id))
+        .where(eq(schema.userUrlLikes.userId, userId)),
+      this.cacheRepository.getUrlRanking(10),
+    ]);
+
+    return urlsWithAuthors.map((urlWithAuthor) => {
+      const urlIdIndex = urlRanking.findIndex(
+        (value, index) =>
+          typeof value === 'string' &&
+          index % 2 === 0 &&
+          urlWithAuthor.urls.id === value
+      );
+
+      const score = Number(urlRanking[urlIdIndex + 1] ?? 0);
+
+      return DrizzleUrlWithAuthorMapper.toDomain(
+        urlWithAuthor.urls,
+        urlWithAuthor.users,
+        score
+      );
+    });
+  }
 }
