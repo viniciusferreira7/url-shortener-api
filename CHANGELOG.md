@@ -1,3 +1,23 @@
+# [1.19.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.18.0...v1.19.0) (2026-01-04)
+
+
+### Bug Fixes
+
+* apply corrections ([2d89822](https://github.com/viniciusferreira7/url-shortener-api/commit/2d89822143bdccff1e5e122d37135321763ab4c8))
+
+
+### Features
+
+* add config to use cassandra ([d65f4c8](https://github.com/viniciusferreira7/url-shortener-api/commit/d65f4c80ed193778b41fb03108f4449ae473a25d))
+* add drizzle mapper ([0227c6b](https://github.com/viniciusferreira7/url-shortener-api/commit/0227c6b76fe5d762cf3e41d88ad75bca90110239))
+* add drizzle user repository ([bebce5a](https://github.com/viniciusferreira7/url-shortener-api/commit/bebce5a3d0e15e7a1d00538c0344eb1f4add6b05))
+* add optional type ([9ea2ef9](https://github.com/viniciusferreira7/url-shortener-api/commit/9ea2ef990656ca43b94e13838bc3d83fd36fc820))
+* create drizzle url mapper ([39c12f7](https://github.com/viniciusferreira7/url-shortener-api/commit/39c12f72fa870df274a16a7fcb1ecd6749161a5f))
+* create relationship between user and url ([a494e82](https://github.com/viniciusferreira7/url-shortener-api/commit/a494e8226b41fcc1a573567441840ec4073aba18))
+* create url schema ([f243216](https://github.com/viniciusferreira7/url-shortener-api/commit/f243216db5194a1b9a10556be15622f7fa30bfa2))
+* create use case for fetch user liked urls ([e041b1c](https://github.com/viniciusferreira7/url-shortener-api/commit/e041b1c6a080a54bc31f40beb72b06bb365262dd))
+* implement missing methods into drizzle url repository ([641a310](https://github.com/viniciusferreira7/url-shortener-api/commit/641a3107b39d2d80cf109de1ded2e1fb1a080fc9))
+
 # [1.18.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.17.0...v1.18.0) (2025-12-14)
 
 
