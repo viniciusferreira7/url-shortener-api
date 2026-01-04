@@ -1,34 +1,34 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { NotAllowedError } from '@/core/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { UrlAlreadyLikedError } from '../../errors/url-already-liked-error';
 import { LikeUrlUseCase } from './like-url';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 let sut: LikeUrlUseCase;
 
 describe('Like URL use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
-    sut = new LikeUrlUseCase(authorsRepository, urlsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
+    sut = new LikeUrlUseCase(usersRepository, urlsRepository);
   });
 
   it('should be able to like a public URL', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
     const url = makeUrl({ isPublic: true, likes: 0 });
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     expect(result.isRight()).toBe(true);
@@ -39,15 +39,15 @@ describe('Like URL use case', () => {
   });
 
   it('should not be able to like a private URL', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
     const url = makeUrl({ isPublic: false, likes: 0 });
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     expect(result.isLeft()).toBe(true);
@@ -57,15 +57,15 @@ describe('Like URL use case', () => {
   });
 
   it('should increment the URL like count', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
     const url = makeUrl({ isPublic: true, likes: 5 });
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     expect(result.isRight()).toBe(true);
@@ -79,33 +79,31 @@ describe('Like URL use case', () => {
   });
 
   it('should add URL to author liked list', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
     const url = makeUrl({ isPublic: true, likes: 0 });
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     expect(result.isRight()).toBe(true);
 
-    const updatedAuthor = await authorsRepository.findById(
-      author.id.toString()
-    );
-    expect(updatedAuthor?.urlsLikedList.currentItems).toContainEqual(url);
+    const updatedUser = await usersRepository.findById(user.id.toString());
+    expect(updatedUser?.urlsLikedList.currentItems).toContainEqual(url);
   });
 
   it('should not be able to like a URL that does not exist', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const result = await sut.execute({
       urlId: 'non-existent-id',
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     expect(result.isLeft()).toBe(true);
@@ -131,22 +129,22 @@ describe('Like URL use case', () => {
   });
 
   it('should not be able to like the same URL twice', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
     const url = makeUrl({ isPublic: true, likes: 0 });
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
     await urlsRepository.create(url);
 
     const firstLike = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     expect(firstLike.isRight()).toBe(true);
 
     const secondLike = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     expect(secondLike.isLeft()).toBe(true);
@@ -156,22 +154,22 @@ describe('Like URL use case', () => {
   });
 
   it('should handle multiple authors liking the same URL', async () => {
-    const author1 = makeAuthor();
-    const author2 = makeAuthor();
+    const user1 = makeUser();
+    const user2 = makeUser();
     const url = makeUrl({ isPublic: true, likes: 0 });
 
-    await authorsRepository.create(author1);
-    await authorsRepository.create(author2);
+    await usersRepository.create(user1);
+    await usersRepository.create(user2);
     await urlsRepository.create(url);
 
     const result1 = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author1.id.toString(),
+      authorId: user1.id.toString(),
     });
 
     const result2 = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author2.id.toString(),
+      authorId: user2.id.toString(),
     });
 
     expect(result1.isRight()).toBe(true);
@@ -187,43 +185,41 @@ describe('Like URL use case', () => {
   });
 
   it('should allow an author to like different URLs', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
     const url1 = makeUrl({ isPublic: true, likes: 0 });
     const url2 = makeUrl({ isPublic: true, likes: 0 });
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
     await urlsRepository.create(url1);
     await urlsRepository.create(url2);
 
     const result1 = await sut.execute({
       urlId: url1.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     const result2 = await sut.execute({
       urlId: url2.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     expect(result1.isRight()).toBe(true);
     expect(result2.isRight()).toBe(true);
 
-    const updatedAuthor = await authorsRepository.findById(
-      author.id.toString()
-    );
-    expect(updatedAuthor?.urlsLikedList.currentItems).toHaveLength(2);
+    const updatedUser = await usersRepository.findById(user.id.toString());
+    expect(updatedUser?.urlsLikedList.currentItems).toHaveLength(2);
   });
 
   it('should persist the like count to repository', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
     const url = makeUrl({ isPublic: true, likes: 3 });
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
     await urlsRepository.create(url);
 
     await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
     });
 
     const persistedUrl = await urlsRepository.findById(url.id.toString());

@@ -1,9 +1,9 @@
 import { type Either, left, right } from '@/core/either';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { Url } from '../../enterprise/entities/url';
-import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { CacheRepository } from '../repositories/cache-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
+import type { UsersRepository } from '../repositories/users-repository';
 import type { UrlCodeGenerator } from '../url-code/url-code-generator';
 
 interface CreateUrlUseCaseRequest {
@@ -23,7 +23,7 @@ type CreateUrlUseCaseResponse = Either<
 
 export class CreateUrlUseCase {
   constructor(
-    private readonly authorsRepository: AuthorsRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly urlsRepository: UrlsRepository,
     private readonly cacheRepository: CacheRepository,
     private readonly urlCodeGenerator: UrlCodeGenerator
@@ -32,9 +32,9 @@ export class CreateUrlUseCase {
     authorId,
     ...urlData
   }: CreateUrlUseCaseRequest): Promise<CreateUrlUseCaseResponse> {
-    const author = await this.authorsRepository.findById(authorId);
+    const user = await this.usersRepository.findById(authorId);
 
-    if (!author) {
+    if (!user) {
       return left(new ResourceNotFoundError());
     }
 
@@ -43,7 +43,7 @@ export class CreateUrlUseCase {
     const codeCreated = this.urlCodeGenerator.encode(nextId);
 
     const url = Url.create({
-      authorId: author.id,
+      authorId: user.id,
       code: codeCreated,
       name: urlData.name,
       destinationUrl: urlData.destinationUrl,

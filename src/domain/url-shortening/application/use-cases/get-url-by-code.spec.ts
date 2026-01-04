@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryCacheRepository } from '@/test/repositories/in-memory-cache-repository';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { GetUrlByCodeUseCase } from './get-url-by-code';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 let cacheRepository: InMemoryCacheRepository;
 
@@ -15,18 +15,18 @@ let sut: GetUrlByCodeUseCase;
 
 describe('Get url by code use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
     cacheRepository = new InMemoryCacheRepository();
     sut = new GetUrlByCodeUseCase(urlsRepository, cacheRepository);
   });
 
   it('should be able to get url by code', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, code: 'abc123' });
+    const url = makeUrl({ authorId: user.id, code: 'abc123' });
 
     await urlsRepository.create(url);
 
@@ -45,12 +45,12 @@ describe('Get url by code use case', () => {
   });
 
   it('should be able to get public url by code', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'pub123',
       isPublic: true,
     });
@@ -70,12 +70,12 @@ describe('Get url by code use case', () => {
   });
 
   it('should be able to get private url by code', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'priv456',
       isPublic: false,
     });
@@ -104,11 +104,11 @@ describe('Get url by code use case', () => {
   });
 
   it('should be case-sensitive when finding by code', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, code: 'AbC123' });
+    const url = makeUrl({ authorId: user.id, code: 'AbC123' });
 
     await urlsRepository.create(url);
 
@@ -126,12 +126,12 @@ describe('Get url by code use case', () => {
   });
 
   it('should return correct url data with all properties', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'xyz789',
       name: 'My Shortened URL',
       description: 'This URL has been shortened',
@@ -152,19 +152,19 @@ describe('Get url by code use case', () => {
       expect(retrievedUrl.name).toBe('My Shortened URL');
       expect(retrievedUrl.description).toBe('This URL has been shortened');
       expect(retrievedUrl.isPublic).toBe(true);
-      expect(retrievedUrl.authorId.toString()).toBe(author.id.toString());
+      expect(retrievedUrl.authorId.toString()).toBe(user.id.toString());
       expect(retrievedUrl.createdAt).toBeInstanceOf(Date);
     }
   });
 
   it('should be able to get multiple urls with different codes', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url1 = makeUrl({ authorId: author.id, code: 'code1' });
-    const url2 = makeUrl({ authorId: author.id, code: 'code2' });
-    const url3 = makeUrl({ authorId: author.id, code: 'code3' });
+    const url1 = makeUrl({ authorId: user.id, code: 'code1' });
+    const url2 = makeUrl({ authorId: user.id, code: 'code2' });
+    const url3 = makeUrl({ authorId: user.id, code: 'code3' });
 
     await urlsRepository.create(url1);
     await urlsRepository.create(url2);
@@ -186,12 +186,12 @@ describe('Get url by code use case', () => {
   });
 
   it('should retrieve url even after update', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'upd123',
       name: 'Original Name',
     });
@@ -215,11 +215,11 @@ describe('Get url by code use case', () => {
   });
 
   it('should return ResourceNotFoundError when url has been deleted', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, code: 'del123' });
+    const url = makeUrl({ authorId: user.id, code: 'del123' });
 
     await urlsRepository.create(url);
 
@@ -234,12 +234,12 @@ describe('Get url by code use case', () => {
   });
 
   it('should find url by code even with special characters', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'a1b2_c3-d4',
     });
 

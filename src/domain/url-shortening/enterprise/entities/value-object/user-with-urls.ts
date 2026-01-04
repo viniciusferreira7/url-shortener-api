@@ -1,17 +1,19 @@
 import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
 import { ValueObject } from '@/core/entities/value-object/value-object';
 import type { Url } from '../url';
+import type { UrlsLikedList } from '../urls-liked-list';
 
-export interface AuthorWithUrlsProps {
+export interface UserWithUrlsProps {
   authorId: UniqueEntityId;
   authorName: string;
   authorEmail: string;
   createdAt: Date;
   updatedAt?: Date | null;
   urls: Url[];
+  urlsLiked: UrlsLikedList;
 }
 
-export class AuthorWithUrls extends ValueObject<AuthorWithUrlsProps> {
+export class UserWithUrls extends ValueObject<UserWithUrlsProps> {
   get authorId(): UniqueEntityId {
     return this.props.authorId;
   }
@@ -36,7 +38,11 @@ export class AuthorWithUrls extends ValueObject<AuthorWithUrlsProps> {
     return this.props.urls;
   }
 
-  static create(props: AuthorWithUrlsProps) {
-    return new AuthorWithUrls(props);
+  get urlsLiked() {
+    return this.props.urlsLiked;
+  }
+
+  static create(props: UserWithUrlsProps) {
+    return new UserWithUrls(props);
   }
 }

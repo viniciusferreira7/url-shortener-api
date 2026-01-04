@@ -13,13 +13,13 @@ export interface FindManyParams extends PaginationParams {
     | 'updated_at'
     | 'title'
     | 'description'
-    | 'value'
+    | 'destinationUrl'
     | 'isPublic'
     | '-created_at'
     | '-updated_at'
     | '-title'
     | '-description'
-    | '-value'
+    | '-destinationUrl'
     | '-isPublic';
 }
 
@@ -33,12 +33,12 @@ export interface FindManyWhereIsPublicParams extends PaginationParams {
     | 'updated_at'
     | 'title'
     | 'description'
-    | 'value'
+    | 'destinationUrl'
     | '-created_at'
     | '-updated_at'
     | '-title'
     | '-description'
-    | '-value';
+    | '-destinationUrl';
 }
 
 export interface FindManyByAuthorIdParams extends PaginationParams {
@@ -52,13 +52,13 @@ export interface FindManyByAuthorIdParams extends PaginationParams {
     | 'updated_at'
     | 'title'
     | 'description'
-    | 'value'
+    | 'destinationUrl'
     | 'isPublic'
     | '-created_at'
     | '-updated_at'
     | '-title'
     | '-description'
-    | '-value'
+    | '-destinationUrl'
     | '-isPublic';
 }
 

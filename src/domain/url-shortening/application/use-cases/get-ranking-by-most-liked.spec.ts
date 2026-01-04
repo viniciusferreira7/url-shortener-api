@@ -1,41 +1,41 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { GetRankingByMostLikedUseCase } from './get-ranking-by-most-liked';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 
 let sut: GetRankingByMostLikedUseCase;
 
 describe('Get ranking by most liked use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
     sut = new GetRankingByMostLikedUseCase(urlsRepository);
   });
 
   it('should be able to get ranking by most liked URLs', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url1 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'url1',
       isPublic: true,
       likes: 10,
     });
     const url2 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'url2',
       isPublic: true,
       likes: 25,
     });
     const url3 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'url3',
       isPublic: true,
       likes: 5,
@@ -68,14 +68,14 @@ describe('Get ranking by most liked use case', () => {
   });
 
   it('should limit ranking to specified limit', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const urls = [];
     for (let i = 1; i <= 15; i++) {
       const url = makeUrl({
-        authorId: author.id,
+        authorId: user.id,
         code: `url${i}`,
         isPublic: true,
         likes: i,
@@ -102,24 +102,24 @@ describe('Get ranking by most liked use case', () => {
   });
 
   it('should return ranking sorted by likes in descending order', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url1 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'low',
       isPublic: true,
       likes: 5,
     });
     const url2 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'high',
       isPublic: true,
       likes: 100,
     });
     const url3 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'medium',
       isPublic: true,
       likes: 50,
@@ -141,18 +141,18 @@ describe('Get ranking by most liked use case', () => {
   });
 
   it('should only include public URLs in ranking', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const publicUrl = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'public',
       isPublic: true,
       likes: 10,
     });
     const privateUrl = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'private',
       isPublic: false,
       likes: 100,
@@ -174,12 +174,12 @@ describe('Get ranking by most liked use case', () => {
   });
 
   it('should include URL details in ranking', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'test123',
       name: 'Test URL',
       description: 'A popular URL',
@@ -198,23 +198,23 @@ describe('Get ranking by most liked use case', () => {
       expect(result.value.ranking[0].urlName).toBe('Test URL');
       expect(result.value.ranking[0].urlDescription).toBe('A popular URL');
       expect(result.value.ranking[0].urlIsPublic).toBe(true);
-      expect(result.value.ranking[0].authorName).toBe(author.name);
+      expect(result.value.ranking[0].authorName).toBe(user.name);
     }
   });
 
   it('should handle URLs with same like count', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url1 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'url1',
       isPublic: true,
       likes: 10,
     });
     const url2 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'url2',
       isPublic: true,
       likes: 10,
@@ -237,18 +237,18 @@ describe('Get ranking by most liked use case', () => {
   });
 
   it('should handle URLs with zero likes', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url1 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'url1',
       isPublic: true,
       likes: 0,
     });
     const url2 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'url2',
       isPublic: true,
       likes: 5,
@@ -269,20 +269,20 @@ describe('Get ranking by most liked use case', () => {
   });
 
   it('should handle ranking with multiple authors', async () => {
-    const author1 = makeAuthor({ name: 'Author One' });
-    const author2 = makeAuthor({ name: 'Author Two' });
+    const user1 = makeUser({ name: 'Author One' });
+    const user2 = makeUser({ name: 'Author Two' });
 
-    await authorsRepository.create(author1);
-    await authorsRepository.create(author2);
+    await usersRepository.create(user1);
+    await usersRepository.create(user2);
 
     const url1 = makeUrl({
-      authorId: author1.id,
+      authorId: user1.id,
       code: 'url1',
       isPublic: true,
       likes: 20,
     });
     const url2 = makeUrl({
-      authorId: author2.id,
+      authorId: user2.id,
       code: 'url2',
       isPublic: true,
       likes: 15,
@@ -303,13 +303,13 @@ describe('Get ranking by most liked use case', () => {
   });
 
   it('should use default limit of 10 when limit is not specified', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     for (let i = 1; i <= 12; i++) {
       const url = makeUrl({
-        authorId: author.id,
+        authorId: user.id,
         code: `url${i}`,
         isPublic: true,
         likes: i,
@@ -327,13 +327,13 @@ describe('Get ranking by most liked use case', () => {
   });
 
   it('should respect custom limit parameter', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     for (let i = 1; i <= 10; i++) {
       const url = makeUrl({
-        authorId: author.id,
+        authorId: user.id,
         code: `url${i}`,
         isPublic: true,
         likes: i,

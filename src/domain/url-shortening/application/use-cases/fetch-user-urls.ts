@@ -2,40 +2,40 @@ import { type Either, left, right } from '@/core/either';
 import type { Pagination } from '@/core/entities/value-object/pagination';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import type { Url } from '../../enterprise/entities/url';
-import type { AuthorsRepository } from '../repositories/authors-repository';
 import type {
   FindManyByAuthorIdParams,
   UrlsRepository,
 } from '../repositories/urls-repository';
+import type { UsersRepository } from '../repositories/users-repository';
 
-interface FetchAuthorUrlsUseCaseRequest {
+interface FetchUserUrlsUseCaseRequest {
   authorId: string;
   params?: Omit<FindManyByAuthorIdParams, 'authorId'>;
 }
 
-type FetchAuthorUrlsUseCaseResponse = Either<
+type FetchUserUrlsUseCaseResponse = Either<
   ResourceNotFoundError,
   Pagination<Url>
 >;
 
-export class FetchAuthorUrlsUseCase {
+export class FetchUserUrlsUseCase {
   constructor(
-    private readonly authorsRepository: AuthorsRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly urlsRepository: UrlsRepository
   ) {}
 
   async execute({
     authorId,
     params,
-  }: FetchAuthorUrlsUseCaseRequest): Promise<FetchAuthorUrlsUseCaseResponse> {
-    const author = await this.authorsRepository.findById(authorId);
+  }: FetchUserUrlsUseCaseRequest): Promise<FetchUserUrlsUseCaseResponse> {
+    const user = await this.usersRepository.findById(authorId);
 
-    if (!author) {
+    if (!user) {
       return left(new ResourceNotFoundError());
     }
 
     const urls = await this.urlsRepository.findManyByAuthorId({
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       page: params?.page ?? 1,
       perPage: params?.perPage ?? 10,
       search: params?.search,

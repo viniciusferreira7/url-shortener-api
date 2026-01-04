@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryCacheRepository } from '@/test/repositories/in-memory-cache-repository';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { Base62UrlCodeGenerator } from '@/test/url-code/url-code-generator';
 import { CreateUrlUseCase } from './create-url';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 let cacheRepository: InMemoryCacheRepository;
 let urlCodeGenerator: Base62UrlCodeGenerator;
@@ -17,12 +17,12 @@ let sut: CreateUrlUseCase;
 
 describe('Create url use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
     cacheRepository = new InMemoryCacheRepository();
     urlCodeGenerator = new Base62UrlCodeGenerator();
     sut = new CreateUrlUseCase(
-      authorsRepository,
+      usersRepository,
       urlsRepository,
       cacheRepository,
       urlCodeGenerator
@@ -30,14 +30,14 @@ describe('Create url use case', () => {
   });
 
   it('should be able to create url shortener', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl();
 
     const result = await sut.execute({
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       name: url.name,
       destinationUrl: url.destinationUrl,
       description: url.description,
@@ -48,7 +48,7 @@ describe('Create url use case', () => {
     expect(result.value).toEqual(
       expect.objectContaining({
         url: expect.objectContaining({
-          authorId: author.id,
+          authorId: user.id,
           name: url.name,
           destinationUrl: url.destinationUrl,
           description: url.description,

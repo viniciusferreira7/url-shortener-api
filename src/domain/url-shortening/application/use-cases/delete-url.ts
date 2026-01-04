@@ -2,8 +2,8 @@ import { type Either, left, right } from '@/core/either';
 import type { NotAllowedError } from '@/core/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import type { Url } from '../../enterprise/entities/url';
-import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
+import type { UsersRepository } from '../repositories/users-repository';
 
 interface DeleteUrlRequest {
   authorId: string;
@@ -19,7 +19,7 @@ type DeleteUrlResponse = Either<
 
 export class DeleteUrlUseCase {
   constructor(
-    private readonly authorsRepository: AuthorsRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly urlsRepository: UrlsRepository
   ) {}
 
@@ -27,9 +27,9 @@ export class DeleteUrlUseCase {
     authorId,
     urlId,
   }: DeleteUrlRequest): Promise<DeleteUrlResponse> {
-    const author = await this.authorsRepository.findById(authorId);
+    const user = await this.usersRepository.findById(authorId);
 
-    if (!author) {
+    if (!user) {
       return left(new ResourceNotFoundError());
     }
 

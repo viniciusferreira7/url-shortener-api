@@ -1,29 +1,29 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { GetUrlByIdUseCase } from './get-url-by-id';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 
 let sut: GetUrlByIdUseCase;
 
 describe('Get url by ID use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
     sut = new GetUrlByIdUseCase(urlsRepository);
   });
 
   it('should be able to get url by id', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id });
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
@@ -43,11 +43,11 @@ describe('Get url by ID use case', () => {
   });
 
   it('should be able to get public url by id', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, isPublic: true });
+    const url = makeUrl({ authorId: user.id, isPublic: true });
 
     await urlsRepository.create(url);
 
@@ -63,11 +63,11 @@ describe('Get url by ID use case', () => {
   });
 
   it('should be able to get private url by id', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, isPublic: false });
+    const url = makeUrl({ authorId: user.id, isPublic: false });
 
     await urlsRepository.create(url);
 
@@ -101,12 +101,12 @@ describe('Get url by ID use case', () => {
   });
 
   it('should return correct url data with all properties', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       name: 'My Test URL',
       description: 'This is a test URL',
       isPublic: true,
@@ -125,18 +125,18 @@ describe('Get url by ID use case', () => {
       expect(retrievedUrl.name).toBe('My Test URL');
       expect(retrievedUrl.description).toBe('This is a test URL');
       expect(retrievedUrl.isPublic).toBe(true);
-      expect(retrievedUrl.authorId.toString()).toBe(author.id.toString());
+      expect(retrievedUrl.authorId.toString()).toBe(user.id.toString());
       expect(retrievedUrl.createdAt).toBeInstanceOf(Date);
       expect(retrievedUrl.likes).toBe(0);
     }
   });
 
   it('should retrieve url even after update', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, name: 'Original Name' });
+    const url = makeUrl({ authorId: user.id, name: 'Original Name' });
 
     await urlsRepository.create(url);
 
@@ -156,11 +156,11 @@ describe('Get url by ID use case', () => {
   });
 
   it('should return null when url has been deleted', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id });
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 

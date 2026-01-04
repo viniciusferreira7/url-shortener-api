@@ -1,19 +1,19 @@
 import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
 import { ValueObject } from '@/core/entities/value-object/value-object';
-import type { UrlsLikedList } from '../urls-liked-list';
 
 export interface UrlWithAuthorProps {
   urlId: UniqueEntityId;
   urlName: string;
-  UrlValue: string;
-  UrlDescription: string;
-  UrlIsPublic: boolean;
+  urlDestination: string;
+  urlDescription: string | null;
+  urlIsPublic: boolean;
+  urlCode: string;
   authorId: UniqueEntityId;
   authorName: string;
   score?: number;
+  urlLikes: number;
   createdAt: Date;
   updatedAt?: Date | null;
-  urlsLiked: UrlsLikedList;
 }
 
 export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
@@ -25,16 +25,20 @@ export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
     return this.props.urlName;
   }
 
-  get urlValue(): string {
-    return this.props.UrlValue;
+  get urlDestination(): string {
+    return this.props.urlDestination;
   }
 
-  get urlDescription(): string {
-    return this.props.UrlDescription;
+  get urlCode(): string {
+    return this.props.urlCode;
+  }
+
+  get urlDescription(): string | null {
+    return this.props.urlDescription;
   }
 
   get urlIsPublic(): boolean {
-    return this.props.UrlIsPublic;
+    return this.props.urlIsPublic;
   }
 
   get authorId(): UniqueEntityId {
@@ -49,16 +53,16 @@ export class UrlWithAuthor extends ValueObject<UrlWithAuthorProps> {
     return this.props.score;
   }
 
+  get urlLikes(): number {
+    return this.props.urlLikes;
+  }
+
   get createdAt(): Date {
     return this.props.createdAt;
   }
 
   get updatedAt(): Date | null | undefined {
     return this.props.updatedAt;
-  }
-
-  get urlsLiked() {
-    return this.props.urlsLiked;
   }
 
   set score(score: number | undefined) {

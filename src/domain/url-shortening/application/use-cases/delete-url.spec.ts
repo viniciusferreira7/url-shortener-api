@@ -1,34 +1,34 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { DeleteUrlUseCase } from './delete-url';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 
 let sut: DeleteUrlUseCase;
 
 describe('Delete url use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
-    sut = new DeleteUrlUseCase(authorsRepository, urlsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
+    sut = new DeleteUrlUseCase(usersRepository, urlsRepository);
   });
 
   it('should be able to delete url shortener', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id });
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
     const result = await sut.execute({
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       urlId: url.id.toString(),
     });
 
@@ -36,7 +36,7 @@ describe('Delete url use case', () => {
     expect(result.value).toEqual(
       expect.objectContaining({
         url: expect.objectContaining({
-          authorId: author.id,
+          authorId: user.id,
           name: url.name,
           destinationUrl: url.destinationUrl,
           description: url.description,
@@ -50,8 +50,8 @@ describe('Delete url use case', () => {
   });
 
   it('should not be able to delete url shortener without author', async () => {
-    const author = makeAuthor();
-    const url = makeUrl({ authorId: author.id });
+    const user = makeUser();
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
@@ -65,12 +65,12 @@ describe('Delete url use case', () => {
   });
 
   it('should not be able to delete url shortener that does not exist', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const result = await sut.execute({
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       urlId: 'non-existent-url',
     });
 
@@ -79,25 +79,25 @@ describe('Delete url use case', () => {
   });
 
   it('should be able to delete multiple urls from same author', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url1 = makeUrl({ authorId: author.id });
-    const url2 = makeUrl({ authorId: author.id });
+    const url1 = makeUrl({ authorId: user.id });
+    const url2 = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url1);
     await urlsRepository.create(url2);
 
     const result1 = await sut.execute({
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       urlId: url1.id.toString(),
     });
 
     expect(result1.isRight()).toBe(true);
 
     const result2 = await sut.execute({
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       urlId: url2.id.toString(),
     });
 

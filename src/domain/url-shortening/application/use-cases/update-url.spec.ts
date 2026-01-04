@@ -1,36 +1,36 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { NotAllowedError } from '@/core/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { UpdateUrlUseCase } from './update-url';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 
 let sut: UpdateUrlUseCase;
 
 describe('Update url use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
-    sut = new UpdateUrlUseCase(authorsRepository, urlsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
+    sut = new UpdateUrlUseCase(usersRepository, urlsRepository);
   });
 
   it('should be able to update url shortener name', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id });
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       name: 'Updated URL Name',
     });
 
@@ -44,11 +44,11 @@ describe('Update url use case', () => {
   });
 
   it('should be able to update url shortener value', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id });
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
@@ -56,7 +56,7 @@ describe('Update url use case', () => {
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       destinationUrl: newValue,
     });
 
@@ -69,11 +69,11 @@ describe('Update url use case', () => {
   });
 
   it('should be able to update url shortener description', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id });
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
@@ -81,7 +81,7 @@ describe('Update url use case', () => {
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       description: newDescription,
     });
 
@@ -93,17 +93,17 @@ describe('Update url use case', () => {
   });
 
   it('should be able to update url shortener isPublic', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, isPublic: false });
+    const url = makeUrl({ authorId: user.id, isPublic: false });
 
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       isPublic: true,
     });
 
@@ -115,17 +115,17 @@ describe('Update url use case', () => {
   });
 
   it('should be able to update url shortener with multiple fields', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, isPublic: false });
+    const url = makeUrl({ authorId: user.id, isPublic: false });
 
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       name: 'New Name',
       destinationUrl: 'https://example.com/new',
       description: 'New description',
@@ -143,12 +143,12 @@ describe('Update url use case', () => {
   });
 
   it('should be able to clear url shortener description', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       description: 'Some description',
     });
 
@@ -156,7 +156,7 @@ describe('Update url use case', () => {
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       description: null,
     });
 
@@ -168,8 +168,8 @@ describe('Update url use case', () => {
   });
 
   it('should not be able to update url shortener without author', async () => {
-    const author = makeAuthor();
-    const url = makeUrl({ authorId: author.id });
+    const user = makeUser();
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
@@ -184,13 +184,13 @@ describe('Update url use case', () => {
   });
 
   it('should not be able to update url shortener that does not exist', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const result = await sut.execute({
       urlId: 'non-existent-url',
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       name: 'Updated Name',
     });
 
@@ -199,19 +199,19 @@ describe('Update url use case', () => {
   });
 
   it('should not be able to update url shortener from another author', async () => {
-    const author1 = makeAuthor();
-    const author2 = makeAuthor();
+    const user1 = makeUser();
+    const user2 = makeUser();
 
-    await authorsRepository.create(author1);
-    await authorsRepository.create(author2);
+    await usersRepository.create(user1);
+    await usersRepository.create(user2);
 
-    const url = makeUrl({ authorId: author1.id });
+    const url = makeUrl({ authorId: user1.id });
 
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author2.id.toString(),
+      authorId: user2.id.toString(),
       name: 'Updated Name',
     });
 
@@ -220,11 +220,11 @@ describe('Update url use case', () => {
   });
 
   it('should update url shortener timestamp when modified', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id });
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
@@ -234,7 +234,7 @@ describe('Update url use case', () => {
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       name: 'Updated Name',
     });
 
@@ -251,17 +251,17 @@ describe('Update url use case', () => {
   });
 
   it('should persist updates to repository', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id });
+    const url = makeUrl({ authorId: user.id });
 
     await urlsRepository.create(url);
 
     const result = await sut.execute({
       urlId: url.id.toString(),
-      authorId: author.id.toString(),
+      authorId: user.id.toString(),
       name: 'Updated Name',
       destinationUrl: 'https://updated.example.com',
     });

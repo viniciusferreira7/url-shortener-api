@@ -30,6 +30,7 @@ export class FetchManyPublicUrlsUseCase {
       order: params.order,
       createdAtGte: params.createdAtGte,
       updatedAtGte: params.updatedAtGte,
+      isPublic: true,
     });
 
     return right(result);

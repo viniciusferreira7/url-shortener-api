@@ -1,20 +1,19 @@
 import { Pagination } from '@/core/entities/value-object/pagination';
 import { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
-import type { AuthorsRepository } from '@/domain/url-shortening/application/repositories/authors-repository';
 import type {
   FindManyByAuthorIdParams,
   FindManyParams,
   FindManyWhereIsPublicParams,
   UrlsRepository,
 } from '@/domain/url-shortening/application/repositories/urls-repository';
+import type { UsersRepository } from '@/domain/url-shortening/application/repositories/users-repository';
 import type { Url } from '@/domain/url-shortening/enterprise/entities/url';
-import { UrlsLikedList } from '@/domain/url-shortening/enterprise/entities/urls-liked-list';
 import { UrlWithAuthor } from '@/domain/url-shortening/enterprise/entities/value-object/url-with-author';
 
 export class InMemoryUrlsRepository implements UrlsRepository {
   public items: Url[] = [];
 
-  constructor(private readonly authorsRepository: AuthorsRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(url: Url): Promise<Url> {
     this.items.push(url);
@@ -111,7 +110,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
             aValue = a.description || '';
             bValue = b.description || '';
             break;
-          case 'value':
+          case 'destinationUrl':
             aValue = a.destinationUrl;
             bValue = b.destinationUrl;
             break;
@@ -216,21 +215,22 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 
     const result = await Promise.all(
       items.slice(startIndex, endIndex).map(async (url) => {
-        const author = await this.authorsRepository.findById(
+        const user = await this.usersRepository.findById(
           url.authorId.toString()
         );
 
         return UrlWithAuthor.create({
           urlId: url.id,
           urlName: url.name,
-          UrlValue: url.destinationUrl,
-          UrlDescription: url.description || '',
-          UrlIsPublic: url.isPublic,
+          urlDestination: url.destinationUrl,
+          urlDescription: url.description || '',
+          urlIsPublic: url.isPublic,
+          urlCode: url.code,
+          urlLikes: url.likes,
           authorId: url.authorId,
-          authorName: author?.name || '',
+          authorName: user?.name || '',
           createdAt: url.createdAt,
           updatedAt: url.updatedAt,
-          urlsLiked: author?.urlsLikedList || new UrlsLikedList(),
         });
       })
     );
@@ -343,21 +343,22 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 
     const result = await Promise.all(
       urls.map(async (url) => {
-        const author = await this.authorsRepository.findById(
+        const user = await this.usersRepository.findById(
           url.authorId.toString()
         );
 
         return UrlWithAuthor.create({
           urlId: url.id,
           urlName: url.name,
-          UrlValue: url.destinationUrl,
-          UrlDescription: url.description || '',
-          UrlIsPublic: url.isPublic,
+          urlDestination: url.destinationUrl,
+          urlDescription: url.description || '',
+          urlIsPublic: url.isPublic,
+          urlLikes: url.likes,
+          urlCode: url.code,
           authorId: url.authorId,
-          authorName: author?.name || '',
+          authorName: user?.name || '',
           createdAt: url.createdAt,
           updatedAt: url.updatedAt,
-          urlsLiked: author?.urlsLikedList || new UrlsLikedList(),
         });
       })
     );
@@ -373,21 +374,22 @@ export class InMemoryUrlsRepository implements UrlsRepository {
 
     const result = await Promise.all(
       publicUrls.map(async (url) => {
-        const author = await this.authorsRepository.findById(
+        const user = await this.usersRepository.findById(
           url.authorId.toString()
         );
 
         return UrlWithAuthor.create({
           urlId: url.id,
           urlName: url.name,
-          UrlValue: url.destinationUrl,
-          UrlDescription: url.description || '',
-          UrlIsPublic: url.isPublic,
+          urlDestination: url.destinationUrl,
+          urlDescription: url.description || '',
+          urlIsPublic: url.isPublic,
+          urlLikes: url.likes,
+          urlCode: url.code,
           authorId: url.authorId,
-          authorName: author?.name || '',
+          authorName: user?.name || '',
           createdAt: url.createdAt,
           updatedAt: url.updatedAt,
-          urlsLiked: author?.urlsLikedList || new UrlsLikedList(),
         });
       })
     );

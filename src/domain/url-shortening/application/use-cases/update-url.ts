@@ -2,8 +2,8 @@ import { type Either, left, right } from '@/core/either';
 import { NotAllowedError } from '@/core/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import type { Url } from '../../enterprise/entities/url';
-import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
+import type { UsersRepository } from '../repositories/users-repository';
 
 interface UpdateUrlUseCaseRequest {
   urlId: string;
@@ -23,7 +23,7 @@ type UpdateUrlUseCaseResponse = Either<
 
 export class UpdateUrlUseCase {
   constructor(
-    private readonly authorsRepository: AuthorsRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly urlsRepository: UrlsRepository
   ) {}
 
@@ -32,9 +32,9 @@ export class UpdateUrlUseCase {
     authorId,
     ...updateData
   }: UpdateUrlUseCaseRequest): Promise<UpdateUrlUseCaseResponse> {
-    const author = await this.authorsRepository.findById(authorId);
+    const user = await this.usersRepository.findById(authorId);
 
-    if (!author) {
+    if (!user) {
       return left(new ResourceNotFoundError());
     }
 
@@ -44,7 +44,7 @@ export class UpdateUrlUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    if (!url.authorId.equals(author.id)) {
+    if (!url.authorId.equals(user.id)) {
       return left(new NotAllowedError());
     }
 

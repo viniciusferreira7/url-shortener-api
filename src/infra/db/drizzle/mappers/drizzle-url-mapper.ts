@@ -1,7 +1,7 @@
 import type { InferSelectModel } from 'drizzle-orm';
 import { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
 import { Url } from '@/domain/url-shortening/enterprise/entities/url';
-import type { urls } from '../schema/url';
+import type { urls } from '../schema/urls';
 
 type UrlRaw = InferSelectModel<typeof urls>;
 

@@ -3,7 +3,7 @@ import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-
 import type { Optional } from '@/core/types/optional';
 import type { UrlsLikedList } from './urls-liked-list';
 
-interface AuthorProps {
+interface UserProps {
   name: string;
   email: string;
   password: string;
@@ -12,7 +12,7 @@ interface AuthorProps {
   urlsLiked: UrlsLikedList;
 }
 
-export class Author extends AggregateRoot<AuthorProps> {
+export class User extends AggregateRoot<UserProps> {
   get name() {
     return this.props.name;
   }
@@ -38,10 +38,10 @@ export class Author extends AggregateRoot<AuthorProps> {
   }
 
   public static create(
-    props: Optional<AuthorProps, 'createdAt'>,
+    props: Optional<UserProps, 'createdAt'>,
     id?: UniqueEntityId
   ) {
-    return new Author(
+    return new User(
       {
         ...props,
         createdAt: props?.createdAt ?? new Date(),

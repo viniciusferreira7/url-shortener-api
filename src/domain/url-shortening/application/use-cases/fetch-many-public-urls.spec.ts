@@ -1,32 +1,32 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { FetchManyPublicUrlsUseCase } from './fetch-many-public-urls';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 
 let sut: FetchManyPublicUrlsUseCase;
 
 describe('Fetch many public urls use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
     sut = new FetchManyPublicUrlsUseCase(urlsRepository);
   });
 
   describe('Fetch many public URLs', () => {
     it('should be able to fetch paginated public urls shortener', async () => {
-      const author = makeAuthor();
+      const user = makeUser();
 
-      await authorsRepository.create(author);
+      await usersRepository.create(user);
 
       await Promise.all(
         Array.from({ length: 50 }, () => {
           return urlsRepository.create(
-            makeUrl({ authorId: author.id, isPublic: true })
+            makeUrl({ authorId: user.id, isPublic: true })
           );
         })
       );
@@ -50,35 +50,35 @@ describe('Fetch many public urls use case', () => {
     });
 
     it('should be able to fetch public urls with search term', async () => {
-      const author = makeAuthor();
+      const user = makeUser();
 
-      await authorsRepository.create(author);
+      await usersRepository.create(user);
 
       await Promise.all([
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'My Important Link',
             isPublic: true,
           })
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Another Link',
             isPublic: true,
           })
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Important Document',
             isPublic: true,
           })
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Private Link',
             isPublic: false,
           })
@@ -107,15 +107,15 @@ describe('Fetch many public urls use case', () => {
     });
 
     it('should be able to fetch public urls ordered by created_at descending', async () => {
-      const author = makeAuthor();
+      const user = makeUser();
       const now = new Date();
 
-      await authorsRepository.create(author);
+      await usersRepository.create(user);
 
       await Promise.all([
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'First URL',
             isPublic: true,
             createdAt: new Date(now.getTime() - 3000),
@@ -123,7 +123,7 @@ describe('Fetch many public urls use case', () => {
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Second URL',
             isPublic: true,
             createdAt: new Date(now.getTime() - 2000),
@@ -131,7 +131,7 @@ describe('Fetch many public urls use case', () => {
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Third URL',
             isPublic: true,
             createdAt: new Date(now.getTime() - 1000),
@@ -158,15 +158,15 @@ describe('Fetch many public urls use case', () => {
     });
 
     it('should be able to fetch public urls ordered by created_at ascending', async () => {
-      const author = makeAuthor();
+      const user = makeUser();
       const now = new Date();
 
-      await authorsRepository.create(author);
+      await usersRepository.create(user);
 
       await Promise.all([
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'First URL',
             isPublic: true,
             createdAt: new Date(now.getTime() - 3000),
@@ -174,7 +174,7 @@ describe('Fetch many public urls use case', () => {
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Second URL',
             isPublic: true,
             createdAt: new Date(now.getTime() - 2000),
@@ -182,7 +182,7 @@ describe('Fetch many public urls use case', () => {
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Third URL',
             isPublic: true,
             createdAt: new Date(now.getTime() - 1000),
@@ -209,15 +209,15 @@ describe('Fetch many public urls use case', () => {
     });
 
     it('should be able to fetch public urls filtered by createdAtGte', async () => {
-      const author = makeAuthor();
+      const user = makeUser();
       const baseDate = new Date('2024-01-01');
 
-      await authorsRepository.create(author);
+      await usersRepository.create(user);
 
       await Promise.all([
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Old URL',
             isPublic: true,
             createdAt: new Date('2023-12-31'),
@@ -225,7 +225,7 @@ describe('Fetch many public urls use case', () => {
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'New URL 1',
             isPublic: true,
             createdAt: new Date('2024-01-02'),
@@ -233,7 +233,7 @@ describe('Fetch many public urls use case', () => {
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'New URL 2',
             isPublic: true,
             createdAt: new Date('2024-01-03'),
@@ -260,15 +260,15 @@ describe('Fetch many public urls use case', () => {
     });
 
     it('should be able to fetch public urls filtered by updatedAtGte', async () => {
-      const author = makeAuthor();
+      const user = makeUser();
       const baseDate = new Date('2024-01-01');
 
-      await authorsRepository.create(author);
+      await usersRepository.create(user);
 
       await Promise.all([
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'Old URL',
             isPublic: true,
             updatedAt: new Date('2023-12-31'),
@@ -276,7 +276,7 @@ describe('Fetch many public urls use case', () => {
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'New URL 1',
             isPublic: true,
             updatedAt: new Date('2024-01-02'),
@@ -284,7 +284,7 @@ describe('Fetch many public urls use case', () => {
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             name: 'New URL 2',
             isPublic: true,
             updatedAt: new Date('2024-01-03'),
@@ -313,20 +313,20 @@ describe('Fetch many public urls use case', () => {
     });
 
     it('should return empty result when no public urls exist', async () => {
-      const author = makeAuthor();
+      const user = makeUser();
 
-      await authorsRepository.create(author);
+      await usersRepository.create(user);
 
       await Promise.all([
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             isPublic: false,
           })
         ),
         urlsRepository.create(
           makeUrl({
-            authorId: author.id,
+            authorId: user.id,
             isPublic: false,
           })
         ),
@@ -348,14 +348,14 @@ describe('Fetch many public urls use case', () => {
     });
 
     it('should handle pagination correctly for public urls', async () => {
-      const author = makeAuthor();
+      const user = makeUser();
 
-      await authorsRepository.create(author);
+      await usersRepository.create(user);
 
       await Promise.all(
         Array.from({ length: 25 }, () => {
           return urlsRepository.create(
-            makeUrl({ authorId: author.id, isPublic: true })
+            makeUrl({ authorId: user.id, isPublic: true })
           );
         })
       );

@@ -2,8 +2,8 @@ import { type Either, left, right } from '@/core/either';
 import { NotAllowedError } from '@/core/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { UrlAlreadyLikedError } from '../../errors/url-already-liked-error';
-import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
+import type { UsersRepository } from '../repositories/users-repository';
 
 interface LikeUrlUseCaseRequest {
   urlId: string;
@@ -19,7 +19,7 @@ type LikeUrlUseCaseResponse = Either<
 
 export class LikeUrlUseCase {
   constructor(
-    private readonly authorsRepository: AuthorsRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly urlsRepository: UrlsRepository
   ) {}
 
@@ -27,8 +27,8 @@ export class LikeUrlUseCase {
     urlId,
     authorId,
   }: LikeUrlUseCaseRequest): Promise<LikeUrlUseCaseResponse> {
-    const author = await this.authorsRepository.findById(authorId);
-    if (!author) {
+    const user = await this.usersRepository.findById(authorId);
+    if (!user) {
       return left(new ResourceNotFoundError());
     }
 
@@ -41,19 +41,19 @@ export class LikeUrlUseCase {
       return left(new NotAllowedError());
     }
 
-    const alreadyLiked = author.urlsLikedList.currentItems.some((likedUrl) =>
+    const alreadyLiked = user.urlsLikedList.currentItems.some((likedUrl) =>
       likedUrl.equals(url)
     );
     if (alreadyLiked) {
       return left(new UrlAlreadyLikedError());
     }
 
-    author.urlsLikedList.add(url);
+    user.urlsLikedList.add(url);
 
     const newLikesCount = url.likes + 1;
     url.likes = newLikesCount;
 
-    await this.authorsRepository.save(author);
+    await this.usersRepository.save(user);
     await this.urlsRepository.save(url);
 
     return right({

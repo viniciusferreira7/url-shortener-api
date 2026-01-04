@@ -1,7 +1,7 @@
 import { type Either, left, right } from '@/core/either';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import type { AuthorsRepository } from '../repositories/authors-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
+import type { UsersRepository } from '../repositories/users-repository';
 
 interface UnlikeUrlUseCaseRequest {
   urlId: string;
@@ -17,7 +17,7 @@ type UnlikeUrlUseCaseResponse = Either<
 
 export class UnlikeUrlUseCase {
   constructor(
-    private readonly authorsRepository: AuthorsRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly urlsRepository: UrlsRepository
   ) {}
 
@@ -25,8 +25,8 @@ export class UnlikeUrlUseCase {
     urlId,
     authorId,
   }: UnlikeUrlUseCaseRequest): Promise<UnlikeUrlUseCaseResponse> {
-    const author = await this.authorsRepository.findById(authorId);
-    if (!author) {
+    const user = await this.usersRepository.findById(authorId);
+    if (!user) {
       return left(new ResourceNotFoundError());
     }
 
@@ -35,12 +35,12 @@ export class UnlikeUrlUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    author.urlsLikedList.remove(url);
+    user.urlsLikedList.remove(url);
 
     const newLikesCount = Math.max(0, url.likes - 1);
     url.likes = newLikesCount;
 
-    await this.authorsRepository.save(author);
+    await this.usersRepository.save(user);
     await this.urlsRepository.save(url);
 
     return right({

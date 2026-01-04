@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
-import { makeAuthor } from '@/test/factories/make-author';
 import { makeUrl } from '@/test/factories/make-url';
-import { InMemoryAuthorsRepository } from '@/test/repositories/in-memory-authors-repository';
+import { makeUser } from '@/test/factories/make-user';
 import { InMemoryCacheRepository } from '@/test/repositories/in-memory-cache-repository';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
+import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { GetRankingUseCase } from './get-ranking';
 
-let authorsRepository: InMemoryAuthorsRepository;
+let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 let cacheRepository: InMemoryCacheRepository;
 
@@ -14,20 +14,20 @@ let sut: GetRankingUseCase;
 
 describe('Get ranking use case', () => {
   beforeEach(() => {
-    authorsRepository = new InMemoryAuthorsRepository();
-    urlsRepository = new InMemoryUrlsRepository(authorsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    urlsRepository = new InMemoryUrlsRepository(usersRepository);
     cacheRepository = new InMemoryCacheRepository();
     sut = new GetRankingUseCase(urlsRepository, cacheRepository);
   });
 
   it('should be able to get url ranking', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url1 = makeUrl({ authorId: author.id, code: 'url1', isPublic: true });
-    const url2 = makeUrl({ authorId: author.id, code: 'url2', isPublic: true });
-    const url3 = makeUrl({ authorId: author.id, code: 'url3', isPublic: true });
+    const url1 = makeUrl({ authorId: user.id, code: 'url1', isPublic: true });
+    const url2 = makeUrl({ authorId: user.id, code: 'url2', isPublic: true });
+    const url3 = makeUrl({ authorId: user.id, code: 'url3', isPublic: true });
 
     await urlsRepository.create(url1);
     await urlsRepository.create(url2);
@@ -63,14 +63,14 @@ describe('Get ranking use case', () => {
   });
 
   it('should limit ranking to top 10 URLs', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const urls = [];
     for (let i = 1; i <= 15; i++) {
       const url = makeUrl({
-        authorId: author.id,
+        authorId: user.id,
         code: `url${i}`,
         isPublic: true,
       });
@@ -98,18 +98,18 @@ describe('Get ranking use case', () => {
   });
 
   it('should return ranking sorted by score in descending order', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url1 = makeUrl({ authorId: author.id, code: 'low', isPublic: true });
+    const url1 = makeUrl({ authorId: user.id, code: 'low', isPublic: true });
     const url2 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'high',
       isPublic: true,
     });
     const url3 = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'medium',
       isPublic: true,
     });
@@ -134,12 +134,12 @@ describe('Get ranking use case', () => {
   });
 
   it('should include URL details in ranking', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
     const url = makeUrl({
-      authorId: author.id,
+      authorId: user.id,
       code: 'test123',
       name: 'Test URL',
       description: 'A test URL for ranking',
@@ -161,17 +161,17 @@ describe('Get ranking use case', () => {
         'A test URL for ranking'
       );
       expect(result.value.ranking[0].urlIsPublic).toBe(true);
-      expect(result.value.ranking[0].authorName).toBe(author.name);
+      expect(result.value.ranking[0].authorName).toBe(user.name);
     }
   });
 
   it('should handle URLs with same score', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url1 = makeUrl({ authorId: author.id, code: 'url1', isPublic: true });
-    const url2 = makeUrl({ authorId: author.id, code: 'url2', isPublic: true });
+    const url1 = makeUrl({ authorId: user.id, code: 'url1', isPublic: true });
+    const url2 = makeUrl({ authorId: user.id, code: 'url2', isPublic: true });
 
     await urlsRepository.create(url1);
     await urlsRepository.create(url2);
@@ -191,11 +191,11 @@ describe('Get ranking use case', () => {
   });
 
   it('should increment URL score multiple times', async () => {
-    const author = makeAuthor();
+    const user = makeUser();
 
-    await authorsRepository.create(author);
+    await usersRepository.create(user);
 
-    const url = makeUrl({ authorId: author.id, code: 'url1', isPublic: true });
+    const url = makeUrl({ authorId: user.id, code: 'url1', isPublic: true });
 
     await urlsRepository.create(url);
 
@@ -214,19 +214,19 @@ describe('Get ranking use case', () => {
   });
 
   it('should handle ranking with multiple authors', async () => {
-    const author1 = makeAuthor({ name: 'Author One' });
-    const author2 = makeAuthor({ name: 'Author Two' });
+    const user1 = makeUser({ name: 'Author One' });
+    const user2 = makeUser({ name: 'Author Two' });
 
-    await authorsRepository.create(author1);
-    await authorsRepository.create(author2);
+    await usersRepository.create(user1);
+    await usersRepository.create(user2);
 
     const url1 = makeUrl({
-      authorId: author1.id,
+      authorId: user1.id,
       code: 'url1',
       isPublic: true,
     });
     const url2 = makeUrl({
-      authorId: author2.id,
+      authorId: user2.id,
       code: 'url2',
       isPublic: true,
     });

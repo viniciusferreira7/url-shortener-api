@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 import type { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
-import { Author } from '@/domain/url-shortening/enterprise/entities/author';
 import { UrlsLikedList } from '@/domain/url-shortening/enterprise/entities/urls-liked-list';
+import { User } from '@/domain/url-shortening/enterprise/entities/user';
 
-export function makeAuthor(
+export function makeUser(
   override: Partial<{
     name: string;
     email: string;
@@ -16,7 +16,7 @@ export function makeAuthor(
 ) {
   const name = override?.name ?? faker.person.firstName();
 
-  const author = Author.create(
+  const user = User.create(
     {
       name,
       email:
@@ -33,5 +33,5 @@ export function makeAuthor(
     id
   );
 
-  return author;
+  return user;
 }
