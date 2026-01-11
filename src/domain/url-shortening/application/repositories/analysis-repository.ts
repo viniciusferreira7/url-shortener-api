@@ -8,5 +8,4 @@ export interface AnalysisRepository {
   incrementBy(key: string, id: string, amount: number): Promise<void>;
   getUrlRanking(limit: number): Promise<UrlRanking>;
   delete(key: string): Promise<void>;
-  clear(): Promise<void>;
 }

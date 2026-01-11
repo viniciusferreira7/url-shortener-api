@@ -113,6 +113,7 @@ jobs:
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
       REDIS_DB: ${{ secrets.REDIS_DB }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      REDIS_CODE_ID: ${{ secrets.REDIS_CODE_ID }}
       CLIENT_URL: ${{ secrets.CLIENT_URL }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
@@ -193,6 +194,7 @@ jobs:
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
       REDIS_DB: ${{ secrets.REDIS_DB }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      REDIS_CODE_ID: ${{ secrets.REDIS_CODE_ID }}
       CLIENT_URL: ${{ secrets.CLIENT_URL }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
