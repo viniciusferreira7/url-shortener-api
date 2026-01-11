@@ -68,17 +68,26 @@ src/
 │   ├── http/
 │   │   └── controllers/   # HTTP controllers
 │   ├── db/
-│   │   ├── schema/        # Database schema definitions
-│   │   ├── client.ts      # Database connection
-│   │   └── migrations/    # Database migrations
+│   │   ├── drizzle/       # PostgreSQL implementation
+│   │   │   ├── repositories/  # Drizzle repositories
+│   │   │   ├── mappers/       # Domain <-> Drizzle mappers
+│   │   │   ├── schema/        # Database schema
+│   │   │   └── client.ts      # Database connection
+│   │   └── redis/         # Redis implementation
+│   │       ├── repositories/  # Redis repositories
+│   │       └── client.ts      # Redis connection
+│   ├── factories/         # Dependency injection factories
+│   ├── url-code/          # URL code generator implementation
 │   ├── lib/
 │   │   └── auth.ts        # Better Auth configuration
 │   └── env.ts             # Environment variables schema
 ├── test/
-│   └── repositories/      # In-memory repository implementations
-│       ├── in-memory-urls-repository.ts
-│       ├── in-memory-users-repository.ts
-│       └── in-memory-cache-repository.ts
+│   ├── repositories/      # In-memory repository implementations
+│   │   ├── in-memory-urls-repository.ts
+│   │   ├── in-memory-users-repository.ts
+│   │   └── in-memory-analysis-repository.ts
+│   ├── factories/         # Test data factories
+│   └── url-code/          # URL code generator for tests
 └── index.ts             # Application entry point
 ```
 
@@ -117,8 +126,11 @@ DATABASE_USERNAME=your_database_username
 DATABASE_PASSWORD=your_database_password
 DATABASE_NAME=your_database_name
 
-REDIS_URL=redis://localhost:6379
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
 REDIS_PASSWORD=your_redis_password
+REDIS_CODE_ID=1000
 
 CLIENT_URL=http://localhost:3000
 
@@ -339,6 +351,82 @@ The application implements domain-driven design with comprehensive use cases for
 - ✅ Dual ranking system (by views and by likes)
 - ✅ Comprehensive test coverage (97+ tests)
 
+## 🏭 Dependency Injection
+
+The application uses the **Factory Pattern** for dependency injection, located in `src/infra/factories/`. Each use case has a corresponding factory function that wires up all required dependencies.
+
+### Factory Functions
+
+All use case factories are available through a barrel export:
+
+```typescript
+import {
+  makeCreateUrlUseCase,
+  makeGetUrlByCodeUseCase,
+  makeLikeUrlUseCase,
+  // ... and 9 more factories
+} from '@/infra/factories';
+```
+
+### Available Factories
+
+**URL Management:**
+- `makeCreateUrlUseCase` - Create shortened URLs
+- `makeGetUrlByCodeUseCase` - Retrieve URLs by code
+- `makeGetUrlByIdUseCase` - Retrieve URLs by ID
+- `makeUpdateUrlUseCase` - Update URL properties
+- `makeDeleteUrlUseCase` - Delete URLs
+
+**User Interactions:**
+- `makeLikeUrlUseCase` - Like URLs
+- `makeUnlikeUrlUseCase` - Unlike URLs
+
+**Data Fetching:**
+- `makeFetchUserUrlsUseCase` - Fetch user's URLs
+- `makeFetchUserLikedUrlsUseCase` - Fetch liked URLs
+- `makeFetchManyPublicUrlsUseCase` - Browse public URLs
+
+**Analytics:**
+- `makeGetRankingUseCase` - Get most accessed URLs
+- `makeGetRankingByMostLikedUseCase` - Get most liked URLs
+
+### Usage Example
+
+```typescript
+// In your HTTP controller
+import { makeCreateUrlUseCase } from '@/infra/factories';
+
+const createUrlUseCase = makeCreateUrlUseCase();
+
+const result = await createUrlUseCase.execute({
+  authorId: user.id,
+  name: 'My Link',
+  destinationUrl: 'https://example.com',
+  isPublic: true
+});
+
+if (result.isRight()) {
+  const { url } = result.value;
+  // Handle success
+} else {
+  // Handle error
+}
+```
+
+### Injected Dependencies
+
+Each factory automatically wires up:
+- **DrizzleUrlsRepository** - PostgreSQL URL storage
+- **DrizzleUsersRepository** - PostgreSQL user management
+- **RedisAnalysisRepository** - Redis analytics and caching
+- **Base62UrlCodeGenerator** - URL code generation (base62 encoding)
+
+This approach ensures:
+- ✅ Clean separation of concerns
+- ✅ Easy testing with dependency substitution
+- ✅ Centralized dependency configuration
+- ✅ Type safety throughout the application
+
 ## 🧪 Testing
 
 ### Test Infrastructure
@@ -401,8 +489,11 @@ Tests are located in:
 | \`DATABASE_USERNAME\` | Database username | Yes | - |
 | \`DATABASE_PASSWORD\` | Database password | Yes | - |
 | \`DATABASE_NAME\` | Database name | Yes | - |
-| \`REDIS_URL\` | Redis connection string | Yes | - |
+| \`REDIS_HOST\` | Redis server hostname | Yes | localhost |
+| \`REDIS_PORT\` | Redis server port | Yes | 6379 |
+| \`REDIS_DB\` | Redis database number | Yes | 0 |
 | \`REDIS_PASSWORD\` | Redis password | Yes | - |
+| \`REDIS_CODE_ID\` | Starting ID for URL code generation | Yes | - |
 | \`CLIENT_URL\` | Frontend URL for CORS | Yes | - |
 | \`BETTER_AUTH_SECRET\` | Secret key for auth tokens | Yes | - |
 | \`BETTER_AUTH_URL\` | Base URL of the API | Yes | - |
