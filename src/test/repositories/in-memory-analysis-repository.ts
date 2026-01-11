@@ -1,13 +1,13 @@
-import type { CacheRepository } from '@/domain/url-shortening/application/repositories/cache-repository';
+import type { AnalysisRepository } from '@/domain/url-shortening/application/repositories/analysis-repository';
 
-interface CacheEntry<T> {
+interface AnalysisEntry<T> {
   value: T;
   expiresAt?: number;
 }
 
-export class InMemoryCacheRepository implements CacheRepository {
+export class InMemoryAnalysisRepository implements AnalysisRepository {
   private currentId: number = 0;
-  private cache: Map<string, CacheEntry<unknown>> = new Map();
+  private analysis: Map<string, AnalysisEntry<unknown>> = new Map();
 
   async getCurrentId(): Promise<number> {
     return this.currentId;
@@ -19,14 +19,14 @@ export class InMemoryCacheRepository implements CacheRepository {
   }
 
   async get<T>(key: string): Promise<T | null> {
-    const entry = this.cache.get(key);
+    const entry = this.analysis.get(key);
 
     if (!entry) {
       return null;
     }
 
     if (entry.expiresAt && entry.expiresAt < Date.now()) {
-      this.cache.delete(key);
+      this.analysis.delete(key);
       return null;
     }
 
@@ -36,30 +36,30 @@ export class InMemoryCacheRepository implements CacheRepository {
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
     const expiresAt = ttl ? Date.now() + ttl : undefined;
 
-    this.cache.set(key, {
+    this.analysis.set(key, {
       value,
       expiresAt,
     });
   }
 
   async incrementBy(key: string, id: string, amount: number): Promise<void> {
-    const entry = this.cache.get(key);
+    const entry = this.analysis.get(key);
     const currentValue = entry
       ? ((entry.value as Record<string, number>)[id] ?? 0)
       : 0;
 
-    const cacheData = (entry?.value as Record<string, number>) || {};
-    cacheData[id] = currentValue + amount;
+    const analysisData = (entry?.value as Record<string, number>) || {};
+    analysisData[id] = currentValue + amount;
 
     await this.set(
       key,
-      cacheData as unknown,
+      analysisData as unknown,
       entry?.expiresAt ? entry.expiresAt - Date.now() : undefined
     );
   }
 
   async getUrlRanking(limit: number): Promise<Array<string | number>> {
-    const entry = this.cache.get('url-ranking');
+    const entry = this.analysis.get('url-ranking');
 
     if (!entry) {
       return [];
@@ -80,10 +80,10 @@ export class InMemoryCacheRepository implements CacheRepository {
   }
 
   async delete(key: string): Promise<void> {
-    this.cache.delete(key);
+    this.analysis.delete(key);
   }
 
   async clear(): Promise<void> {
-    this.cache.clear();
+    this.analysis.clear();
   }
 }

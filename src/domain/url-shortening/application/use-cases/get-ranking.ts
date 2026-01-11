@@ -1,7 +1,7 @@
 import { type Either, right } from '@/core/either';
 import { UniqueEntityId } from '@/core/entities/value-object/unique-entity-id';
 import type { UrlWithAuthor } from '../../enterprise/entities/value-object/url-with-author';
-import type { CacheRepository } from '../repositories/cache-repository';
+import type { AnalysisRepository } from '../repositories/analysis-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
 
 export type GetRankingUseCaseResponse = Either<
@@ -14,11 +14,11 @@ export type GetRankingUseCaseResponse = Either<
 export class GetRankingUseCase {
   constructor(
     private readonly urlsRepository: UrlsRepository,
-    private readonly cacheRepository: CacheRepository
+    private readonly analysisRepository: AnalysisRepository
   ) {}
 
   public async execute(): Promise<GetRankingUseCaseResponse> {
-    const scores = await this.cacheRepository.getUrlRanking(10);
+    const scores = await this.analysisRepository.getUrlRanking(10);
 
     const urlIds = scores
       .filter((value, index) => {

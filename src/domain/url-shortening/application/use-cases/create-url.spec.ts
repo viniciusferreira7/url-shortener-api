@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'bun:test';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { makeUrl } from '@/test/factories/make-url';
 import { makeUser } from '@/test/factories/make-user';
-import { InMemoryCacheRepository } from '@/test/repositories/in-memory-cache-repository';
+import { InMemoryAnalysisRepository } from '@/test/repositories/in-memory-analysis-repository';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
 import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { Base62UrlCodeGenerator } from '@/test/url-code/url-code-generator';
@@ -10,7 +10,7 @@ import { CreateUrlUseCase } from './create-url';
 
 let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
-let cacheRepository: InMemoryCacheRepository;
+let analysisRepository: InMemoryAnalysisRepository;
 let urlCodeGenerator: Base62UrlCodeGenerator;
 
 let sut: CreateUrlUseCase;
@@ -19,12 +19,12 @@ describe('Create url use case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository();
     urlsRepository = new InMemoryUrlsRepository(usersRepository);
-    cacheRepository = new InMemoryCacheRepository();
+    analysisRepository = new InMemoryAnalysisRepository();
     urlCodeGenerator = new Base62UrlCodeGenerator();
     sut = new CreateUrlUseCase(
       usersRepository,
       urlsRepository,
-      cacheRepository,
+      analysisRepository,
       urlCodeGenerator
     );
   });
@@ -58,7 +58,7 @@ describe('Create url use case', () => {
       })
     );
 
-    const codeId = await cacheRepository.getCurrentId();
+    const codeId = await analysisRepository.getCurrentId();
 
     expect(codeId).toEqual(1);
   });

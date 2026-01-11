@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, gte, ilike, inArray, or, sql } from 'drizzle-orm';
 import { Pagination } from '@/core/entities/value-object/pagination';
-import type { CacheRepository } from '@/domain/url-shortening/application/repositories/cache-repository';
+import type { AnalysisRepository } from '@/domain/url-shortening/application/repositories/analysis-repository';
 import type {
   FindManyByAuthorIdParams,
   FindManyParams,
@@ -17,7 +17,7 @@ import { schema } from '../schema';
 export class DrizzleUrlsRepository implements UrlsRepository {
   constructor(
     private readonly db: typeof drizzleDb,
-    private readonly cacheRepository: CacheRepository
+    private readonly analysisRepository: AnalysisRepository
   ) {}
   async create(url: Url): Promise<Url> {
     const [urlRaw] = await this.db
@@ -200,7 +200,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
         .orderBy(...order)
         .limit(perPage)
         .offset((page - 1) * perPage),
-      this.cacheRepository.getUrlRanking(10),
+      this.analysisRepository.getUrlRanking(10),
     ]);
 
     return Pagination.create({
@@ -308,7 +308,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
         .from(schema.urls)
         .innerJoin(schema.users, eq(schema.urls.authorId, schema.users.id))
         .where(inArray(schema.urls.id, ids)),
-      this.cacheRepository.getUrlRanking(10),
+      this.analysisRepository.getUrlRanking(10),
     ]);
 
     return urlsWithAuthors.map((urlWithAuthor) => {
@@ -336,7 +336,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
         .innerJoin(schema.users, eq(schema.urls.authorId, schema.users.id))
         .orderBy(desc(schema.urls.likes))
         .limit(limit),
-      this.cacheRepository.getUrlRanking(10),
+      this.analysisRepository.getUrlRanking(10),
     ]);
 
     return urlsWithAuthors.map((urlWithAuthor) => {
@@ -368,7 +368,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
         .innerJoin(schema.urls, eq(schema.userUrlLikes.urlId, schema.urls.id))
         .innerJoin(schema.users, eq(schema.urls.authorId, schema.users.id))
         .where(eq(schema.userUrlLikes.userId, userId)),
-      this.cacheRepository.getUrlRanking(10),
+      this.analysisRepository.getUrlRanking(10),
     ]);
 
     return urlsWithAuthors.map((urlWithAuthor) => {

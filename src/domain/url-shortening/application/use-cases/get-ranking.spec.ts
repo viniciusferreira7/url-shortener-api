@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { makeUrl } from '@/test/factories/make-url';
 import { makeUser } from '@/test/factories/make-user';
-import { InMemoryCacheRepository } from '@/test/repositories/in-memory-cache-repository';
+import { InMemoryAnalysisRepository } from '@/test/repositories/in-memory-analysis-repository';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
 import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { GetRankingUseCase } from './get-ranking';
 
 let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
-let cacheRepository: InMemoryCacheRepository;
+let analysisRepository: InMemoryAnalysisRepository;
 
 let sut: GetRankingUseCase;
 
@@ -16,8 +16,8 @@ describe('Get ranking use case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository();
     urlsRepository = new InMemoryUrlsRepository(usersRepository);
-    cacheRepository = new InMemoryCacheRepository();
-    sut = new GetRankingUseCase(urlsRepository, cacheRepository);
+    analysisRepository = new InMemoryAnalysisRepository();
+    sut = new GetRankingUseCase(urlsRepository, analysisRepository);
   });
 
   it('should be able to get url ranking', async () => {
@@ -33,9 +33,9 @@ describe('Get ranking use case', () => {
     await urlsRepository.create(url2);
     await urlsRepository.create(url3);
 
-    await cacheRepository.incrementBy('url-ranking', url1.id.toString(), 10);
-    await cacheRepository.incrementBy('url-ranking', url2.id.toString(), 25);
-    await cacheRepository.incrementBy('url-ranking', url3.id.toString(), 5);
+    await analysisRepository.incrementBy('url-ranking', url1.id.toString(), 10);
+    await analysisRepository.incrementBy('url-ranking', url2.id.toString(), 25);
+    await analysisRepository.incrementBy('url-ranking', url3.id.toString(), 5);
 
     const result = await sut.execute();
 
@@ -52,7 +52,7 @@ describe('Get ranking use case', () => {
     }
   });
 
-  it('should return empty ranking when no URLs are cached', async () => {
+  it('should return empty ranking when no URLs are analysisd', async () => {
     const result = await sut.execute();
 
     expect(result.isRight()).toBe(true);
@@ -79,7 +79,7 @@ describe('Get ranking use case', () => {
     }
 
     for (let i = 0; i < urls.length; i++) {
-      await cacheRepository.incrementBy(
+      await analysisRepository.incrementBy(
         'url-ranking',
         urls[i].id.toString(),
         i + 1
@@ -118,9 +118,13 @@ describe('Get ranking use case', () => {
     await urlsRepository.create(url2);
     await urlsRepository.create(url3);
 
-    await cacheRepository.incrementBy('url-ranking', url1.id.toString(), 5);
-    await cacheRepository.incrementBy('url-ranking', url2.id.toString(), 100);
-    await cacheRepository.incrementBy('url-ranking', url3.id.toString(), 50);
+    await analysisRepository.incrementBy('url-ranking', url1.id.toString(), 5);
+    await analysisRepository.incrementBy(
+      'url-ranking',
+      url2.id.toString(),
+      100
+    );
+    await analysisRepository.incrementBy('url-ranking', url3.id.toString(), 50);
 
     const result = await sut.execute();
 
@@ -148,7 +152,7 @@ describe('Get ranking use case', () => {
 
     await urlsRepository.create(url);
 
-    await cacheRepository.incrementBy('url-ranking', url.id.toString(), 10);
+    await analysisRepository.incrementBy('url-ranking', url.id.toString(), 10);
 
     const result = await sut.execute();
 
@@ -176,8 +180,8 @@ describe('Get ranking use case', () => {
     await urlsRepository.create(url1);
     await urlsRepository.create(url2);
 
-    await cacheRepository.incrementBy('url-ranking', url1.id.toString(), 10);
-    await cacheRepository.incrementBy('url-ranking', url2.id.toString(), 10);
+    await analysisRepository.incrementBy('url-ranking', url1.id.toString(), 10);
+    await analysisRepository.incrementBy('url-ranking', url2.id.toString(), 10);
 
     const result = await sut.execute();
 
@@ -199,9 +203,9 @@ describe('Get ranking use case', () => {
 
     await urlsRepository.create(url);
 
-    await cacheRepository.incrementBy('url-ranking', url.id.toString(), 5);
-    await cacheRepository.incrementBy('url-ranking', url.id.toString(), 3);
-    await cacheRepository.incrementBy('url-ranking', url.id.toString(), 2);
+    await analysisRepository.incrementBy('url-ranking', url.id.toString(), 5);
+    await analysisRepository.incrementBy('url-ranking', url.id.toString(), 3);
+    await analysisRepository.incrementBy('url-ranking', url.id.toString(), 2);
 
     const result = await sut.execute();
 
@@ -234,8 +238,8 @@ describe('Get ranking use case', () => {
     await urlsRepository.create(url1);
     await urlsRepository.create(url2);
 
-    await cacheRepository.incrementBy('url-ranking', url1.id.toString(), 20);
-    await cacheRepository.incrementBy('url-ranking', url2.id.toString(), 15);
+    await analysisRepository.incrementBy('url-ranking', url1.id.toString(), 20);
+    await analysisRepository.incrementBy('url-ranking', url2.id.toString(), 15);
 
     const result = await sut.execute();
 

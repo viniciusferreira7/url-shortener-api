@@ -1,6 +1,6 @@
 type UrlRanking = Array<string | number>;
 
-export interface CacheRepository {
+export interface AnalysisRepository {
   getCurrentId(): Promise<number>;
   increaseId(): Promise<number>;
   get<T>(key: string): Promise<T | null>;

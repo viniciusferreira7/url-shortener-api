@@ -1,7 +1,7 @@
 import { type Either, left, right } from '@/core/either';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import type { Url } from '../../enterprise/entities/url';
-import type { CacheRepository } from '../repositories/cache-repository';
+import type { AnalysisRepository } from '../repositories/analysis-repository';
 import type { UrlsRepository } from '../repositories/urls-repository';
 
 interface GetUrlByCodeUseCaseRequest {
@@ -18,7 +18,7 @@ type GetUrlByCodeUseCaseResponse = Either<
 export class GetUrlByCodeUseCase {
   constructor(
     private readonly urlsRepository: UrlsRepository,
-    private readonly cacheRepository: CacheRepository
+    private readonly analysisRepository: AnalysisRepository
   ) {}
 
   public async execute({
@@ -30,9 +30,13 @@ export class GetUrlByCodeUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    const cacheKey = 'url-ranking';
+    const analysisKey = 'url-ranking';
 
-    await this.cacheRepository.incrementBy(cacheKey, url.id.toString(), 1);
+    await this.analysisRepository.incrementBy(
+      analysisKey,
+      url.id.toString(),
+      1
+    );
 
     return right({ url });
   }

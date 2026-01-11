@@ -2,14 +2,14 @@ import { beforeEach, describe, expect, it } from 'bun:test';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { makeUrl } from '@/test/factories/make-url';
 import { makeUser } from '@/test/factories/make-user';
-import { InMemoryCacheRepository } from '@/test/repositories/in-memory-cache-repository';
+import { InMemoryAnalysisRepository } from '@/test/repositories/in-memory-analysis-repository';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
 import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
 import { GetUrlByCodeUseCase } from './get-url-by-code';
 
 let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
-let cacheRepository: InMemoryCacheRepository;
+let analysisRepository: InMemoryAnalysisRepository;
 
 let sut: GetUrlByCodeUseCase;
 
@@ -17,8 +17,8 @@ describe('Get url by code use case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository();
     urlsRepository = new InMemoryUrlsRepository(usersRepository);
-    cacheRepository = new InMemoryCacheRepository();
-    sut = new GetUrlByCodeUseCase(urlsRepository, cacheRepository);
+    analysisRepository = new InMemoryAnalysisRepository();
+    sut = new GetUrlByCodeUseCase(urlsRepository, analysisRepository);
   });
 
   it('should be able to get url by code', async () => {
