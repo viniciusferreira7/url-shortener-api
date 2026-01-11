@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import { env } from '../env';
+import { env } from '@/infra/env';
 
 export const redisClient = new Redis({
   host: env.REDIS_HOST,
