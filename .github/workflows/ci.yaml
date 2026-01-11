@@ -109,7 +109,9 @@ jobs:
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      REDIS_URL: ${{ secrets.REDIS_URL }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      REDIS_DB: ${{ secrets.REDIS_DB }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
       CLIENT_URL: ${{ secrets.CLIENT_URL }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
@@ -187,7 +189,9 @@ jobs:
       DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-      REDIS_URL: ${{ secrets.REDIS_URL }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      REDIS_DB: ${{ secrets.REDIS_DB }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
       CLIENT_URL: ${{ secrets.CLIENT_URL }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}

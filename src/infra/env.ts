@@ -11,7 +11,9 @@ const envSchema = z.object({
   DATABASE_PASSWORD: z.string(),
   DATABASE_NAME: z.string(),
 
-  REDIS_URL: z.url(),
+  REDIS_HOST: z.string().default('localhost'),
+  REDIS_PORT: z.coerce.number().default(6379),
+  REDIS_DB: z.coerce.number().default(0),
   REDIS_PASSWORD: z.string(),
 
   CLIENT_URL: z.url(),
