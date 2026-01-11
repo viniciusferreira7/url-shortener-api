@@ -1,3 +1,32 @@
+# [1.20.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.19.0...v1.20.0) (2026-01-11)
+
+
+### Bug Fixes
+
+* correct import paths and dependencies in factories ([8bdfc48](https://github.com/viniciusferreira7/url-shortener-api/commit/8bdfc48b74301d11a5bc87316c10acd0565ff17b))
+* correct path of drizzle config ([3f1b1bd](https://github.com/viniciusferreira7/url-shortener-api/commit/3f1b1bd6098df70d208dbdc521d16c5264f44107))
+
+
+### Features
+
+* add Base62UrlCodeGenerator implementation ([730cc3d](https://github.com/viniciusferreira7/url-shortener-api/commit/730cc3d15793104ab3bbbfaa62002382e1399d17))
+* add factories barrel export ([3117da2](https://github.com/viniciusferreira7/url-shortener-api/commit/3117da23474328e0c4ca511f4d186bc4fd465c4c))
+* add factory for CreateUrlUseCase ([95941ae](https://github.com/viniciusferreira7/url-shortener-api/commit/95941aec29130ce07764ef4559e9481a1708c21f))
+* add factory for DeleteUrlUseCase ([b033091](https://github.com/viniciusferreira7/url-shortener-api/commit/b0330915885e947ea650e6b52ef1cb7f1d8f97e4))
+* add factory for FetchManyPublicUrlsUseCase ([9553092](https://github.com/viniciusferreira7/url-shortener-api/commit/9553092d120e0ff17b9fe89c6dcf8bf08d85bb32))
+* add factory for FetchUserLikedUrlsUseCase ([2870c96](https://github.com/viniciusferreira7/url-shortener-api/commit/2870c96e17152e02df75641ef1f9c16d80df8f00))
+* add factory for FetchUserUrlsUseCase ([080cf73](https://github.com/viniciusferreira7/url-shortener-api/commit/080cf73861c1ec82bc96fbd8395a61cd89474da7))
+* add factory for GetRankingByMostLikedUseCase ([472892d](https://github.com/viniciusferreira7/url-shortener-api/commit/472892d8adba81c42d8c409544bfaa925cbb5dab))
+* add factory for GetRankingUseCase ([92ed94d](https://github.com/viniciusferreira7/url-shortener-api/commit/92ed94da677c9171bd84bf02eed1015871986b1a))
+* add factory for GetUrlByCodeUseCase ([99a989f](https://github.com/viniciusferreira7/url-shortener-api/commit/99a989f84ee87c1248d1337707d7ffd97f24ed6e))
+* add factory for GetUrlByIdUseCase ([8dd3a4b](https://github.com/viniciusferreira7/url-shortener-api/commit/8dd3a4b3da4d5b1a37af5d0e356935822e5d7601))
+* add factory for LikeUrlUseCase ([381cf4c](https://github.com/viniciusferreira7/url-shortener-api/commit/381cf4c931e85e5ee1a8080f0549aa26123d0dfd))
+* add factory for UnlikeUrlUseCase ([535c6c4](https://github.com/viniciusferreira7/url-shortener-api/commit/535c6c4e14b8740ada29fded11390122746a573c))
+* add factory for UpdateUrlUseCase ([a700839](https://github.com/viniciusferreira7/url-shortener-api/commit/a70083939adb927d7f965b5e4e5091962dc4fb5d))
+* create redis analysis repository ([e00d284](https://github.com/viniciusferreira7/url-shortener-api/commit/e00d2846399d4e3229198ce776e43fdaecdc956a))
+* implement all methods od analysis repository into redis analysis repository ([6e97bd8](https://github.com/viniciusferreira7/url-shortener-api/commit/6e97bd8eb85d3838f4b03d476274653f63aab272))
+* re-add factories barrel export ([d0bdd41](https://github.com/viniciusferreira7/url-shortener-api/commit/d0bdd41f586676c11404db824e23b4b1f36217b0))
+
 # [1.19.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.18.0...v1.19.0) (2026-01-04)
 
 
