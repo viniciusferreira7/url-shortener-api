@@ -2,7 +2,7 @@ import { GetRankingByMostLikedUseCase } from '@/domain/url-shortening/applicatio
 import { drizzleDb } from '../db/drizzle/client';
 import { DrizzleUrlsRepository } from '../db/drizzle/repositories/drizzle-url-repository';
 import { redisClient } from '../db/redis/client';
-import { RedisAnalysisRepository } from '../db/redis/repositories/redis-analysis-repostitory';
+import { RedisAnalysisRepository } from '../db/redis/repositories/redis-analysis-repository';
 import { env } from '../env';
 
 export function makeGetRankingByMostLikedUseCase(): GetRankingByMostLikedUseCase {
