@@ -1,12 +1,14 @@
 {
-	"cSpell.words": [
-		"awslabs",
-		"cycjimmy",
-		"DOCKERHUB",
-		"elysia",
-		"elysiajs",
-		"github",
-		"GITHUB",
-		"isready"
-	]
+  "cSpell.words": [
+    "awslabs",
+    "cycjimmy",
+    "DOCKERHUB",
+    "elysia",
+    "elysiajs",
+    "github",
+    "GITHUB",
+    "hashids",
+    "Hashids",
+    "isready"
+  ]
 }
