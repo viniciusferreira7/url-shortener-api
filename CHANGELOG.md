@@ -1,3 +1,15 @@
+# [1.21.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.20.0...v1.21.0) (2026-01-17)
+
+
+### Bug Fixes
+
+* adjust ID generation sequence in CreateUrlUseCase ([4e77b5c](https://github.com/viniciusferreira7/url-shortener-api/commit/4e77b5c2b540170010ec62e6ef45487c734cf5bb))
+
+
+### Features
+
+* migrate from base62 to Hashids for URL code generation ([830689a](https://github.com/viniciusferreira7/url-shortener-api/commit/830689a80af01c3e2069f98f8bf28b9c072647c6))
+
 # [1.20.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.19.0...v1.20.0) (2026-01-11)
 
 
