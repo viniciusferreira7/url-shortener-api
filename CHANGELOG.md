@@ -1,3 +1,13 @@
+# [1.22.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.21.0...v1.22.0) (2026-01-17)
+
+
+### Features
+
+* add cache repository infrastructure ([389a3e0](https://github.com/viniciusferreira7/url-shortener-api/commit/389a3e0b44de8e038f2e24128e2f71bfd8cce767))
+* implement Cache-Aside pattern in DrizzleUrlsRepository ([206e09d](https://github.com/viniciusferreira7/url-shortener-api/commit/206e09d1b4de0237a9dfb620375fc809416a4c0c))
+* implement toDrizzle and fromCache in UrlWithAuthor mapper ([1b030b5](https://github.com/viniciusferreira7/url-shortener-api/commit/1b030b592911bfedcdcbac033568d54ccec83e3d))
+* inject RedisCacheRepository in all URL use case factories ([de2df67](https://github.com/viniciusferreira7/url-shortener-api/commit/de2df6702b5ac16d21c89b513d46dbe93a3d052a))
+
 # [1.21.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.20.0...v1.21.0) (2026-01-17)
 
 
