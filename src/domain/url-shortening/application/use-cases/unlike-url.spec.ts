@@ -27,13 +27,11 @@ describe('Unlike URL use case', () => {
     await usersRepository.create(user);
     await urlsRepository.create(url);
 
-    // First, like the URL
     await likeUseCase.execute({
       urlId: url.id.toString(),
       authorId: user.id.toString(),
     });
 
-    // Then, unlike it
     const result = await sut.execute({
       urlId: url.id.toString(),
       authorId: user.id.toString(),
@@ -53,7 +51,6 @@ describe('Unlike URL use case', () => {
     await usersRepository.create(user);
     await urlsRepository.create(url);
 
-    // Like first to add to author's list
     await likeUseCase.execute({
       urlId: url.id.toString(),
       authorId: user.id.toString(),
@@ -81,7 +78,6 @@ describe('Unlike URL use case', () => {
     await usersRepository.create(user);
     await urlsRepository.create(url);
 
-    // Like the URL
     await likeUseCase.execute({
       urlId: url.id.toString(),
       authorId: user.id.toString(),
@@ -90,7 +86,6 @@ describe('Unlike URL use case', () => {
     let updatedUser = await usersRepository.findById(user.id.toString());
     expect(updatedUser?.urlsLikedList.currentItems).toHaveLength(1);
 
-    // Unlike the URL
     const result = await sut.execute({
       urlId: url.id.toString(),
       authorId: user.id.toString(),
@@ -165,7 +160,6 @@ describe('Unlike URL use case', () => {
     await usersRepository.create(user2);
     await urlsRepository.create(url);
 
-    // Both authors like the URL
     await likeUseCase.execute({
       urlId: url.id.toString(),
       authorId: user1.id.toString(),
@@ -179,7 +173,6 @@ describe('Unlike URL use case', () => {
     let updatedUrl = await urlsRepository.findById(url.id.toString());
     expect(updatedUrl?.likes).toBe(2);
 
-    // First author unlikes
     const result1 = await sut.execute({
       urlId: url.id.toString(),
       authorId: user1.id.toString(),
@@ -194,7 +187,6 @@ describe('Unlike URL use case', () => {
     updatedUrl = await urlsRepository.findById(url.id.toString());
     expect(updatedUrl?.likes).toBe(1);
 
-    // Second author unlikes
     const result2 = await sut.execute({
       urlId: url.id.toString(),
       authorId: user2.id.toString(),
@@ -219,7 +211,6 @@ describe('Unlike URL use case', () => {
     await urlsRepository.create(url1);
     await urlsRepository.create(url2);
 
-    // Like both URLs
     await likeUseCase.execute({
       urlId: url1.id.toString(),
       authorId: user.id.toString(),
@@ -233,7 +224,6 @@ describe('Unlike URL use case', () => {
     let updatedUser = await usersRepository.findById(user.id.toString());
     expect(updatedUser?.urlsLikedList.currentItems).toHaveLength(2);
 
-    // Unlike the first URL
     const result1 = await sut.execute({
       urlId: url1.id.toString(),
       authorId: user.id.toString(),
@@ -244,7 +234,6 @@ describe('Unlike URL use case', () => {
     updatedUser = await usersRepository.findById(user.id.toString());
     expect(updatedUser?.urlsLikedList.currentItems).toHaveLength(1);
 
-    // Unlike the second URL
     const result2 = await sut.execute({
       urlId: url2.id.toString(),
       authorId: user.id.toString(),
@@ -263,13 +252,11 @@ describe('Unlike URL use case', () => {
     await usersRepository.create(user);
     await urlsRepository.create(url);
 
-    // Like first
     await likeUseCase.execute({
       urlId: url.id.toString(),
       authorId: user.id.toString(),
     });
 
-    // Then unlike
     await sut.execute({
       urlId: url.id.toString(),
       authorId: user.id.toString(),

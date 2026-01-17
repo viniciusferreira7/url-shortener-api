@@ -43,24 +43,6 @@ export class RedisAnalysisRepository implements AnalysisRepository {
     return id;
   }
 
-  async get<T>(key: string): Promise<T | null> {
-    const entry = await this.redis.get(key);
-
-    if (!entry) return null;
-
-    return JSON.parse(entry) as T;
-  }
-
-  async set<T>(key: string, value: T, ttl?: number): Promise<void> {
-    const serialized = JSON.stringify(value);
-
-    await this.redis.set(key, serialized);
-
-    if (ttl) {
-      await this.redis.expire(key, ttl);
-    }
-  }
-
   async incrementBy(key: string, id: string, amount: number): Promise<void> {
     await this.redis.zincrby(key, amount, id);
   }
