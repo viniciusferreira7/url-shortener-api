@@ -9,15 +9,17 @@ import type {
 } from '@/domain/url-shortening/application/repositories/urls-repository';
 import type { Url } from '@/domain/url-shortening/enterprise/entities/url';
 import type { UrlWithAuthor } from '@/domain/url-shortening/enterprise/entities/value-object/url-with-author';
+import type { CacheRepository } from '@/infra/cache/cache-repository';
 import type { drizzleDb } from '../client';
 import { DrizzleUrlMapper } from '../mappers/drizzle-url-mapper';
-import { DrizzleUrlWithAuthorMapper } from '../mappers/drizzle-url-with-author-mapper copy';
+import { DrizzleUrlWithAuthorMapper } from '../mappers/drizzle-url-with-author-mapper';
 import { schema } from '../schema';
 
 export class DrizzleUrlsRepository implements UrlsRepository {
   constructor(
     private readonly db: typeof drizzleDb,
-    private readonly analysisRepository: AnalysisRepository
+    private readonly analysisRepository: AnalysisRepository,
+    private readonly cacheRepository: CacheRepository
   ) {}
   async create(url: Url): Promise<Url> {
     const [urlRaw] = await this.db
@@ -53,6 +55,8 @@ export class DrizzleUrlsRepository implements UrlsRepository {
       .set(DrizzleUrlMapper.toDrizzle(url))
       .returning();
 
+    await this.cacheRepository.delete('urls-most-liked');
+
     return DrizzleUrlMapper.toDomain(urlRaw);
   }
   async delete(urlId: string): Promise<Url | null> {
@@ -62,6 +66,8 @@ export class DrizzleUrlsRepository implements UrlsRepository {
       .returning();
 
     if (!urlRaw) return null;
+
+    await this.cacheRepository.delete('urls-most-liked');
 
     return DrizzleUrlMapper.toDomain(urlRaw);
   }
@@ -329,6 +335,19 @@ export class DrizzleUrlsRepository implements UrlsRepository {
     });
   }
   async findManyByMostLiked(limit: number): Promise<Array<UrlWithAuthor>> {
+    const cacheKey = `urls-most-liked`;
+
+    const cacheHit = await this.cacheRepository.get(cacheKey);
+
+    if (cacheHit) {
+      const cachedData = JSON.parse(cacheHit);
+
+      return cachedData.map(
+        (data: ReturnType<typeof DrizzleUrlWithAuthorMapper.toDrizzle>) =>
+          DrizzleUrlWithAuthorMapper.fromCache(data)
+      );
+    }
+
     const [urlsWithAuthors, urlRanking] = await Promise.all([
       this.db
         .select()
@@ -339,7 +358,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
       this.analysisRepository.getUrlRanking(10),
     ]);
 
-    return urlsWithAuthors.map((urlWithAuthor) => {
+    const urls = urlsWithAuthors.map((urlWithAuthor) => {
       const urlIdIndex = urlRanking.findIndex(
         (value, index) =>
           typeof value === 'string' &&
@@ -355,6 +374,13 @@ export class DrizzleUrlsRepository implements UrlsRepository {
         score
       );
     });
+
+    await this.cacheRepository.set(
+      cacheKey,
+      JSON.stringify(DrizzleUrlWithAuthorMapper.toDrizzle)
+    );
+
+    return urls;
   }
 
   async findManyLikedByUserId(userId: string): Promise<Array<UrlWithAuthor>> {
