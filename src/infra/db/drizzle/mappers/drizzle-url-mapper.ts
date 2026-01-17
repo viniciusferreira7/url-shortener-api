@@ -16,6 +16,7 @@ export class DrizzleUrlMapper {
         description: raw.description,
         authorId: new UniqueEntityId(raw.authorId),
         likes: raw.likes,
+        score: raw.score,
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,
       },
@@ -32,6 +33,7 @@ export class DrizzleUrlMapper {
       description: url.description ?? null,
       authorId: url.authorId.toString(),
       likes: url.likes,
+      score: url.score,
       createdAt: url.createdAt,
       updatedAt: url.updatedAt ?? null,
     };

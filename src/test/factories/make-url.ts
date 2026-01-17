@@ -13,6 +13,7 @@ export function makeUrl(
     createdAt: Date;
     updatedAt?: Date | null;
     likes?: number;
+    score?: number;
   }> = {},
   id?: UniqueEntityId
 ) {
@@ -29,6 +30,7 @@ export function makeUrl(
       createdAt: override?.createdAt ?? new Date(),
       updatedAt: override?.updatedAt ?? null,
       likes: override?.likes ?? 0,
+      score: override?.score ?? 0,
     },
     id
   );

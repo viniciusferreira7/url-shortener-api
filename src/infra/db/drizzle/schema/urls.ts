@@ -24,6 +24,7 @@ export const urls = pgTable(
     isPublic: boolean('is_public').notNull().default(false),
     description: varchar('description', { length: 575 }),
     likes: bigint('likes', { mode: 'number' }).notNull().default(0),
+    score: bigint('score', { mode: 'number' }).notNull().default(0),
     createdAt: timestamp('created_at')
       .notNull()
       .$defaultFn(() => new Date()),

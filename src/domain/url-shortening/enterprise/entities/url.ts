@@ -10,6 +10,7 @@ interface UrlProps {
   description?: string | null;
   authorId: UniqueEntityId;
   likes: number;
+  score: number;
   createdAt: Date;
   updatedAt?: Date | null;
 }
@@ -43,6 +44,10 @@ export class Url extends Entity<UrlProps> {
     return this.props.likes;
   }
 
+  get score() {
+    return this.props.score;
+  }
+
   get createdAt() {
     return this.props.createdAt;
   }
@@ -73,6 +78,10 @@ export class Url extends Entity<UrlProps> {
 
   set likes(value: number) {
     this.props.likes = value;
+  }
+
+  set score(value: number) {
+    this.props.score = value;
   }
 
   public static create(

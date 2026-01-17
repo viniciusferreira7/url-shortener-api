@@ -305,27 +305,50 @@ export class DrizzleUrlsRepository implements UrlsRepository {
       result: urlsPaginated.map(DrizzleUrlMapper.toDomain),
     });
   }
-  async findManyByIds(ids: string[]): Promise<Array<UrlWithAuthor>> {
+  async findManyByIds(
+    ids: string[],
+    urlRanking?: Array<string | number>
+  ): Promise<Array<UrlWithAuthor>> {
     if (ids.length === 0) return [];
 
-    const [urlsWithAuthors, urlRanking] = await Promise.all([
+    if (!urlRanking) {
+      const sortedIds = [...ids].sort();
+      const cacheKey = `urls-by-ids:${sortedIds.join(',')}`;
+
+      const cacheHit = await this.cacheRepository.get(cacheKey);
+
+      if (cacheHit) {
+        const cachedData = JSON.parse(cacheHit);
+
+        return cachedData.map(
+          (data: ReturnType<typeof DrizzleUrlWithAuthorMapper.toDrizzle>) =>
+            DrizzleUrlWithAuthorMapper.fromCache(data)
+        );
+      }
+    }
+
+    const [urlsWithAuthors, fetchedUrlRanking] = await Promise.all([
       this.db
         .select()
         .from(schema.urls)
         .innerJoin(schema.users, eq(schema.urls.authorId, schema.users.id))
         .where(inArray(schema.urls.id, ids)),
-      this.analysisRepository.getUrlRanking(10),
+      urlRanking
+        ? Promise.resolve(urlRanking)
+        : this.analysisRepository.getUrlRanking(10),
     ]);
 
-    return urlsWithAuthors.map((urlWithAuthor) => {
-      const urlIdIndex = urlRanking.findIndex(
+    const ranking = urlRanking ?? fetchedUrlRanking;
+
+    const urls = urlsWithAuthors.map((urlWithAuthor) => {
+      const urlIdIndex = ranking.findIndex(
         (value, index) =>
           typeof value === 'string' &&
           index % 2 === 0 &&
           urlWithAuthor.urls.id === value
       );
 
-      const score = Number(urlRanking[urlIdIndex + 1] ?? 0);
+      const score = Number(ranking[urlIdIndex + 1] ?? 0);
 
       return DrizzleUrlWithAuthorMapper.toDomain(
         urlWithAuthor.urls,
@@ -333,6 +356,39 @@ export class DrizzleUrlsRepository implements UrlsRepository {
         score
       );
     });
+
+    if (urlRanking) {
+      urls.sort((a, b) => {
+        const aIndex = ranking.findIndex(
+          (value, index) =>
+            typeof value === 'string' &&
+            index % 2 === 0 &&
+            value === a.urlId.toString()
+        );
+        const bIndex = ranking.findIndex(
+          (value, index) =>
+            typeof value === 'string' &&
+            index % 2 === 0 &&
+            value === b.urlId.toString()
+        );
+
+        return aIndex - bIndex;
+      });
+    }
+
+    if (!urlRanking) {
+      const sortedIds = [...ids].sort();
+      const cacheKey = `urls-by-ids:${sortedIds.join(',')}`;
+
+      await this.cacheRepository.set(
+        cacheKey,
+        JSON.stringify(
+          urls.map((url) => DrizzleUrlWithAuthorMapper.toDrizzle(url))
+        )
+      );
+    }
+
+    return urls;
   }
   async findManyByMostLiked(limit: number): Promise<Array<UrlWithAuthor>> {
     const cacheKey = `urls-most-liked`;
@@ -377,7 +433,9 @@ export class DrizzleUrlsRepository implements UrlsRepository {
 
     await this.cacheRepository.set(
       cacheKey,
-      JSON.stringify(DrizzleUrlWithAuthorMapper.toDrizzle)
+      JSON.stringify(
+        urls.map((url) => DrizzleUrlWithAuthorMapper.toDrizzle(url))
+      )
     );
 
     return urls;

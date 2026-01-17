@@ -229,6 +229,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
           urlLikes: url.likes,
           authorId: url.authorId,
           authorName: user?.name || '',
+          score: 0,
           createdAt: url.createdAt,
           updatedAt: url.updatedAt,
         });
@@ -338,7 +339,10 @@ export class InMemoryUrlsRepository implements UrlsRepository {
     });
   }
 
-  async findManyByIds(ids: string[]): Promise<Array<UrlWithAuthor>> {
+  async findManyByIds(
+    ids: string[],
+    urlRanking?: Array<string | number>
+  ): Promise<Array<UrlWithAuthor>> {
     const urls = this.items.filter((url) => ids.includes(url.id.toString()));
 
     const result = await Promise.all(
@@ -346,6 +350,18 @@ export class InMemoryUrlsRepository implements UrlsRepository {
         const user = await this.usersRepository.findById(
           url.authorId.toString()
         );
+
+        // Extract score from ranking if provided
+        let score = 0;
+        if (urlRanking) {
+          const urlIdIndex = urlRanking.findIndex(
+            (value, index) =>
+              typeof value === 'string' &&
+              index % 2 === 0 &&
+              url.id.toString() === value
+          );
+          score = Number(urlRanking[urlIdIndex + 1] ?? 0);
+        }
 
         return UrlWithAuthor.create({
           urlId: url.id,
@@ -357,11 +373,32 @@ export class InMemoryUrlsRepository implements UrlsRepository {
           urlCode: url.code,
           authorId: url.authorId,
           authorName: user?.name || '',
+          score,
           createdAt: url.createdAt,
           updatedAt: url.updatedAt,
         });
       })
     );
+
+    // Sort by ranking order when ranking is provided (highest score first)
+    if (urlRanking) {
+      result.sort((a, b) => {
+        const aIndex = urlRanking.findIndex(
+          (value, index) =>
+            typeof value === 'string' &&
+            index % 2 === 0 &&
+            value === a.urlId.toString()
+        );
+        const bIndex = urlRanking.findIndex(
+          (value, index) =>
+            typeof value === 'string' &&
+            index % 2 === 0 &&
+            value === b.urlId.toString()
+        );
+
+        return aIndex - bIndex;
+      });
+    }
 
     return result;
   }
@@ -388,6 +425,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
           urlCode: url.code,
           authorId: url.authorId,
           authorName: user?.name || '',
+          score: 0,
           createdAt: url.createdAt,
           updatedAt: url.updatedAt,
         });
@@ -420,6 +458,7 @@ export class InMemoryUrlsRepository implements UrlsRepository {
           urlCode: url.code,
           authorId: url.authorId,
           authorName: author?.name || '',
+          score: 0,
           createdAt: url.createdAt,
           updatedAt: url.updatedAt,
         });

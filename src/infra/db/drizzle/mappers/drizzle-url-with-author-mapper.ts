@@ -40,7 +40,7 @@ export class DrizzleUrlWithAuthorMapper {
       urlCode: data.url.code,
       authorId: new UniqueEntityId(data.user.id),
       authorName: data.user.name,
-      score: 0,
+      score: data.score,
       urlLikes: data.url.likes,
       createdAt: data.url.createdAt,
       updatedAt: data.url.updatedAt,
@@ -49,6 +49,7 @@ export class DrizzleUrlWithAuthorMapper {
   static toDrizzle(urlWithAuthor: UrlWithAuthor): {
     url: UrlRaw;
     user: Partial<UserRaw> & Pick<UserRaw, 'id' | 'name'>;
+    score: number;
   } {
     return {
       url: {
@@ -60,6 +61,7 @@ export class DrizzleUrlWithAuthorMapper {
         description: urlWithAuthor.urlDescription ?? null,
         authorId: urlWithAuthor.authorId.toString(),
         likes: urlWithAuthor.urlLikes,
+        score: urlWithAuthor.score ?? 0,
         createdAt: urlWithAuthor.createdAt,
         updatedAt: urlWithAuthor.updatedAt ?? null,
       },
@@ -67,6 +69,7 @@ export class DrizzleUrlWithAuthorMapper {
         id: urlWithAuthor.authorId.toString(),
         name: urlWithAuthor.authorName,
       },
+      score: urlWithAuthor.score ?? 0,
     };
   }
 }

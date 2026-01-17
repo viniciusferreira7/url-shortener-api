@@ -51,6 +51,7 @@ export class CreateUrlUseCase {
       isPublic: urlData.isPublic,
       createdAt: new Date(),
       likes: 0,
+      score: 0,
     });
 
     await this.urlsRepository.create(url);
