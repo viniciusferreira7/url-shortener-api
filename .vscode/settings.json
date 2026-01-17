@@ -9,6 +9,9 @@
     "GITHUB",
     "hashids",
     "Hashids",
-    "isready"
+    "isready",
+    "WITHSCORES",
+    "zincrby",
+    "zrange"
   ]
 }
