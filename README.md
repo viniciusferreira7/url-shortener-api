@@ -59,36 +59,48 @@ src/
 │   └── url-shortening/
 │       ├── application/
 │       │   ├── repositories/      # Repository interfaces
-│       │   ├── use-cases/         # Business use cases
-│       │   └── url-code/          # URL code generation
+│       │   ├── use-cases/         # Business use cases (97+ tests)
+│       │   └── url-code/          # URL code generation interface
 │       └── enterprise/
 │           ├── entities/          # Domain entities (Url, User)
-│           └── value-objects/     # Value objects
+│           └── value-objects/     # Value objects (UrlWithAuthor)
 ├── infra/
+│   ├── cache/                 # Cache layer abstraction
+│   │   └── cache-repository.ts    # Cache interface for Cache-Aside pattern
 │   ├── http/
-│   │   └── controllers/   # HTTP controllers
+│   │   └── controllers/       # HTTP controllers
 │   ├── db/
-│   │   ├── drizzle/       # PostgreSQL implementation
-│   │   │   ├── repositories/  # Drizzle repositories
-│   │   │   ├── mappers/       # Domain <-> Drizzle mappers
-│   │   │   ├── schema/        # Database schema
-│   │   │   └── client.ts      # Database connection
-│   │   └── redis/         # Redis implementation
-│   │       ├── repositories/  # Redis repositories
-│   │       └── client.ts      # Redis connection
-│   ├── factories/         # Dependency injection factories
-│   ├── url-code/          # URL code generator implementation
+│   │   ├── drizzle/           # PostgreSQL implementation
+│   │   │   ├── repositories/      # Drizzle repositories
+│   │   │   │   ├── drizzle-urls-repository.ts   # URLs with Cache-Aside
+│   │   │   │   └── drizzle-users-repository.ts  # User management
+│   │   │   ├── mappers/           # Domain <-> Drizzle mappers
+│   │   │   │   ├── drizzle-url-mapper.ts
+│   │   │   │   ├── drizzle-url-with-author-mapper.ts
+│   │   │   │   └── drizzle-user-mapper.ts
+│   │   │   ├── schema/            # Database schema (UUIDv7)
+│   │   │   └── client.ts          # Database connection
+│   │   └── redis/             # Redis implementation
+│   │       ├── repositories/      # Redis repositories
+│   │       │   ├── redis-analysis-repository.ts  # Analytics & ranking
+│   │       │   └── redis-cache-repository.ts     # Cache-Aside implementation
+│   │       └── client.ts          # Redis connection
+│   ├── factories/             # Dependency injection factories (12 factories)
+│   ├── url-code/              # URL code generator implementation
+│   │   └── hash-url-code-generator.ts    # Hashids with base64 URL-safe
 │   ├── lib/
-│   │   └── auth.ts        # Better Auth configuration
-│   └── env.ts             # Environment variables schema
+│   │   ├── auth.ts            # Better Auth configuration
+│   │   └── hashids.ts         # Hashids configuration
+│   └── env.ts                 # Environment variables schema
 ├── test/
-│   ├── repositories/      # In-memory repository implementations
+│   ├── repositories/          # In-memory repository implementations
 │   │   ├── in-memory-urls-repository.ts
 │   │   ├── in-memory-users-repository.ts
 │   │   └── in-memory-analysis-repository.ts
-│   ├── factories/         # Test data factories
-│   └── url-code/          # URL code generator for tests
-└── index.ts             # Application entry point
+│   ├── factories/             # Test data factories
+│   └── url-code/              # URL code generator for tests
+│       └── fake-hash-url-code-generator.ts   # Base62 for testing
+└── index.ts                 # Application entry point
 ```
 
 ## 🛠️ Prerequisites
