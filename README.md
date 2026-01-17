@@ -132,6 +132,8 @@ REDIS_DB=0
 REDIS_PASSWORD=your_redis_password
 REDIS_CODE_ID=1000
 
+SECRET_HASH_KEY=your_secret_hash_key_for_url_encoding
+
 CLIENT_URL=http://localhost:3000
 
 BETTER_AUTH_SECRET=your_secret_key
@@ -419,7 +421,7 @@ Each factory automatically wires up:
 - **DrizzleUrlsRepository** - PostgreSQL URL storage
 - **DrizzleUsersRepository** - PostgreSQL user management
 - **RedisAnalysisRepository** - Redis analytics and caching
-- **Base62UrlCodeGenerator** - URL code generation (base62 encoding)
+- **HashUrlCodeGenerator** - URL code generation using Hashids with base64 URL-safe alphabet
 
 This approach ensures:
 - ✅ Clean separation of concerns
@@ -494,6 +496,7 @@ Tests are located in:
 | \`REDIS_DB\` | Redis database number | Yes | 0 |
 | \`REDIS_PASSWORD\` | Redis password | Yes | - |
 | \`REDIS_CODE_ID\` | Starting ID for URL code generation | Yes | - |
+| \`SECRET_HASH_KEY\` | Secret key for Hashids URL encoding | Yes | - |
 | \`CLIENT_URL\` | Frontend URL for CORS | Yes | - |
 | \`BETTER_AUTH_SECRET\` | Secret key for auth tokens | Yes | - |
 | \`BETTER_AUTH_URL\` | Base URL of the API | Yes | - |
