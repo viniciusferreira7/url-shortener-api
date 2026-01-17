@@ -232,6 +232,38 @@ All tables use UUIDv7 for primary keys, providing:
 - **Session storage** - Fast session lookups
 - **View counters** - Atomic increment operations for URL views
 
+### Cache-Aside Pattern Implementation
+
+The application implements the **Cache-Aside (Lazy Loading)** pattern for optimal performance:
+
+**Read Flow:**
+1. Check cache first
+2. **Cache Hit**: Deserialize data and reconstruct domain entities
+3. **Cache Miss**: Fetch from PostgreSQL → Store in Redis → Return data
+
+**Write Flow:**
+1. Update PostgreSQL database
+2. Invalidate affected cache keys
+3. Next read will refresh the cache (lazy loading)
+
+**Implementation Details:**
+- **Cache Key**: `urls-most-liked` - Stores top URLs by like count
+- **Data Format**: Drizzle raw format (database representation)
+- **Deserialization**: `DrizzleUrlWithAuthorMapper.fromCache()` reconstructs domain entities
+- **TTL**: 15 minutes for cached data
+- **Invalidation**: Automatic on URL update/delete operations
+
+**Cache Invalidation Triggers:**
+- URL updated (`save()` method)
+- URL deleted (`delete()` method)
+- Ensures data consistency between cache and database
+
+This pattern provides:
+- ✅ Reduced database load for frequently accessed rankings
+- ✅ Fast response times for popular queries
+- ✅ Automatic cache refresh on data changes
+- ✅ Domain entity integrity (proper deserialization)
+
 ## 🔐 Authentication
 
 Authentication is handled by [Better Auth](https://www.better-auth.com) with:
@@ -418,9 +450,10 @@ if (result.isRight()) {
 ### Injected Dependencies
 
 Each factory automatically wires up:
-- **DrizzleUrlsRepository** - PostgreSQL URL storage
+- **DrizzleUrlsRepository** - PostgreSQL URL storage with cache-aside pattern
 - **DrizzleUsersRepository** - PostgreSQL user management
-- **RedisAnalysisRepository** - Redis analytics and caching
+- **RedisAnalysisRepository** - Redis analytics and URL access tracking
+- **RedisCacheRepository** - Redis cache layer (Cache-Aside pattern implementation)
 - **HashUrlCodeGenerator** - URL code generation using Hashids with base64 URL-safe alphabet
 
 This approach ensures:
