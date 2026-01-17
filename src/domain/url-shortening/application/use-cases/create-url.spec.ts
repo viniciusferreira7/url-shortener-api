@@ -5,13 +5,13 @@ import { makeUser } from '@/test/factories/make-user';
 import { InMemoryAnalysisRepository } from '@/test/repositories/in-memory-analysis-repository';
 import { InMemoryUrlsRepository } from '@/test/repositories/in-memory-urls-repository';
 import { InMemoryUsersRepository } from '@/test/repositories/in-memory-users-repository';
-import { Base62UrlCodeGenerator } from '@/test/url-code/url-code-generator';
+import { FakeHashUrlCodeGenerator } from '@/test/url-code/fake-hash-url-code-generator';
 import { CreateUrlUseCase } from './create-url';
 
 let usersRepository: InMemoryUsersRepository;
 let urlsRepository: InMemoryUrlsRepository;
 let analysisRepository: InMemoryAnalysisRepository;
-let urlCodeGenerator: Base62UrlCodeGenerator;
+let urlCodeGenerator: FakeHashUrlCodeGenerator;
 
 let sut: CreateUrlUseCase;
 
@@ -20,7 +20,7 @@ describe('Create url use case', () => {
     usersRepository = new InMemoryUsersRepository();
     urlsRepository = new InMemoryUrlsRepository(usersRepository);
     analysisRepository = new InMemoryAnalysisRepository();
-    urlCodeGenerator = new Base62UrlCodeGenerator();
+    urlCodeGenerator = new FakeHashUrlCodeGenerator();
     sut = new CreateUrlUseCase(
       usersRepository,
       urlsRepository,

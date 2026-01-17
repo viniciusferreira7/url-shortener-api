@@ -38,9 +38,9 @@ export class CreateUrlUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    const nextId = await this.analysisRepository.increaseId();
+    const currentId = await this.analysisRepository.getCurrentId();
 
-    const codeCreated = this.urlCodeGenerator.encode(nextId);
+    const codeCreated = this.urlCodeGenerator.encode(currentId);
 
     const url = Url.create({
       authorId: user.id,
@@ -54,6 +54,8 @@ export class CreateUrlUseCase {
     });
 
     await this.urlsRepository.create(url);
+
+    await this.analysisRepository.increaseId();
 
     return right({ url });
   }
