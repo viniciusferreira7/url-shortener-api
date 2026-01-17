@@ -17,6 +17,8 @@ const envSchema = z.object({
   REDIS_PASSWORD: z.string(),
   REDIS_CODE_ID: z.coerce.number(),
 
+  SECRET_HASH_KEY: z.string(),
+
   CLIENT_URL: z.url(),
 });
 

@@ -5,7 +5,7 @@ import { DrizzleUsersRepository } from '../db/drizzle/repositories/drizzle-users
 import { redisClient } from '../db/redis/client';
 import { RedisAnalysisRepository } from '../db/redis/repositories/redis-analysis-repository';
 import { env } from '../env';
-import { Base62UrlCodeGenerator } from '../url-code/base62-url-code-generator';
+import { HashUrlCodeGenerator } from '../url-code/hash-url-code-generator';
 
 export function makeCreateUrlUseCase(): CreateUrlUseCase {
   const analysisRepository = new RedisAnalysisRepository(redisClient, env);
@@ -14,7 +14,7 @@ export function makeCreateUrlUseCase(): CreateUrlUseCase {
     drizzleDb,
     analysisRepository
   );
-  const urlCodeGenerator = new Base62UrlCodeGenerator();
+  const urlCodeGenerator = new HashUrlCodeGenerator();
 
   return new CreateUrlUseCase(
     usersRepository,

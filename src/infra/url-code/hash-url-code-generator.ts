@@ -1,13 +1,16 @@
-import base62 from 'base62';
+import type Hashids from 'hashids';
 import type { UrlCodeGenerator } from '@/domain/url-shortening/application/url-code/url-code-generator';
+import { hashids } from '../lib/hashids';
 
-export class Base62UrlCodeGenerator implements UrlCodeGenerator {
+export class HashUrlCodeGenerator implements UrlCodeGenerator {
+  constructor(private readonly hasher: Hashids = hashids) {}
+
   encode(value: number): string {
     if (!Number.isInteger(value) || value < 0) {
       throw new Error('Value must be a non-negative integer');
     }
 
-    return base62.encode(value);
+    return this.hasher.encode(value);
   }
 
   decode(value: string): number {
@@ -15,6 +18,8 @@ export class Base62UrlCodeGenerator implements UrlCodeGenerator {
       throw new Error('Code must be a non-empty string');
     }
 
-    return base62.decode(value);
+    const code = this.hasher.decode(value)[0];
+
+    return Number(code);
   }
 }
