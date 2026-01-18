@@ -9,7 +9,7 @@ A high-performance URL shortener API built with modern technologies including El
 - **Runtime**: [Bun](https://bun.sh) v1.2.22
 - **Framework**: [Elysia](https://elysiajs.com) - Fast and ergonomic web framework
 - **Database**: PostgreSQL 17.2 - User management, authentication, and URL storage
-- **Cache**: Redis 7.4 - Caching and analytics
+- **Cache**: Redis 7.4 - Caching and analytics (using Bun's native Redis client)
 - **ORM**: [Drizzle ORM](https://orm.drizzle.team) - TypeScript ORM for PostgreSQL
 - **Authentication**: [Better Auth](https://www.better-auth.com)
 - **Validation**: Zod
@@ -238,11 +238,12 @@ All tables use UUIDv7 for primary keys, providing:
 - Sortable by creation time
 - Better database performance
 
-### Redis
+### Redis (Bun Native Client)
 - **Caching** - Reduces database load for frequently accessed data
 - **Analytics** - Real-time URL access tracking and ranking
 - **Session storage** - Fast session lookups
 - **View counters** - Atomic increment operations for URL views
+- **Performance** - Leverages Bun's built-in Redis client for optimal performance
 
 ### Cache-Aside Pattern Implementation
 
