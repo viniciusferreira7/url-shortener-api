@@ -1,3 +1,10 @@
+## [1.22.1](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.22.0...v1.22.1) (2026-01-18)
+
+
+### Bug Fixes
+
+* correct type error on redis analysis repository ([a1e8434](https://github.com/viniciusferreira7/url-shortener-api/commit/a1e84345dc58be1456f211c5751b97a3847a0ab3))
+
 # [1.22.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.21.0...v1.22.0) (2026-01-17)
 
 
