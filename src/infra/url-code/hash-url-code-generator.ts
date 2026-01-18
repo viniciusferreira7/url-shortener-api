@@ -1,9 +1,8 @@
 import type Hashids from 'hashids';
 import type { UrlCodeGenerator } from '@/domain/url-shortening/application/url-code/url-code-generator';
-import { hashids } from '../lib/hashids';
 
 export class HashUrlCodeGenerator implements UrlCodeGenerator {
-  constructor(private readonly hasher: Hashids = hashids) {}
+  constructor(private readonly hasher: Hashids) {}
 
   encode(value: number): string {
     if (!Number.isInteger(value) || value < 0) {
