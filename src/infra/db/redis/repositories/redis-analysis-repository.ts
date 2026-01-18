@@ -14,7 +14,7 @@ export class RedisAnalysisRepository implements AnalysisRepository {
   async getCurrentId(): Promise<number> {
     const defaultId = this.envService.REDIS_CODE_ID;
 
-    await this.redis.set('code_id', defaultId, 'NX');
+    await this.redis.set('code_id', defaultId.toString(), 'NX');
 
     const codeId = await this.redis.get('code_id');
 
@@ -30,7 +30,7 @@ export class RedisAnalysisRepository implements AnalysisRepository {
   async increaseId(): Promise<number> {
     const defaultId = this.envService.REDIS_CODE_ID;
 
-    await this.redis.set('code_id', defaultId, 'NX');
+    await this.redis.set('code_id', defaultId.toString(), 'NX');
 
     const codeId = await this.redis.incr('code_id');
 
@@ -52,7 +52,7 @@ export class RedisAnalysisRepository implements AnalysisRepository {
       'url-ranking',
       '1',
       limit.toString(),
-      'WITHSCORES'
+      'WITHSCORES',
     ]);
 
     return score;
