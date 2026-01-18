@@ -1,9 +1,6 @@
-import Redis from 'ioredis';
+import { RedisClient } from 'bun';
 import { env } from '@/infra/env';
 
-export const redisClient = new Redis({
-  host: env.REDIS_HOST,
-  port: env.REDIS_PORT,
-  db: env.REDIS_DB,
-  password: env.REDIS_PASSWORD,
-});
+const redisUrl = `redis://${env.REDIS_PASSWORD ? `:${env.REDIS_PASSWORD}@` : ''}${env.REDIS_HOST}:${env.REDIS_PORT}/${env.REDIS_DB}`;
+
+export const redisClient = new RedisClient(redisUrl);

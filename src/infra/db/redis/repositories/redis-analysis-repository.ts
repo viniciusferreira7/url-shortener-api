@@ -1,11 +1,11 @@
-import type Redis from 'ioredis';
+import type { RedisClient } from 'bun';
 import type { AnalysisRepository } from '@/domain/url-shortening/application/repositories/analysis-repository';
 import { env } from '@/infra/env';
 import { redisClient } from '../client';
 
 export class RedisAnalysisRepository implements AnalysisRepository {
   constructor(
-    private readonly redis: Redis,
+    private readonly redis: RedisClient,
     private readonly envService: typeof env
   ) {
     this.redis = redisClient;
@@ -44,16 +44,16 @@ export class RedisAnalysisRepository implements AnalysisRepository {
   }
 
   async incrementBy(key: string, id: string, amount: number): Promise<void> {
-    await this.redis.zincrby(key, amount, id);
+    await this.redis.send('ZINCRBY', [key, amount.toString(), id]);
   }
 
   async getUrlRanking(limit: number): Promise<(string | number)[]> {
-    const score = await this.redis.zrange(
+    const score = await this.redis.send('ZRANGE', [
       'url-ranking',
-      1,
-      limit,
+      '1',
+      limit.toString(),
       'WITHSCORES'
-    );
+    ]);
 
     return score;
   }

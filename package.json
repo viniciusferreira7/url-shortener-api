@@ -33,7 +33,6 @@
     "drizzle-orm": "^0.44.6",
     "elysia": "latest",
     "hashids": "^2.3.0",
-    "ioredis": "^5.9.1",
     "pg": "^8.16.3",
     "zod": "^4.1.11"
   },
@@ -48,6 +47,7 @@
     "@semantic-release/release-notes-generator": "^14.1.0",
     "@types/pg": "^8.15.5",
     "bun-types": "latest",
+    "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.5"
   },
   "module": "src/index.js"
