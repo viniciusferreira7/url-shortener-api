@@ -1,13 +1,12 @@
 import cors from '@elysiajs/cors';
 import { Elysia } from 'elysia';
 import { env } from '@/infra/env';
-import { betterAuthPlugin } from './http/plugins/better-auth';
+import { privateControllers } from './http/controllers/private';
+import { publicControllers } from './http/controllers/public';
 import { openApiPlugin } from './http/plugins/openapi';
-import { auth } from './lib/auth';
 
-const app = new Elysia()
+const app = new Elysia({ prefix: 'api' })
   .use(openApiPlugin)
-  .use(betterAuthPlugin)
   .use(
     cors({
       origin: env.CLIENT_URL,
@@ -16,8 +15,8 @@ const app = new Elysia()
       allowedHeaders: ['Content-Type', 'Authorization'],
     })
   )
-  .mount(auth.handler)
-  .get('/', () => 'Hello Elysia')
+  .use(privateControllers)
+  .use(publicControllers)
   .listen(env.PORT);
 
 console.log(
