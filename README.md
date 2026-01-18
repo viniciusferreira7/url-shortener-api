@@ -349,8 +349,8 @@ Images are automatically published to Docker Hub under:
 
 ## 🌐 API Documentation
 
-API documentation is available via OpenAPI/Swagger at:
-- Development: [http://localhost:3333/swagger](http://localhost:3333/swagger)
+API documentation is available via OpenAPI/Scalar at:
+- Development: [http://localhost:3333/api/openapi](http://localhost:3333/api/openapi)
 
 ## 📚 Use Cases
 
