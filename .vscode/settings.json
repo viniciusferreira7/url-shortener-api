@@ -9,7 +9,9 @@
     "GITHUB",
     "hashids",
     "Hashids",
+    "healthz",
     "isready",
+    "readyz",
     "WITHSCORES",
     "zincrby",
     "zrange"
