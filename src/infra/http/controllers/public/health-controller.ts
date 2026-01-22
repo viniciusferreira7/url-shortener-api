@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import Elysia from 'elysia';
 import z from 'zod';
 import { drizzleDb } from '@/infra/db/drizzle/client';
@@ -13,11 +14,14 @@ export const healthController = new Elysia()
     {
       detail: {
         summary: 'Health check',
-        tags: ['health'],
+        tags: ['Health'],
       },
       response: {
         200: z.object({
           message: z.string(),
+        }),
+        500: z.object({
+          message: z.string().describe('Internal server error'),
         }),
       },
     }
@@ -30,7 +34,7 @@ export const healthController = new Elysia()
       try {
         const [redisResponse, _drizzleResponse] = await Promise.all([
           redisClient.ping(),
-          drizzleDb.execute('select 1'),
+          drizzleDb.execute(sql`SELECT COUNT(name) FROM users LIMIT 1`),
         ]);
 
         if (redisResponse !== 'PONG') {
@@ -47,11 +51,14 @@ export const healthController = new Elysia()
     {
       detail: {
         summary: 'Ready check',
-        tags: ['health'],
+        tags: ['Health'],
       },
       response: {
         200: z.object({
           message: z.string(),
+        }),
+        503: z.object({
+          message: z.string().describe('Service is unavailable'),
         }),
       },
     }
