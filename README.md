@@ -64,11 +64,22 @@ src/
 │       └── enterprise/
 │           ├── entities/          # Domain entities (Url, User)
 │           └── value-objects/     # Value objects (UrlWithAuthor)
+├── system/
+│   └── application/
+│       ├── repositories/      # System repository interfaces
+│       │   └── system-health-repository.ts  # Health check interface
+│       └── use-cases/         # System use cases
+│           └── check-services-health.ts     # Health check logic
 ├── infra/
 │   ├── cache/                 # Cache layer abstraction
 │   │   └── cache-repository.ts    # Cache interface for Cache-Aside pattern
 │   ├── http/
 │   │   └── controllers/       # HTTP controllers
+│   │       ├── auth/               # Authenticated routes
+│   │       └── public/             # Public routes (health checks)
+│   ├── system/
+│   │   └── repositories/      # System infrastructure implementations
+│   │       └── system-health-repository.ts  # Redis & PostgreSQL health checks
 │   ├── db/
 │   │   ├── drizzle/           # PostgreSQL implementation
 │   │   │   ├── repositories/      # Drizzle repositories
@@ -85,7 +96,7 @@ src/
 │   │       │   ├── redis-analysis-repository.ts  # Analytics & ranking
 │   │       │   └── redis-cache-repository.ts     # Cache-Aside implementation
 │   │       └── client.ts          # Redis connection
-│   ├── factories/             # Dependency injection factories (12 factories)
+│   ├── factories/             # Dependency injection factories (13 factories)
 │   ├── url-code/              # URL code generator implementation
 │   │   └── hash-url-code-generator.ts    # Hashids with base64 URL-safe
 │   ├── lib/
@@ -352,6 +363,61 @@ Images are automatically published to Docker Hub under:
 API documentation is available via OpenAPI/Scalar at:
 - Development: [http://localhost:3333/api/openapi](http://localhost:3333/api/openapi)
 
+## 🏥 Health Checks
+
+The application provides two health check endpoints following Kubernetes best practices:
+
+### Liveness Probe (`/healthz`)
+Basic health check to verify the application is running:
+```bash
+curl http://localhost:3333/healthz
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Ok"
+}
+```
+
+### Readiness Probe (`/readyz`)
+Comprehensive health check for external service dependencies:
+```bash
+curl http://localhost:3333/readyz
+```
+
+**Response (200 OK) - All services healthy:**
+```json
+{
+  "status": "ok",
+  "services": {
+    "redis": true,
+    "db": true
+  }
+}
+```
+
+**Response (503 Service Unavailable) - Service degraded:**
+```json
+{
+  "status": "down",
+  "services": {
+    "redis": false,
+    "db": true
+  }
+}
+```
+
+**Checked Services:**
+- **PostgreSQL** - Database connection via `SELECT 1` query
+- **Redis** - Cache connection via `PING` command
+
+**Architecture:**
+- Uses Clean Architecture with `CheckServicesHealthUseCase`
+- Repository pattern with `SystemHealthRepository` interface
+- Implementation in `InfraSystemHealthRepository`
+- Factory pattern for dependency injection via `makeCheckServicesHealthUseCase()`
+
 ## 📚 Use Cases
 
 The application implements domain-driven design with comprehensive use cases for URL management:
@@ -436,6 +502,9 @@ import {
 **Analytics:**
 - `makeGetRankingUseCase` - Get most accessed URLs
 - `makeGetRankingByMostLikedUseCase` - Get most liked URLs
+
+**System:**
+- `makeCheckServicesHealthUseCase` - Check Redis and PostgreSQL health
 
 ### Usage Example
 
