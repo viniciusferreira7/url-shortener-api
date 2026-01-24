@@ -1,8 +1,6 @@
-import { sql } from 'drizzle-orm';
 import Elysia from 'elysia';
 import z from 'zod';
-import { drizzleDb } from '@/infra/db/drizzle/client';
-import { redisClient } from '@/infra/db/redis/client';
+import { makeCheckServicesHealthUseCase } from '@/infra/factories/make-check-services-health-use-case';
 
 export const healthController = new Elysia()
   .get(
@@ -29,24 +27,25 @@ export const healthController = new Elysia()
   .get(
     '/readyz',
     async ({ set }) => {
-      set.status = 200;
+      const checkServicesHealthUseCase = makeCheckServicesHealthUseCase();
 
-      try {
-        const [redisResponse, _drizzleResponse] = await Promise.all([
-          redisClient.ping(),
-          drizzleDb.execute(sql`SELECT COUNT(name) FROM users LIMIT 1`),
-        ]);
+      const result = await checkServicesHealthUseCase.execute();
 
-        if (redisResponse !== 'PONG') {
+      if (result.isRight()) {
+        const { status, services } = result.value;
+
+        if (status === 'down') {
           set.status = 503;
-
-          return { message: 'Service is unavailable' };
         }
-      } catch (_error) {
-        return { message: 'Service is unavailable' };
+
+        return { status, services };
       }
 
-      return { message: 'ok' };
+      set.status = 503;
+      return {
+        status: 'down',
+        services: { redis: false, db: false },
+      };
     },
     {
       detail: {
@@ -55,10 +54,18 @@ export const healthController = new Elysia()
       },
       response: {
         200: z.object({
-          message: z.string(),
+          status: z.string().describe('ok'),
+          services: z.object({
+            redis: z.boolean().default(false),
+            db: z.boolean().default(false),
+          }),
         }),
         503: z.object({
-          message: z.string().describe('Service is unavailable'),
+          status: z.string().describe('down'),
+          services: z.object({
+            redis: z.boolean().default(false),
+            db: z.boolean().default(false),
+          }),
         }),
       },
     }
