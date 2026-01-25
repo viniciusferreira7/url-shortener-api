@@ -5,6 +5,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { openAPI } from 'better-auth/plugins';
 import { env } from '@/infra/env';
 import { drizzleDb } from '../db/drizzle/client';
+import { RedisSecondaryStorageRepository } from '../db/redis/repositories/redis-secondary-storage-repository';
 
 export const auth = betterAuth({
   database: drizzleAdapter(drizzleDb, {
@@ -22,7 +23,15 @@ export const auth = betterAuth({
       verify: ({ password, hash }) => Bun.password.verify(password, hash),
     },
   },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 10 * 60, // 5 minutes
+    },
+  },
+  secondaryStorage: new RedisSecondaryStorageRepository(),
   advanced: {
+    cookiePrefix: 'url-shortener:',
     database: {
       generateId: false,
     },

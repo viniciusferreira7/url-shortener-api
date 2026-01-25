@@ -2,6 +2,7 @@ import cors from '@elysiajs/cors';
 import { Elysia } from 'elysia';
 import { env } from '@/infra/env';
 import { openApiPlugin } from '../../plugins/openapi';
+import { healthController } from './health-controller';
 
 export const publicControllers = new Elysia()
   .use(openApiPlugin)
@@ -13,8 +14,5 @@ export const publicControllers = new Elysia()
       allowedHeaders: ['Content-Type', 'Authorization'],
     })
   )
-  //TODO: add API KEY using JWT
-  .get('/health', ({ set }) => {
-    set.status = 200;
-    return { status: 'ok' };
-  });
+  .use(healthController);
+//TODO: add API KEY using JWT
