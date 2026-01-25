@@ -93,9 +93,12 @@ src/
 │   │   │   └── client.ts          # Database connection
 │   │   └── redis/             # Redis implementation
 │   │       ├── repositories/      # Redis repositories
-│   │       │   ├── redis-analysis-repository.ts  # Analytics & ranking
-│   │       │   └── redis-cache-repository.ts     # Cache-Aside implementation
+│   │       │   ├── redis-analysis-repository.ts      # Analytics & ranking
+│   │       │   ├── redis-cache-repository.ts         # Cache-Aside implementation
+│   │       │   └── redis-secondary-storage-repository.ts  # Better Auth session caching
 │   │       └── client.ts          # Redis connection
+│   ├── storage/               # Storage layer abstraction
+│   │   └── secondary-storage-repository.ts  # Secondary storage interface
 │   ├── factories/             # Dependency injection factories (13 factories)
 │   ├── url-code/              # URL code generator implementation
 │   │   └── hash-url-code-generator.ts    # Hashids with base64 URL-safe
@@ -252,7 +255,7 @@ All tables use UUIDv7 for primary keys, providing:
 ### Redis (Bun Native Client)
 - **Caching** - Reduces database load for frequently accessed data
 - **Analytics** - Real-time URL access tracking and ranking
-- **Session storage** - Fast session lookups
+- **Session storage** - Better Auth secondary storage with 10-minute cookie cache
 - **View counters** - Atomic increment operations for URL views
 - **Performance** - Leverages Bun's built-in Redis client for optimal performance
 
@@ -288,12 +291,48 @@ This pattern provides:
 - ✅ Automatic cache refresh on data changes
 - ✅ Domain entity integrity (proper deserialization)
 
+### Session Caching Architecture
+
+The application implements a **dual-layer session caching strategy** using Better Auth:
+
+**Cookie Cache Layer (First Layer):**
+- 10-minute TTL for session cookies
+- Reduces round-trips to Redis and PostgreSQL
+- Fastest session validation for active users
+
+**Redis Secondary Storage (Second Layer):**
+- Implemented via `RedisSecondaryStorageRepository`
+- Stores session data with optional TTL
+- Provides distributed session lookups across multiple instances
+- Falls back to PostgreSQL when cache misses occur
+
+**PostgreSQL (Persistent Layer):**
+- Authoritative source for all session data
+- Handles session creation, updates, and deletions
+- Ensures data consistency across distributed caches
+
+**Session Lookup Flow:**
+1. Check cookie cache (10-minute TTL)
+2. **Cache Hit**: Return session immediately
+3. **Cache Miss**: Check Redis secondary storage
+4. **Redis Hit**: Return cached session, update cookie cache
+5. **Redis Miss**: Query PostgreSQL, populate both caches
+
+This architecture provides:
+- ✅ Sub-millisecond session validation for active users
+- ✅ Horizontal scalability with Redis-backed sessions
+- ✅ Reduced database load for authentication requests
+- ✅ Graceful degradation if Redis is unavailable
+
 ## 🔐 Authentication
 
 Authentication is handled by [Better Auth](https://www.better-auth.com) with:
-- Email/password authentication
-- Session management
-- PostgreSQL adapter via Drizzle ORM
+- Email/password authentication with Bun's native password hashing
+- Session management with dual-layer caching:
+  - Cookie cache (10 minutes TTL)
+  - Redis secondary storage for distributed session lookups
+- PostgreSQL adapter via Drizzle ORM for persistent session storage
+- Auto sign-in after registration
 
 ## 🐳 Docker Support
 
@@ -536,6 +575,7 @@ Each factory automatically wires up:
 - **DrizzleUsersRepository** - PostgreSQL user management
 - **RedisAnalysisRepository** - Redis analytics and URL access tracking
 - **RedisCacheRepository** - Redis cache layer (Cache-Aside pattern implementation)
+- **RedisSecondaryStorageRepository** - Better Auth session caching (integrated in auth.ts)
 - **HashUrlCodeGenerator** - URL code generation using Hashids with base64 URL-safe alphabet
 
 This approach ensures:
