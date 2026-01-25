@@ -12,6 +12,7 @@
     "healthz",
     "isready",
     "readyz",
+    "uuidv",
     "WITHSCORES",
     "zincrby",
     "zrange"
