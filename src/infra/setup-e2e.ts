@@ -9,6 +9,7 @@ import { execSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { afterEach } from 'node:test';
 import { RedisClient } from 'bun';
+import { sql } from 'drizzle-orm';
 import { drizzleDb } from './db/drizzle/client';
 import { envSchema } from './env';
 
@@ -49,7 +50,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await drizzleDb.execute(`drop schema if exists "${schemaId}" cascade`);
+  await drizzleDb.execute(sql`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE`);
 
   if (redis) {
     await redis.send('FLUSHDB', []);
