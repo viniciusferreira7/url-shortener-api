@@ -6,6 +6,7 @@ import { redisClient } from '../db/redis/client';
 import { RedisAnalysisRepository } from '../db/redis/repositories/redis-analysis-repository';
 import { RedisCacheRepository } from '../db/redis/repositories/redis-cache-repository';
 import { env } from '../env';
+import { hashids } from '../lib/hashids';
 import { HashUrlCodeGenerator } from '../url-code/hash-url-code-generator';
 
 export function makeCreateUrlUseCase(): CreateUrlUseCase {
@@ -17,7 +18,7 @@ export function makeCreateUrlUseCase(): CreateUrlUseCase {
     analysisRepository,
     cacheRepository
   );
-  const urlCodeGenerator = new HashUrlCodeGenerator();
+  const urlCodeGenerator = new HashUrlCodeGenerator(hashids);
 
   return new CreateUrlUseCase(
     usersRepository,
