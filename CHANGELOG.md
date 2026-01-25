@@ -1,3 +1,26 @@
+# [1.23.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.22.1...v1.23.0) (2026-01-25)
+
+
+### Bug Fixes
+
+* add missing param ([0bec22b](https://github.com/viniciusferreira7/url-shortener-api/commit/0bec22b495c368c3d6b16951bc369c34fc813ab0))
+* correct constructor ([ab7925e](https://github.com/viniciusferreira7/url-shortener-api/commit/ab7925ee4e8b3606e0e24ade67be586fadd0635e))
+* correct query to verify connection with database ([0a0398d](https://github.com/viniciusferreira7/url-shortener-api/commit/0a0398dd49b734416f5d7464410d56fa41d68a44))
+* correct SQL to drop schema ([461d4a1](https://github.com/viniciusferreira7/url-shortener-api/commit/461d4a14588b5bb338ccd11b41b5304cdf815382))
+
+
+### Features
+
+* add secondary storage using redis ([a4735f2](https://github.com/viniciusferreira7/url-shortener-api/commit/a4735f2aa979a21679df823398f26f00765303b4))
+* create controller to create URL ([ca0eff4](https://github.com/viniciusferreira7/url-shortener-api/commit/ca0eff4a406a97186f4341056d3a717ec58c5ec6))
+* create factory for check services health use case ([9ba79fd](https://github.com/viniciusferreira7/url-shortener-api/commit/9ba79fdd64f5077c76e3dd327fe90559c294f172))
+* create health and ready check for external services like redis and postgres ([810c679](https://github.com/viniciusferreira7/url-shortener-api/commit/810c67979f0fc32d981be462e3e7e016e2bf192b))
+* create migrations for tables ([1549a41](https://github.com/viniciusferreira7/url-shortener-api/commit/1549a4116a5d22620f2f50ca58fcae1802926d9a))
+* create system module with health check use case ([8128426](https://github.com/viniciusferreira7/url-shortener-api/commit/81284266931ec4b0a3eb958ab461e604f2796fc1))
+* create url presenter ([fd55885](https://github.com/viniciusferreira7/url-shortener-api/commit/fd558854be851d4eb0e730784bd4ca95b40da9ae))
+* implement system health repository for PostgreSQL and Redis checks ([0b561cf](https://github.com/viniciusferreira7/url-shortener-api/commit/0b561cf7c5f3aeca6ec10556f8b9a47a73f0644d))
+* schema of url to use on response ([e9758a6](https://github.com/viniciusferreira7/url-shortener-api/commit/e9758a6c8f876beda3e284f96aa968c1fe132643))
+
 ## [1.22.1](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.22.0...v1.22.1) (2026-01-18)
 
 
