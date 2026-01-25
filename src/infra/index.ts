@@ -1,7 +1,7 @@
 import cors from '@elysiajs/cors';
 import { Elysia } from 'elysia';
 import { env } from '@/infra/env';
-import { privateControllers } from './http/controllers/private';
+import { authControllers } from './http/controllers/auth';
 import { publicControllers } from './http/controllers/public';
 import { openApiPlugin } from './http/plugins/openapi';
 
@@ -15,7 +15,7 @@ const app = new Elysia({ prefix: 'api' })
       allowedHeaders: ['Content-Type', 'Authorization'],
     })
   )
-  .use(privateControllers)
+  .use(authControllers)
   .use(publicControllers)
   .listen(env.PORT);
 
