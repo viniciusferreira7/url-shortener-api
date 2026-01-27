@@ -3,7 +3,7 @@ services:
     container_name: url-shortener-api-postgresql
     image: postgres:17.2
     ports:
-      - 5432:5432
+      - ${DATABASE_PORT:-5432}:5432
     environment:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -23,7 +23,7 @@ services:
     container_name: url-shortener-api-redis
     image: redis:7.4-alpine
     ports:
-      - 6379:6379
+      - ${REDIS_PORT:-6379}:6379
     command: redis-server --requirepass ${REDIS_PASSWORD}
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
