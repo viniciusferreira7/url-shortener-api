@@ -17,9 +17,14 @@ export const envSchema = z.object({
   REDIS_PASSWORD: z.string(),
   REDIS_CODE_ID: z.coerce.number(),
 
+  CLIENT_URL: z.url(),
+
   SECRET_HASH_KEY: z.string(),
 
-  CLIENT_URL: z.url(),
+  GH_TOKEN: z.string(),
+
+  BETTER_AUTH_SECRET: z.string(),
+  BETTER_AUTH_URL: z.url(),
 });
 
 const envSchemaResult = envSchema.safeParse(process.env);
