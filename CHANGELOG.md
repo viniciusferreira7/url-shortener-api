@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.23.0...v1.24.0) (2026-01-27)
+
+
+### Features
+
+* add validation for missing envs ([9c97fb6](https://github.com/viniciusferreira7/url-shortener-api/commit/9c97fb680fe24e484ee8cf084472698069f39a9a))
+
 # [1.23.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.22.1...v1.23.0) (2026-01-25)
 
 
