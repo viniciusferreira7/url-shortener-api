@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.24.0...v1.24.1) (2026-01-27)
+
+
+### Bug Fixes
+
+* correct port mapping ([f74f370](https://github.com/viniciusferreira7/url-shortener-api/commit/f74f37037c923858bf9d17a92b05d42ef571ba14))
+
 # [1.24.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.23.0...v1.24.0) (2026-01-27)
 
 
