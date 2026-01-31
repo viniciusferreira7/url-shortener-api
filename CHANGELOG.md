@@ -1,3 +1,27 @@
+# [1.25.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.24.1...v1.25.0) (2026-01-31)
+
+
+### Bug Fixes
+
+* add empty GH_TOKEN to E2E test environment ([b50edce](https://github.com/viniciusferreira7/url-shortener-api/commit/b50edce7566a0dc87667f6d6846c459b4d5ef83a))
+* configure Redis with password authentication in CI ([bd9511c](https://github.com/viniciusferreira7/url-shortener-api/commit/bd9511c51e0dea86237c4f26ad7d6782280e0812))
+* correct E2E test path in package.json ([dca2251](https://github.com/viniciusferreira7/url-shortener-api/commit/dca225110f4638addbefae8ec2d23c52e2eb1429))
+* correct PostgreSQL and Redis health checks in CI ([1e02421](https://github.com/viniciusferreira7/url-shortener-api/commit/1e024218ef9f966611ea5cef36f2151f484b2ec3))
+* exclude E2E tests from unit test command ([28d5f37](https://github.com/viniciusferreira7/url-shortener-api/commit/28d5f377ff33466b98237bbd9f1393f7ed91f4f9))
+* remove quotes from E2E test glob pattern ([7192058](https://github.com/viniciusferreira7/url-shortener-api/commit/71920584480ead9d42cff98651ed0c38edc4852f))
+* remove Redis password from CI service ([1a9c070](https://github.com/viniciusferreira7/url-shortener-api/commit/1a9c0706c769bd94a9cf352b87846b29c63d943e))
+* remove secrets from Redis service options in CI ([051a28f](https://github.com/viniciusferreira7/url-shortener-api/commit/051a28f3e30c7cdd3e27088ec21dba35bcc7f718))
+* simplify test paths to use directories ([246c6f9](https://github.com/viniciusferreira7/url-shortener-api/commit/246c6f9142c729dec478c71a700e943586a8e532))
+* update response schema validation for UUID v4 ([de2f2dd](https://github.com/viniciusferreira7/url-shortener-api/commit/de2f2ddca08093b7c0a0b2b740df014cff5c13bb))
+* use explicit glob patterns for unit tests ([ea73ef3](https://github.com/viniciusferreira7/url-shortener-api/commit/ea73ef3c29a96c51e9e34589fbee0bd87eed0682))
+* use path-based glob patterns for test isolation ([0e084d0](https://github.com/viniciusferreira7/url-shortener-api/commit/0e084d07b118d36dfbbe877d745bc7355160fb22))
+* use test name pattern to exclude E2E tests ([effcad2](https://github.com/viniciusferreira7/url-shortener-api/commit/effcad24272842e3b4fdd61aefa4d5e0165633a0))
+
+
+### Features
+
+* add E2E testing infrastructure ([a769ed2](https://github.com/viniciusferreira7/url-shortener-api/commit/a769ed21833384cb1da7b32432e4744dabe2c4d3))
+
 ## [1.24.1](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.24.0...v1.24.1) (2026-01-27)
 
 
