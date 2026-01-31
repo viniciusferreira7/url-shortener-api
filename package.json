@@ -5,7 +5,6 @@
     "dev": "bun run --watch src/infra/index.ts",
     "db:generate": "bun --env-file .env --bun drizzle-kit generate",
     "db:migrate": "bun --env-file .env drizzle-kit migrate",
-    "db:push": "bun --env-file .env --bun drizzle-kit push",
     "db:studio": "bun --env-file .env --bun drizzle-kit studio",
     "docker:up": "docker compose --env-file .env up -d",
     "docker:down": "docker compose down",
@@ -22,16 +21,18 @@
     "check:fix": "biome check --write src/",
     "check:type": "bunx tsc --noEmit --skipLibCheck",
     "test": "bun test src/core src/domain",
+    "test:e2e": "bun test --preload src/infra/setup-e2e.ts --env-file .env src/infra/http/controller",
     "test:watch": "bun test src/core src/domain --watch",
     "verify": "git pull origin $(git branch --show-current) && bun test && bun check:fix && bun check:type"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",
+    "@elysiajs/eden": "^1.4.6",
     "@elysiajs/openapi": "^1.4.11",
     "base62": "^2.0.2",
     "better-auth": "^1.3.26",
     "drizzle-orm": "^0.44.6",
-    "elysia": "latest",
+    "elysia": "^1.4.22",
     "hashids": "^2.3.0",
     "pg": "^8.16.3",
     "zod": "^4.1.11"
