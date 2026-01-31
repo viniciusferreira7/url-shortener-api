@@ -23,7 +23,7 @@ A high-performance URL shortener API built with modern technologies including El
 - ✅ User authentication with Better Auth
 - ✅ PostgreSQL database with Drizzle ORM
 - ✅ Redis caching support with cache invalidation
-- ✅ UUIDv7 for sortable, time-ordered IDs
+- ✅ UUID primary keys with PostgreSQL gen_random_uuid()
 - ✅ OpenAPI/Swagger documentation
 - ✅ CORS configuration
 - ✅ Docker & Docker Compose support with multi-arch builds
@@ -43,7 +43,8 @@ A high-performance URL shortener API built with modern technologies including El
 - ✅ PostgreSQL for scalable URL read operations
 
 ### Quality Assurance
-- ✅ Comprehensive test coverage (97+ tests)
+- ✅ Comprehensive test coverage (97+ unit tests)
+- ✅ E2E testing with schema isolation
 - ✅ Type-safe error handling
 - ✅ Domain-driven design architecture
 
@@ -89,7 +90,7 @@ src/
 │   │   │   │   ├── drizzle-url-mapper.ts
 │   │   │   │   ├── drizzle-url-with-author-mapper.ts
 │   │   │   │   └── drizzle-user-mapper.ts
-│   │   │   ├── schema/            # Database schema (UUIDv7)
+│   │   │   ├── schema/            # Database schema (UUID v4)
 │   │   │   └── client.ts          # Database connection
 │   │   └── redis/             # Redis implementation
 │   │       ├── repositories/      # Redis repositories
@@ -107,6 +108,8 @@ src/
 │   │   └── hashids.ts         # Hashids configuration
 │   └── env.ts                 # Environment variables schema
 ├── test/
+│   ├── e2e/                   # E2E test helpers
+│   │   └── auth-helpers.ts        # Better Auth test utilities
 │   ├── repositories/          # In-memory repository implementations
 │   │   ├── in-memory-urls-repository.ts
 │   │   ├── in-memory-users-repository.ts
@@ -247,10 +250,10 @@ The application uses PostgreSQL as its primary database, handling:
   - Like counts and analytics
   - Author relationships
 
-All tables use UUIDv7 for primary keys, providing:
-- Time-ordered IDs for better indexing
-- Sortable by creation time
-- Better database performance
+All tables use UUID v4 for primary keys via PostgreSQL's `gen_random_uuid()` function, providing:
+- Cryptographically secure random IDs
+- Better cross-platform compatibility
+- Native PostgreSQL generation without runtime dependencies
 
 ### Redis (Bun Native Client)
 - **Caching** - Reduces database load for frequently accessed data
@@ -618,23 +621,41 @@ Located in `src/test/repositories/`, these implementations allow testing without
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run unit tests
 bun run test
 
-# Run tests in watch mode
+# Run unit tests in watch mode
 bun run test:watch
+
+# Run E2E tests
+bun run test:e2e
 ```
 
 Tests are located in:
 - `src/core/**/*.test.ts` - Core layer tests
 - `src/domain/**/*.test.ts` - Domain layer tests
+- `src/infra/http/controllers/**/*.e2e.spec.ts` - E2E tests
+
+### E2E Testing
+
+E2E tests use:
+- **Schema Isolation** - Each test suite gets its own PostgreSQL schema
+- **Better Auth Integration** - Test helpers for authentication (`src/test/e2e/auth-helpers.ts`)
+- **Faker.js** - Generate realistic test data
+- **Automatic Cleanup** - Schemas are dropped after tests complete
+
+**E2E Test Setup:**
+- `setup-e2e.ts` - Global test setup with schema isolation
+- `auth-helpers.ts` - Authentication utilities for creating test users
+- Test files follow `.e2e.spec.ts` naming pattern
 
 **Testing Best Practices:**
 
-1. Use in-memory repositories for unit tests to avoid database dependencies
-2. Test use cases and business logic in isolation
-3. Focus on behavior rather than implementation details
-4. Mock external dependencies
+1. **Unit Tests**: Use in-memory repositories for unit tests to avoid database dependencies
+2. **E2E Tests**: Test complete request/response flows with real database
+3. Test use cases and business logic in isolation
+4. Focus on behavior rather than implementation details
+5. Mock external dependencies in unit tests
 
 ## 📄 Environment Variables
 
