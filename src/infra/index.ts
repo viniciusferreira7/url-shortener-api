@@ -5,7 +5,7 @@ import { authControllers } from './http/controllers/auth';
 import { publicControllers } from './http/controllers/public';
 import { openApiPlugin } from './http/plugins/openapi';
 
-const app = new Elysia({ prefix: 'api' })
+export const app = new Elysia({ prefix: 'api' })
   .use(openApiPlugin)
   .use(
     cors({
