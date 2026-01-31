@@ -24,7 +24,7 @@
     "test:unit": "bun test ./src/core ./src/domain",
     "test:unit:watch": "bun test ./src/core ./src/domain --watch",
     "test:e2e": "bun test --preload ./src/infra/setup-e2e.ts --env-file .env ./src/infra/http/controllers/**/*.e2e.spec.ts",
-    "verify": "git pull origin $(git branch --show-current) && bun test:unit && bun docker:up && bun test:e2e && bun docker:stop && bun check:fix && bun check:type"
+    "verify": "git pull origin $(git branch --show-current) && bun test:unit && bun docker:up && bun test:e2e && bun check:fix && bun check:type"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",
