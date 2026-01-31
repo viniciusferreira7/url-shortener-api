@@ -15,9 +15,7 @@ import { users } from './users';
 export const urls = pgTable(
   'urls',
   {
-    id: uuid('id')
-      .primaryKey()
-      .default(sql`gen_random_uuid()`),
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
     name: varchar('name', { length: 255 }).notNull(),
     destinationUrl: text('destination_url').notNull(),
     code: text('code').notNull(),
@@ -25,9 +23,7 @@ export const urls = pgTable(
     description: varchar('description', { length: 575 }),
     likes: bigint('likes', { mode: 'number' }).notNull().default(0),
     score: bigint('score', { mode: 'number' }).notNull().default(0),
-    createdAt: timestamp('created_at')
-      .notNull()
-      .default(sql`now()`),
+    createdAt: timestamp('created_at').notNull().default(sql`now()`),
     updatedAt: timestamp('updated_at'),
 
     authorId: uuid('user_id')

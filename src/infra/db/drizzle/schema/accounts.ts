@@ -3,12 +3,8 @@ import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './users';
 
 export const accounts = pgTable('accounts', {
-  id: uuid('id')
-    .primaryKey()
-    .default(sql`gen_random_uuid()`),
-  accountId: uuid('account_id')
-    .notNull()
-    .default(sql`gen_random_uuid()`),
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  accountId: uuid('account_id').notNull().default(sql`gen_random_uuid()`),
   providerId: text('provider_id').notNull(),
   userId: uuid('user_id')
     .notNull()
@@ -20,10 +16,6 @@ export const accounts = pgTable('accounts', {
   refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
   scope: text('scope'),
   password: text('password'),
-  createdAt: timestamp('created_at')
-    .default(sql`now()`)
-    .notNull(),
-  updatedAt: timestamp('updated_at')
-    .default(sql`now()`)
-    .notNull(),
+  createdAt: timestamp('created_at').default(sql`now()`).notNull(),
+  updatedAt: timestamp('updated_at').default(sql`now()`).notNull(),
 });
