@@ -93,11 +93,10 @@ jobs:
       redis:
         image: redis:7.4-alpine
         options: >-
-          --health-cmd="redis-cli -a testpassword ping || exit 1"
+          --health-cmd="redis-cli ping"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-          redis-server --requirepass testpassword
         ports:
           - 6379:6379
 
@@ -110,7 +109,7 @@ jobs:
       REDIS_HOST: localhost
       REDIS_PORT: 6379
       REDIS_DB: 0
-      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      REDIS_PASSWORD: ""
       REDIS_CODE_ID: 1000
       CLIENT_URL: ${{ secrets.CLIENT_URL }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
