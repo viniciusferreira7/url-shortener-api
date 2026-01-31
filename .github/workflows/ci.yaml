@@ -83,7 +83,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           POSTGRES_DB: ${{ secrets.DATABASE_NAME }}
         options: >-
-          --health-cmd="pg_isready -U postgres -d"
+          --health-cmd="pg_isready"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -92,13 +92,12 @@ jobs:
 
       redis:
         image: redis:7.4-alpine
-        env:
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
         options: >-
-          --health-cmd="redis-cli ping"
+          --health-cmd="redis-cli -a ${{ secrets.REDIS_PASSWORD }} ping || exit 1"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+          redis-server --requirepass ${{ secrets.REDIS_PASSWORD }}
         ports:
           - 6379:6379
 
