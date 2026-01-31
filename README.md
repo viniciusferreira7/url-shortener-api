@@ -223,6 +223,12 @@ bun run dev
 - \`bun run docker:push\` - Push images to Docker Hub
 - \`bun run docker:build:push\` - Build production image, tag, and push to Docker Hub
 
+### Testing
+- \`bun run test\` - Run unit tests (src/core and src/domain)
+- \`bun run test:unit\` - Run unit tests (alias for test)
+- \`bun run test:unit:watch\` - Run unit tests in watch mode
+- \`bun run test:e2e\` - Run E2E tests with schema isolation
+
 ### Code Quality
 - \`bun run lint\` - Lint code with Biome
 - \`bun run lint:fix\` - Fix linting issues
@@ -382,6 +388,7 @@ bun run docker:build:push
 The project includes a GitHub Actions workflow (`.github/workflows/ci.yaml`) that automatically:
 - ✅ Runs code quality checks (Biome linting & formatting)
 - ✅ Runs unit tests (Bun test runner)
+- ✅ Runs E2E tests with PostgreSQL and Redis services
 - ✅ Builds the application
 - ✅ Builds production Docker image with multi-stage build
 - ✅ Pushes Docker images to Docker Hub with tags:
