@@ -1,3 +1,0 @@
-[test]
-# Exclude E2E tests from default test discovery
-preload = []
