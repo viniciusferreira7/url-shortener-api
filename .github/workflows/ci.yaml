@@ -65,7 +65,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Run unit tests
-        run: bun run test
+        run: bun run test:unit
 
   test-e2e:
     name: E2E Tests
@@ -93,11 +93,10 @@ jobs:
       redis:
         image: redis:7.4-alpine
         options: >-
-          --health-cmd="redis-cli -a ${{ secrets.REDIS_PASSWORD }} ping || exit 1"
+          --health-cmd="redis-cli ping"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-          redis-server --requirepass ${{ secrets.REDIS_PASSWORD }}
         ports:
           - 6379:6379
 
@@ -107,11 +106,11 @@ jobs:
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
-      REDIS_DB: ${{ secrets.REDIS_DB }}
-      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-      REDIS_CODE_ID: ${{ secrets.REDIS_CODE_ID }}
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      REDIS_PASSWORD: ""
+      REDIS_CODE_ID: 1000
       CLIENT_URL: ${{ secrets.CLIENT_URL }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
