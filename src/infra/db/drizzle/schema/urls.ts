@@ -1,4 +1,4 @@
-import { randomUUIDv7 } from 'bun';
+import { sql } from 'drizzle-orm';
 import {
   bigint,
   boolean,
@@ -17,7 +17,7 @@ export const urls = pgTable(
   {
     id: uuid('id')
       .primaryKey()
-      .$defaultFn(() => randomUUIDv7()),
+      .default(sql`gen_random_uuid()`),
     name: varchar('name', { length: 255 }).notNull(),
     destinationUrl: text('destination_url').notNull(),
     code: text('code').notNull(),
@@ -27,8 +27,8 @@ export const urls = pgTable(
     score: bigint('score', { mode: 'number' }).notNull().default(0),
     createdAt: timestamp('created_at')
       .notNull()
-      .$defaultFn(() => new Date()),
-    updatedAt: timestamp('updated_at').$onUpdate(() => new Date()),
+      .default(sql`now()`),
+    updatedAt: timestamp('updated_at'),
 
     authorId: uuid('user_id')
       .notNull()

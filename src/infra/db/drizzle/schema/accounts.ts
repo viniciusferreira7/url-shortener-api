@@ -1,14 +1,14 @@
-import { randomUUIDv7 } from 'bun';
+import { sql } from 'drizzle-orm';
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './users';
 
 export const accounts = pgTable('accounts', {
   id: uuid('id')
     .primaryKey()
-    .$defaultFn(() => randomUUIDv7()),
+    .default(sql`gen_random_uuid()`),
   accountId: uuid('account_id')
     .notNull()
-    .$defaultFn(() => randomUUIDv7()),
+    .default(sql`gen_random_uuid()`),
   providerId: text('provider_id').notNull(),
   userId: uuid('user_id')
     .notNull()
@@ -21,9 +21,9 @@ export const accounts = pgTable('accounts', {
   scope: text('scope'),
   password: text('password'),
   createdAt: timestamp('created_at')
-    .$defaultFn(() => new Date())
+    .default(sql`now()`)
     .notNull(),
   updatedAt: timestamp('updated_at')
-    .$onUpdate(() => new Date())
+    .default(sql`now()`)
     .notNull(),
 });

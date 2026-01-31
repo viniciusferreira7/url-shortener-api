@@ -24,7 +24,7 @@ export class DrizzleUrlMapper {
     );
   }
   static toDrizzle(url: Url): UrlRaw {
-    return {
+    const data: UrlRaw = {
       id: url.id.toString(),
       name: url.name,
       destinationUrl: url.destinationUrl,
@@ -35,7 +35,9 @@ export class DrizzleUrlMapper {
       likes: url.likes,
       score: url.score,
       createdAt: url.createdAt,
-      updatedAt: url.updatedAt ?? null,
+      updatedAt: url?.updatedAt ? url.updatedAt : null,
     };
+
+    return data;
   }
 }
