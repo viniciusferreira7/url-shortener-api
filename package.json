@@ -20,9 +20,9 @@
     "check": "biome check src/",
     "check:fix": "biome check --write src/",
     "check:type": "bunx tsc --noEmit --skipLibCheck",
-    "test": "bun test 'src/core/**/*.spec.ts' 'src/domain/**/*.spec.ts'",
-    "test:e2e": "bun test --preload src/infra/setup-e2e.ts --env-file .env src/infra/http/controllers",
-    "test:watch": "bun test 'src/core/**/*.spec.ts' 'src/domain/**/*.spec.ts' --watch",
+    "test": "bun test ./src/core/**/*.spec.ts ./src/domain/**/*.spec.ts",
+    "test:e2e": "bun test --preload ./src/infra/setup-e2e.ts --env-file .env ./src/infra/http/controllers/**/*.e2e.spec.ts",
+    "test:watch": "bun test ./src/core/**/*.spec.ts ./src/domain/**/*.spec.ts --watch",
     "verify": "git pull origin $(git branch --show-current) && bun test && bun check:fix && bun check:type"
   },
   "dependencies": {
