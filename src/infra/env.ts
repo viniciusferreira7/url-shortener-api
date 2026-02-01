@@ -21,6 +21,8 @@ export const envSchema = z.object({
 
   SECRET_HASH_KEY: z.string(),
 
+  JWT_SECRET: z.string(),
+
   GH_TOKEN: z.string(),
 
   BETTER_AUTH_SECRET: z.string(),

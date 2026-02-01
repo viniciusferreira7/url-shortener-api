@@ -115,9 +115,8 @@ jobs:
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
       SECRET_HASH_KEY: ${{ secrets.SECRET_HASH_KEY }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       GH_TOKEN: ""
-      # JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
-      # JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
 
     steps:
       - name: Checkout code
@@ -193,6 +192,7 @@ jobs:
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
       SECRET_HASH_KEY: ${{ secrets.SECRET_HASH_KEY }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
       - name: Checkout code
