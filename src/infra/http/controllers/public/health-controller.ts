@@ -1,8 +1,10 @@
 import Elysia from 'elysia';
 import z from 'zod';
 import { makeCheckServicesHealthUseCase } from '@/infra/factories/make-check-services-health-use-case';
+import { jwtConfig } from '@/infra/jwt/jwt-config';
 
 export const healthController = new Elysia()
+  .use(jwtConfig)
   .get(
     '/healthz',
     ({ set }) => {
@@ -11,7 +13,7 @@ export const healthController = new Elysia()
     },
     {
       detail: {
-        summary: 'Health check',
+        summary: 'Health check (Public)',
         tags: ['Health'],
       },
       response: {
@@ -26,7 +28,36 @@ export const healthController = new Elysia()
   )
   .get(
     '/readyz',
-    async ({ set }) => {
+    async ({ set, jwt, request }) => {
+      const authorization = request.headers.get('authorization');
+
+      if (!authorization || !authorization.startsWith('Bearer ')) {
+        set.status = 401;
+        return {
+          status: 'unauthorized',
+          message: 'Missing or invalid API key',
+        };
+      }
+
+      const token = authorization.replace('Bearer ', '');
+
+      try {
+        const isValid = await jwt.verify(token);
+
+        if (!isValid) {
+          set.status = 401;
+          return {
+            status: 'unauthorized',
+            message: 'Invalid API key',
+          };
+        }
+      } catch (_error) {
+        set.status = 401;
+        return {
+          status: 'unauthorized',
+          message: 'Invalid API key',
+        };
+      }
       const checkServicesHealthUseCase = makeCheckServicesHealthUseCase();
 
       const result = await checkServicesHealthUseCase.execute();
@@ -49,8 +80,9 @@ export const healthController = new Elysia()
     },
     {
       detail: {
-        summary: 'Ready check',
+        summary: 'Ready check (Requires API Key)',
         tags: ['Health'],
+        security: [{ bearerAuth: [] }],
       },
       response: {
         200: z.object({
@@ -59,6 +91,10 @@ export const healthController = new Elysia()
             redis: z.boolean().default(false),
             db: z.boolean().default(false),
           }),
+        }),
+        401: z.object({
+          status: z.string().describe('unauthorized'),
+          message: z.string().describe('API key validation error'),
         }),
         503: z.object({
           status: z.string().describe('down'),

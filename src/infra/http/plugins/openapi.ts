@@ -37,7 +37,18 @@ export const openApiPlugin = new Elysia({ name: 'Openapi' }).use(
       zod: z.toJSONSchema,
     },
     documentation: {
-      components: await OpenAPI.components,
+      components: {
+        ...(await OpenAPI.components),
+        securitySchemes: {
+          ...(await OpenAPI.components).securitySchemes,
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            description: 'JWT API Key for protected endpoints',
+          },
+        },
+      },
       paths: await OpenAPI.getPaths(),
     },
   })

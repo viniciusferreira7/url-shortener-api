@@ -15,4 +15,3 @@ export const publicControllers = new Elysia()
     })
   )
   .use(healthController);
-//TODO: add API KEY using JWT
