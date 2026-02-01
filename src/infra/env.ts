@@ -31,7 +31,7 @@ export const envSchema = z
     BETTER_AUTH_URL: z.url(),
   })
   .superRefine((data, ctx) => {
-    if (data.NODE_ENV !== 'test' && !data.API_KEY) {
+    if (data.NODE_ENV === 'test' && !data.API_KEY) {
       ctx.addIssue({
         code: 'custom',
         path: ['API_KEY'],

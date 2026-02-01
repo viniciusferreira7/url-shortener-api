@@ -5,7 +5,7 @@
     "dev": "bun run --watch src/infra/index.ts",
     "db:generate": "bun --env-file .env --bun drizzle-kit generate",
     "db:migrate": "bun --env-file .env drizzle-kit migrate",
-    "db:studio": "bun --env-file .env --bun drizzle-kit studio",
+    "db:studio": "bun --env-file .env drizzle-kit studio",
     "docker:up": "docker compose --env-file .env up -d",
     "docker:down": "docker compose down",
     "docker:stop": "docker compose stop",
@@ -23,7 +23,7 @@
     "check:type": "bunx tsc --noEmit --skipLibCheck",
     "test:unit": "bun test ./src/core ./src/domain",
     "test:unit:watch": "bun test ./src/core ./src/domain --watch",
-    "test:e2e": "bun test --preload ./src/infra/setup-e2e.ts --env-file .env ./src/infra/http/controllers/**/*.e2e.spec.ts",
+    "test:e2e": "bun test --preload ./src/infra/setup-e2e.ts  ./src/infra/http/controllers/**/*.e2e.spec.ts",
     "verify": "bash scripts/verify.sh"
   },
   "dependencies": {
