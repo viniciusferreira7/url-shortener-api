@@ -17,12 +17,42 @@ export const app = new Elysia({ prefix: 'api' })
   )
   .onError(({ code, error, set }) => {
     switch (code) {
-      case 'VALIDATION':
+      case 'VALIDATION': {
         set.status = 400;
-        return {
-          message: 'Validation error',
-          errors: error.message,
-        };
+
+        try {
+          const validationError = JSON.parse(error.message);
+
+          if (validationError.errors && Array.isArray(validationError.errors)) {
+            const formattedErrors = validationError.errors.map((err: any) => ({
+              field: err.path ? err.path.join('.') : validationError.property,
+              message: err.message,
+              code: err.code,
+            }));
+
+            return {
+              message: 'Validation failed',
+              on: validationError.on,
+              errors: formattedErrors,
+            };
+          }
+
+          return {
+            message: 'Validation failed',
+            errors: [
+              {
+                field: validationError.property || 'unknown',
+                message: validationError.message,
+              },
+            ],
+          };
+        } catch {
+          return {
+            message: 'Validation failed',
+            errors: error.message,
+          };
+        }
+      }
       case 'NOT_FOUND':
         set.status = 404;
         return {
