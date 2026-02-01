@@ -5,6 +5,19 @@ import { authControllers } from './http/controllers/auth';
 import { publicControllers } from './http/controllers/public';
 import { openApiPlugin } from './http/plugins/openapi';
 
+interface ValidationErrorDetail {
+  path: string[];
+  message: string;
+  code: string;
+}
+
+interface ParsedValidationError {
+  on: string;
+  property: string;
+  message: string;
+  errors?: ValidationErrorDetail[];
+}
+
 export const app = new Elysia({ prefix: 'api' })
   .use(openApiPlugin)
   .use(
@@ -21,10 +34,12 @@ export const app = new Elysia({ prefix: 'api' })
         set.status = 400;
 
         try {
-          const validationError = JSON.parse(error.message);
+          const validationError: ParsedValidationError = JSON.parse(
+            error.message
+          );
 
           if (validationError.errors && Array.isArray(validationError.errors)) {
-            const formattedErrors = validationError.errors.map((err: any) => ({
+            const formattedErrors = validationError.errors.map((err) => ({
               field: err.path ? err.path.join('.') : validationError.property,
               message: err.message,
               code: err.code,
