@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { app } from '@/infra';
 import { createAuthenticatedUser } from '@/test/e2e/auth-helpers';
 
-describe('Create URL controller E2E', () => {
+describe('[POST] /api/url', () => {
   const client = treaty(app);
 
   it('should create a URL when authenticated', async () => {
@@ -31,12 +31,12 @@ describe('Create URL controller E2E', () => {
       expect(data.destination_url).toBe(urlData.destination_url);
       expect(data.is_public).toBe(urlData.is_public);
       expect(data.description).toBe(urlData.description);
-      expect(data.code).toBe(expect.any(String));
+      expect(data.code).toEqual(expect.any(String));
       expect(data.likes).toBe(0);
       expect(data.score).toBe(0);
       expect(data.author_id).toBe(user.id);
-      expect(data.created_at).toBe(expect.any(Date));
-      expect(data.created_at).toBeNull();
+      expect(data.created_at).toEqual(expect.any(Date));
+      expect(data.updated_at).toBeNull();
     }
   });
 

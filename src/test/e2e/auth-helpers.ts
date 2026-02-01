@@ -64,15 +64,17 @@ export async function createAuthenticatedUser() {
     returnHeaders: true,
   });
 
-  const userAndSession = await auth.api.getSession({
-    headers,
-  });
-
   const setCookie = headers.get('set-cookie');
 
   if (!setCookie) {
     throw new Error('No session cookie received after signup');
   }
+
+  const userAndSession = await auth.api.getSession({
+    headers: {
+      cookie: setCookie,
+    },
+  });
 
   return {
     user: userAndSession?.user,

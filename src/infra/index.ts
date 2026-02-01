@@ -18,6 +18,7 @@ export const app = new Elysia({ prefix: 'api' })
   .use(authControllers)
   .use(publicControllers)
   .listen(env.PORT);
+//TODO: create method to validate zod errors
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`

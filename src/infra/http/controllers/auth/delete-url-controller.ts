@@ -1,13 +1,11 @@
-// controllers/user.controller.ts
 import { Elysia } from 'elysia';
 import z from 'zod';
 import { NotAllowedError } from '@/core/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { makeDeleteUrlUseCase } from '@/infra/factories/make-delete-url-use-case';
 import { betterAuthPlugin } from '../../plugins/better-auth';
-import { UrlPresenter } from '../../presenters/url-presenter';
 
-export const createUrlController = new Elysia().use(betterAuthPlugin).delete(
+export const deleteUrlController = new Elysia().use(betterAuthPlugin).delete(
   '/urls/:id',
   async ({ user, set, params }) => {
     const useCase = makeDeleteUrlUseCase();
@@ -25,7 +23,6 @@ export const createUrlController = new Elysia().use(betterAuthPlugin).delete(
       switch (error.constructor) {
         case NotAllowedError:
           set.status = 405;
-
           return { message: error.message };
         case ResourceNotFoundError:
           set.status = 404;
@@ -36,11 +33,9 @@ export const createUrlController = new Elysia().use(betterAuthPlugin).delete(
       }
     }
 
-    const { url } = result.value;
+    set.status = 204;
 
-    set.status = 201;
-
-    return UrlPresenter.toHttp(url);
+    return { message: 'URL deleted successfully' };
   },
   {
     auth: true,
@@ -66,7 +61,7 @@ export const createUrlController = new Elysia().use(betterAuthPlugin).delete(
       }),
     },
     params: z.object({
-      id: z.string().describe('ID of URL'),
+      id: z.uuid().describe('ID of URL'),
     }),
   }
 );
