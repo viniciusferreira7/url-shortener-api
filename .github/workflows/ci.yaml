@@ -116,6 +116,7 @@ jobs:
       BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
       SECRET_HASH_KEY: ${{ secrets.SECRET_HASH_KEY }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      API_KEY: ${{ secrets.API_KEY }}
       GH_TOKEN: ""
 
     steps:
@@ -193,6 +194,7 @@ jobs:
       BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
       SECRET_HASH_KEY: ${{ secrets.SECRET_HASH_KEY }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      API_KEY: ${{ secrets.API_KEY }}
 
     steps:
       - name: Checkout code
