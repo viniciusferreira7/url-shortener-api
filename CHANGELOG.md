@@ -1,3 +1,24 @@
+# [1.26.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.25.0...v1.26.0) (2026-02-01)
+
+
+### Bug Fixes
+
+* change error status code from 400 to 404 for resource not found ([cc35a17](https://github.com/viniciusferreira7/url-shortener-api/commit/cc35a174864b9ce7430b1a6e82b0801e971733d1))
+* correct setup e2e ([4d9322d](https://github.com/viniciusferreira7/url-shortener-api/commit/4d9322d9930a6b1bd64412d1d613b3116806ce7b))
+* ensure null values in URL presenter match schema expectations ([24d2aaf](https://github.com/viniciusferreira7/url-shortener-api/commit/24d2aaf5fa3e1278ec55761f97959d76d509dc0b))
+* use nullable instead of nullish for consistent type inference ([1a4aa9e](https://github.com/viniciusferreira7/url-shortener-api/commit/1a4aa9ea398df435ec4e61a0d26495b8091438b3))
+
+
+### Features
+
+* add API key authentication to health endpoints ([c5601cc](https://github.com/viniciusferreira7/url-shortener-api/commit/c5601cce97e46552edde60367553dcea4c1e11a8))
+* add API key generator script ([1851c89](https://github.com/viniciusferreira7/url-shortener-api/commit/1851c89e6b8758aef3a172548755a6a617ba4905))
+* add API_KEY with conditional validation based on environment ([dd70e52](https://github.com/viniciusferreira7/url-shortener-api/commit/dd70e52c499b2f6c9a00a8735ff5f1b413426bc1))
+* add JWT configuration and dependencies ([b214f3f](https://github.com/viniciusferreira7/url-shortener-api/commit/b214f3feb4a0b596ca182fbff94a2141fb9b6b06))
+* add JWT_SECRET to environment configuration ([60fa4bc](https://github.com/viniciusferreira7/url-shortener-api/commit/60fa4bc77e5239fbe7002b332c75cddf66aa94bd))
+* add session retrieval to auth helpers ([68a7d33](https://github.com/viniciusferreira7/url-shortener-api/commit/68a7d33a5f101b817a117b09d4d270c41c3481b3))
+* add styled verification script with visual feedback ([b0e3db5](https://github.com/viniciusferreira7/url-shortener-api/commit/b0e3db5913a0fbc0a09476463e7e4084c9f551ce))
+
 # [1.25.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.24.1...v1.25.0) (2026-01-31)
 
 
