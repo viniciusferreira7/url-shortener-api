@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import { treaty } from '@elysiajs/eden';
 import { faker } from '@faker-js/faker';
 import { app } from '@/infra';
@@ -6,16 +6,10 @@ import { createAuthenticatedUser } from '@/test/e2e/auth-helpers';
 
 describe('Create URL controller E2E', () => {
   const client = treaty(app);
-  let authHeaders: {
-    cookie: string;
-  };
-
-  beforeAll(async () => {
-    const { sessionHeaders } = await createAuthenticatedUser();
-    authHeaders = sessionHeaders;
-  });
 
   it('should create a URL when authenticated', async () => {
+    const { sessionHeaders, user } = await createAuthenticatedUser();
+
     const urlData = {
       name: faker.lorem.words(3),
       description: faker.lorem.sentence(),
@@ -24,22 +18,25 @@ describe('Create URL controller E2E', () => {
     };
 
     const { data, error, status } = await client.api.urls.post(urlData, {
-      headers: authHeaders,
+      headers: sessionHeaders,
     });
-
-    if (status !== 201) {
-      console.log('Unexpected status:', status);
-      console.log('Error:', JSON.stringify(error, null, 2));
-      console.log('Data:', JSON.stringify(data, null, 2));
-    }
 
     expect(status).toBe(201);
     expect(error).toBeNull();
     expect(data).toBeDefined();
 
-    if (data && 'name' in data) {
+    if (data && 'id' in data && user) {
+      expect(data.id).toBeDefined();
       expect(data.name).toBe(urlData.name);
       expect(data.destination_url).toBe(urlData.destination_url);
+      expect(data.is_public).toBe(urlData.is_public);
+      expect(data.description).toBe(urlData.description);
+      expect(data.code).toBe(expect.any(String));
+      expect(data.likes).toBe(0);
+      expect(data.score).toBe(0);
+      expect(data.author_id).toBe(user.id);
+      expect(data.created_at).toBe(expect.any(Date));
+      expect(data.created_at).toBeNull();
     }
   });
 
