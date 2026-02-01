@@ -9,7 +9,7 @@ export const urlSchemaResponse = z.object({
     .describe(
       'Code of URL, where it will used to redirect when request destination URL'
     ),
-  description: z.string().describe('Description of URL').nullish(),
+  description: z.string().nullable().describe('Description of URL'),
   is_public: z
     .boolean()
     .describe(
@@ -19,5 +19,5 @@ export const urlSchemaResponse = z.object({
   score: z.number().min(0).describe('Number of time that URL was accessed'),
   destination_url: z.url().describe('Destination URL is original URL'),
   created_at: z.string().describe('Identifier when URL was created'),
-  updated_at: z.string().describe('Identifier when URL was updated').nullish(),
+  updated_at: z.string().describe('Identifier when URL was updated').nullable(),
 });
