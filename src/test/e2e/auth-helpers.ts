@@ -64,6 +64,10 @@ export async function createAuthenticatedUser() {
     returnHeaders: true,
   });
 
+  const userAndSession = await auth.api.getSession({
+    headers,
+  });
+
   const setCookie = headers.get('set-cookie');
 
   if (!setCookie) {
@@ -71,7 +75,8 @@ export async function createAuthenticatedUser() {
   }
 
   return {
-    user,
+    user: userAndSession?.user,
+    session: userAndSession?.session,
     sessionHeaders: {
       cookie: setCookie,
     },
