@@ -1,3 +1,17 @@
+# [1.27.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.26.0...v1.27.0) (2026-02-01)
+
+
+### Bug Fixes
+
+* correct delete url controller and auth helpers session handling ([4a8bbde](https://github.com/viniciusferreira7/url-shortener-api/commit/4a8bbde9e1a4a4237d616d88d83ce1d5d336e5c9))
+* improve validation error formatting with detailed field-specific messages ([be03483](https://github.com/viniciusferreira7/url-shortener-api/commit/be034838f76e07982a88de7cdba803018c7650e1))
+
+
+### Features
+
+* add global error handling for validation and server errors ([e2fd812](https://github.com/viniciusferreira7/url-shortener-api/commit/e2fd8121f3bd96009824f40800b0c74f2bcf617f))
+* controller to delete url ([3e3baf0](https://github.com/viniciusferreira7/url-shortener-api/commit/3e3baf0da06e63480d9599409fe1a9e4ba4ed5b1))
+
 # [1.26.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.25.0...v1.26.0) (2026-02-01)
 
 
