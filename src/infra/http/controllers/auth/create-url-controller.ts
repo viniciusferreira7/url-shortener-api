@@ -42,7 +42,7 @@ export const createUrlController = new Elysia().use(betterAuthPlugin).post(
     },
     response: {
       201: urlSchemaResponse,
-      400: z.object({
+      404: z.object({
         message: z.string().describe('Resource not found'),
       }),
       401: z.object({
