@@ -29,6 +29,7 @@
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",
     "@elysiajs/eden": "^1.4.6",
+    "@elysiajs/jwt": "^1.4.0",
     "@elysiajs/openapi": "^1.4.11",
     "base62": "^2.0.2",
     "better-auth": "^1.3.26",
@@ -47,10 +48,12 @@
     "@semantic-release/github": "^11.0.6",
     "@semantic-release/npm": "^12.0.2",
     "@semantic-release/release-notes-generator": "^14.1.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/pg": "^8.15.5",
     "bun-types": "latest",
     "dotenv": "^17.2.3",
-    "drizzle-kit": "^0.31.5"
+    "drizzle-kit": "^0.31.5",
+    "jsonwebtoken": "^9.0.3"
   },
   "module": "src/index.js"
 }
