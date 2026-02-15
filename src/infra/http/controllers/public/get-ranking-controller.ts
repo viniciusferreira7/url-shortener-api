@@ -13,6 +13,10 @@ export const getRankingController = new Elysia().get(
 
     set.status = 200;
 
+    if (result.isLeft()) {
+      return [];
+    }
+
     return result.value.ranking.map(UrlWithAuthorPresenter.toHttp);
   },
   {
