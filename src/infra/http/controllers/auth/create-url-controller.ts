@@ -2,9 +2,9 @@
 import { Elysia } from 'elysia';
 import z from 'zod';
 import { makeCreateUrlUseCase } from '@/infra/factories/make-create-url-use-case';
-import { urlSchemaResponse } from '../../docs/schemas/url-schema-response';
 import { betterAuthPlugin } from '../../plugins/better-auth';
 import { UrlPresenter } from '../../presenters/url-presenter';
+import { urlSchemaResponse } from '../../utils/schemas/url-schema-response';
 
 export const createUrlController = new Elysia().use(betterAuthPlugin).post(
   '/urls',
