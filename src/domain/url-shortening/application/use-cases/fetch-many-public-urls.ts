@@ -6,7 +6,7 @@ import type {
   UrlsRepository,
 } from '../repositories/urls-repository';
 
-interface FindManyPublicUrlsRequest {
+interface FetchManyPublicRequest {
   search?: string;
   page?: number;
   perPage?: number;
@@ -21,7 +21,7 @@ export class FetchManyPublicUrlsUseCase {
   constructor(private readonly urlsRepository: UrlsRepository) {}
 
   public async execute(
-    params: FindManyPublicUrlsRequest
+    params: FetchManyPublicRequest
   ): Promise<FetchManyPublicUrlsResponse> {
     const result = await this.urlsRepository.findManyWhereIsPublic({
       page: params.page ?? 1,
