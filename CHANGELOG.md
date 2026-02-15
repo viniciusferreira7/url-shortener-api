@@ -1,3 +1,21 @@
+# [1.28.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.27.0...v1.28.0) (2026-02-15)
+
+
+### Bug Fixes
+
+* add missing WHERE clause in URL repository save method ([853a735](https://github.com/viniciusferreira7/url-shortener-api/commit/853a735abf3c2acc03ef22b38c6a81bbea7ec53d))
+* correct return ([1902ef7](https://github.com/viniciusferreira7/url-shortener-api/commit/1902ef723ef4ebe5d277f015b53c87a5326dda8c))
+* ensure minimum of 1 page in pagination calculations ([e5e2df4](https://github.com/viniciusferreira7/url-shortener-api/commit/e5e2df4739692ee0625363375f2fcb0dfdfc995d))
+
+
+### Features
+
+* add endpoint to fetch user liked URLs ([ee56e70](https://github.com/viniciusferreira7/url-shortener-api/commit/ee56e7088ed61318c868d51c461fc2340889f03b))
+* add endpoint to fetch user's own URLs with filters ([4703694](https://github.com/viniciusferreira7/url-shortener-api/commit/4703694502fe2a79fbcb290e5a91a849fdf8b2a7))
+* add public endpoint to get top 10 URLs ranking ([e2610e4](https://github.com/viniciusferreira7/url-shortener-api/commit/e2610e4cb2ec9428b1c9fd4beb341e57f7c453f3))
+* add public endpoint to redirect short URLs with 302 status ([ef0e010](https://github.com/viniciusferreira7/url-shortener-api/commit/ef0e010f4a294b994bbb60364dca8c7ca8b13f09))
+* add public URLs listing endpoint with pagination ([c3f290a](https://github.com/viniciusferreira7/url-shortener-api/commit/c3f290a4f45f317720bf13e9966926d35b9e0dbf))
+
 # [1.27.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.26.0...v1.27.0) (2026-02-01)
 
 
