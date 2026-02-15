@@ -53,6 +53,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
     const [urlRaw] = await this.db
       .update(schema.urls)
       .set(DrizzleUrlMapper.toDrizzle(url))
+      .where(eq(schema.urls.id, url.id.toString()))
       .returning();
 
     await this.cacheRepository.delete('urls-most-liked');
