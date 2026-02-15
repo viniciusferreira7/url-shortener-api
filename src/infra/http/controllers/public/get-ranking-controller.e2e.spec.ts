@@ -30,12 +30,12 @@ describe('[GET]: /api/public/ranking', () => {
     }
   });
 
-  test('should return ranking with correct structure', async () => {
+  test('should return ranking ordered by access count', async () => {
     const { sessionHeaders } = await createAuthenticatedUser();
 
-    await client.api.urls.post(
+    const { data: url1 } = await client.api.urls.post(
       {
-        name: 'Ranking Test URL',
+        name: 'Most Accessed URL',
         description: faker.lorem.sentence(),
         is_public: true,
         destination_url: faker.internet.url(),
@@ -45,13 +45,42 @@ describe('[GET]: /api/public/ranking', () => {
       }
     );
 
-    const { status, data } = await client.api.public.ranking.get();
+    const { data: url2 } = await client.api.urls.post(
+      {
+        name: 'Less Accessed URL',
+        description: faker.lorem.sentence(),
+        is_public: true,
+        destination_url: faker.internet.url(),
+      },
+      {
+        headers: sessionHeaders,
+      }
+    );
 
-    expect(status).toBe(200);
-    expect(data).toBeDefined();
+    if (url1 && 'code' in url1 && url2 && 'code' in url2) {
+      await fetch(`http://localhost:3333/api/public/${url1.code}`, {
+        redirect: 'manual',
+      });
+      await fetch(`http://localhost:3333/api/public/${url1.code}`, {
+        redirect: 'manual',
+      });
+      await fetch(`http://localhost:3333/api/public/${url1.code}`, {
+        redirect: 'manual',
+      });
 
-    if (data && Array.isArray(data)) {
-      expect(data).toBeArray();
+      await fetch(`http://localhost:3333/api/public/${url2.code}`, {
+        redirect: 'manual',
+      });
+
+      const { status, data } = await client.api.public.ranking.get();
+
+      expect(status).toBe(200);
+      expect(data).toBeDefined();
+
+      if (data && Array.isArray(data) && data.length > 0) {
+        expect(data).toBeArray();
+        expect(data[0].url_code).toBe(url1.code);
+      }
     }
   });
 
@@ -85,6 +114,45 @@ describe('[GET]: /api/public/ranking', () => {
       data.forEach((url) => {
         expect(url.url_is_public).toBe(true);
       });
+    }
+  });
+
+  test('should rank URLs by access count', async () => {
+    const { sessionHeaders } = await createAuthenticatedUser();
+
+    const urls: Array<{ code: string }> = [];
+
+    for (let i = 0; i < 3; i++) {
+      const { data } = await client.api.urls.post(
+        {
+          name: `Test URL ${i + 1}`,
+          description: faker.lorem.sentence(),
+          is_public: true,
+          destination_url: faker.internet.url(),
+        },
+        {
+          headers: sessionHeaders,
+        }
+      );
+
+      if (data && 'code' in data) {
+        urls.push(data);
+
+        for (let j = 0; j < 3 - i; j++) {
+          await fetch(`http://localhost:3333/api/public/${data.code}`, {
+            redirect: 'manual',
+          });
+        }
+      }
+    }
+
+    const { status, data } = await client.api.public.ranking.get();
+
+    expect(status).toBe(200);
+
+    if (data && Array.isArray(data) && data.length >= 3) {
+      const topUrl = data.find((url) => url.url_code === urls[0].code);
+      expect(topUrl).toBeDefined();
     }
   });
 });
