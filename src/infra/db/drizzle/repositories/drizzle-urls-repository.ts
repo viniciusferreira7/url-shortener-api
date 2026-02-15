@@ -137,7 +137,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
     return Pagination.create({
       page,
       perPage,
-      totalPages: Math.ceil(total / perPage),
+      totalPages: Math.max(1, Math.ceil(total / perPage)),
       result: urlsPaginated.map(DrizzleUrlMapper.toDomain),
     });
   }
@@ -212,7 +212,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
     return Pagination.create({
       page,
       perPage,
-      totalPages: Math.ceil(total / perPage),
+      totalPages: Math.max(1, Math.ceil(total / perPage)),
       result: urlsPaginated.map((urlWithAuthor) => {
         const urlIdIndex = urlRanking.findIndex(
           (value, index) =>
@@ -301,7 +301,7 @@ export class DrizzleUrlsRepository implements UrlsRepository {
     return Pagination.create({
       page,
       perPage,
-      totalPages: Math.ceil(total / perPage),
+      totalPages: Math.max(1, Math.ceil(total / perPage)),
       result: urlsPaginated.map(DrizzleUrlMapper.toDomain),
     });
   }
