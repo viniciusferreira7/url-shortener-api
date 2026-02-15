@@ -75,9 +75,29 @@ src/
 │   ├── cache/                 # Cache layer abstraction
 │   │   └── cache-repository.ts    # Cache interface for Cache-Aside pattern
 │   ├── http/
-│   │   └── controllers/       # HTTP controllers
-│   │       ├── auth/               # Authenticated routes
-│   │       └── public/             # Public routes (health checks)
+│   │   ├── controllers/       # HTTP controllers
+│   │   │   ├── auth/               # Authenticated routes
+│   │   │   │   ├── create-url-controller.ts           # Create shortened URLs
+│   │   │   │   ├── delete-url-controller.ts           # Delete URLs
+│   │   │   │   ├── fetch-user-liked-urls-controller.ts # Get user's liked URLs
+│   │   │   │   └── fetch-user-urls-controller.ts      # Get user's own URLs
+│   │   │   └── public/             # Public routes
+│   │   │       ├── health-controller.ts               # Health checks
+│   │   │       ├── fetch-many-public-urls-controller.ts # Browse public URLs
+│   │   │       ├── get-ranking-controller.ts          # Top 10 URLs by access
+│   │   │       └── get-url-by-code-controller.ts      # Redirect short URLs
+│   │   ├── presenters/        # HTTP response presenters
+│   │   │   ├── url-presenter.ts                   # URL entity presenter
+│   │   │   ├── url-with-author-presenter.ts       # URL with author presenter
+│   │   │   └── pagination-presenter.ts            # Pagination response presenter
+│   │   ├── plugins/           # Elysia plugins
+│   │   │   ├── better-auth.ts                     # Better Auth plugin
+│   │   │   └── openapi.ts                         # OpenAPI/Swagger plugin
+│   │   └── utils/             # HTTP utilities
+│   │       └── schemas/                           # Zod validation schemas
+│   ├── jwt/
+│   │   ├── jwt-config.ts          # JWT configuration
+│   │   └── jwt-auth-plugin.ts     # JWT authentication plugin for API key validation
 │   ├── system/
 │   │   └── repositories/      # System infrastructure implementations
 │   │       └── system-health-repository.ts  # Redis & PostgreSQL health checks
@@ -411,6 +431,60 @@ Images are automatically published to Docker Hub under:
 
 API documentation is available via OpenAPI/Scalar at:
 - Development: [http://localhost:3333/api/openapi](http://localhost:3333/api/openapi)
+
+## 📡 API Endpoints
+
+### Public Endpoints (No Authentication Required)
+
+#### URL Redirection
+- **GET** `/api/public/:code` - Redirect to destination URL
+  - Returns 302 redirect to the original URL
+  - Increments access count for ranking
+  - Works with both public and private URLs
+
+#### URL Discovery
+- **GET** `/api/public/urls` - Browse public URLs (Requires API Key)
+  - Query Parameters:
+    - `page` (number, default: 1) - Page number
+    - `per_page` (number, default: 10) - Items per page
+    - `search` (string, optional) - Search by name or keywords
+    - `order` (enum, optional) - Sort order: `created_at`, `updated_at`, `-created_at`, `-updated_at`
+    - `created_at_gte` (date, optional) - Filter by creation date (yyyy-mm-dd)
+    - `updated_at_gte` (date, optional) - Filter by update date (yyyy-mm-dd)
+  - Returns paginated list of public URLs with author information
+
+#### Analytics
+- **GET** `/api/public/ranking` - Get top 10 most accessed URLs
+  - Returns URLs ranked by access count (most viewed first)
+  - Only includes public URLs
+  - No authentication required
+
+### Authenticated Endpoints (Requires Session)
+
+#### URL Management
+- **POST** `/api/urls` - Create a shortened URL
+  - Body: `{ name, destination_url, description?, is_public }`
+  - Returns the created URL with generated short code
+
+- **DELETE** `/api/urls/:id` - Delete a URL
+  - Requires ownership verification
+  - Returns 204 on success
+
+#### User's URLs
+- **GET** `/api/urls/me` - Get authenticated user's URLs
+  - Query Parameters:
+    - `page` (number, default: 1) - Page number
+    - `per_page` (number, default: 10) - Items per page
+    - `search` (string, optional) - Search by name or keywords
+    - `is_public` (boolean, optional) - Filter by public/private
+    - `order` (enum, optional) - Sort order
+    - `created_at_gte` (date, optional) - Filter by creation date
+    - `updated_at_gte` (date, optional) - Filter by update date
+  - Returns paginated list of user's own URLs
+
+- **GET** `/api/urls/liked` - Get user's liked URLs
+  - Returns array of URLs that the user has liked
+  - Only includes public URLs
 
 ## 🏥 Health Checks
 
