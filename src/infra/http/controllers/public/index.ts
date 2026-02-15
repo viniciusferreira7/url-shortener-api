@@ -3,6 +3,7 @@ import { Elysia } from 'elysia';
 import { env } from '@/infra/env';
 import { openApiPlugin } from '../../plugins/openapi';
 import { fetchManyPublicUrlsController } from './fetch-many-public-urls-controller';
+import { getRankingController } from './get-ranking-controller';
 import { healthController } from './health-controller';
 
 export const publicControllers = new Elysia({ prefix: 'public' })
@@ -16,4 +17,5 @@ export const publicControllers = new Elysia({ prefix: 'public' })
     })
   )
   .use(healthController)
-  .use(fetchManyPublicUrlsController);
+  .use(fetchManyPublicUrlsController)
+  .use(getRankingController);
