@@ -6,19 +6,19 @@ import { env } from '@/infra/env';
 describe('Health controller E2E', () => {
   const client = treaty(app);
 
-  test('[GET]: /api/healthz ', async () => {
-    const { status, data } = await client.api.healthz.get({});
+  test('[GET]: /api/public/healthz ', async () => {
+    const { status, data } = await client.api.public.healthz.get({});
 
     expect(status).toBe(200);
     expect(data?.message).toBe('Ok');
   });
 
-  test('[GET]: /api/readyz ', async () => {
-    const token = env.API_KEY;
+  test('[GET]: /api/public/readyz ', async () => {
+    const apiToken = env.API_KEY;
 
-    const { status, data } = await client.api.readyz.get({
+    const { status, data } = await client.api.public.readyz.get({
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${apiToken}`,
       },
     });
 
