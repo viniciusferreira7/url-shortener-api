@@ -44,6 +44,7 @@ export class LikeUrlUseCase {
     const alreadyLiked = user.urlsLikedList.currentItems.some((likedUrl) =>
       likedUrl.equals(url)
     );
+
     if (alreadyLiked) {
       return left(new UrlAlreadyLikedError());
     }

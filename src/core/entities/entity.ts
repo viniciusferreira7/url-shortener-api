@@ -16,7 +16,11 @@ export abstract class Entity<Props> {
   public equals(entity: Entity<unknown>) {
     if (entity === this) return true;
 
-    if (entity instanceof Entity && this._id === entity._id) return true;
+    if (
+      entity instanceof Entity &&
+      this._id.toString() === entity._id.toString()
+    )
+      return true;
 
     return false;
   }
