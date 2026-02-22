@@ -1,3 +1,19 @@
+# [1.30.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.29.0...v1.30.0) (2026-02-22)
+
+
+### Bug Fixes
+
+* correct get ranking controller ([e31c1cb](https://github.com/viniciusferreira7/url-shortener-api/commit/e31c1cbaa7ad4437905ac95f78f7178f821923a9))
+* correct get url by id controller ([043f375](https://github.com/viniciusferreira7/url-shortener-api/commit/043f375a4d2066ba0ecb07dca87d15218534e1a4))
+* correct like url controller ([a5d0720](https://github.com/viniciusferreira7/url-shortener-api/commit/a5d0720ed60e19e0d5236ab2910c8c93dc6ab11d))
+* correct unlike url controller ([c18c41a](https://github.com/viniciusferreira7/url-shortener-api/commit/c18c41a8e893b0e9159b680b33b26a39dcd78c30))
+
+
+### Features
+
+* create controller to remove like of url ([7e4281a](https://github.com/viniciusferreira7/url-shortener-api/commit/7e4281ad6b7b158b0ab880f0c5df3789a682ef71))
+* create controller to update url ([c23afc1](https://github.com/viniciusferreira7/url-shortener-api/commit/c23afc1fc25d3ee239bdda5c2c06e84d316fd51c))
+
 # [1.29.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.28.0...v1.29.0) (2026-02-22)
 
 
