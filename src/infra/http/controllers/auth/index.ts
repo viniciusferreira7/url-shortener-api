@@ -7,6 +7,7 @@ import { fetchUserUrlsController } from './fetch-user-urls-controller';
 import { getUrlByIdController } from './get-url-by-id-controller';
 import { likeUrlController } from './like-url-controller';
 import { unlikeUrlController } from './unlike-url-controller';
+import { updateUrlController } from './update-url-controller';
 
 export const authControllers = new Elysia()
   .use(createUrlController)
@@ -16,4 +17,5 @@ export const authControllers = new Elysia()
   .use(getUrlByIdController)
   .use(likeUrlController)
   .use(unlikeUrlController)
+  .use(updateUrlController)
   .mount(auth.handler);
