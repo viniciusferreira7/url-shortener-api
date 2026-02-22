@@ -22,7 +22,7 @@ export const getRankingController = new Elysia().get(
   {
     detail: {
       summary: 'Get top 10 URLs ranking by access count (Public)',
-      tags: ['Ranking'],
+      tags: ['URL', 'Ranking'],
     },
     response: {
       200: z.array(urlWithAuthorSchemaResponse),
