@@ -1,3 +1,15 @@
+# [1.29.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.28.0...v1.29.0) (2026-02-22)
+
+
+### Bug Fixes
+
+* correct comparison of ids between two entities ([9f9a3bb](https://github.com/viniciusferreira7/url-shortener-api/commit/9f9a3bbdb89f58f672547c4af9bf755120855676))
+
+
+### Features
+
+* create controller to get url by id ([11fc0dd](https://github.com/viniciusferreira7/url-shortener-api/commit/11fc0dd1ac746a6ebfd301e7152d8ab7ca71702e))
+
 # [1.28.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.27.0...v1.28.0) (2026-02-15)
 
 
