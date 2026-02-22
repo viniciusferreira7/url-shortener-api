@@ -35,7 +35,7 @@ export const unlikeUrlController = new Elysia().use(betterAuthPlugin).patch(
   {
     auth: true,
     detail: {
-      summary: 'Create URL',
+      summary: 'Unlike URL',
       tags: ['URL'],
     },
     params: z.object({
@@ -53,15 +53,5 @@ export const unlikeUrlController = new Elysia().use(betterAuthPlugin).patch(
         message: z.string().describe('Resource not found'),
       }),
     },
-    body: z.object({
-      name: z.string().describe('Name of URL'),
-      description: z.string().describe('Description of URL').nullish(),
-      is_public: z
-        .boolean()
-        .describe(
-          'If set with true value URL can be viewed by another users, otherwise only author can see the URL'
-        ),
-      destination_url: z.url().describe('Destination URL is original URL'),
-    }),
   }
 );
