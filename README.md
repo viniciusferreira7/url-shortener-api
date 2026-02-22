@@ -1,7 +1,5 @@
 # URL Shortener API
 
-> ⚠️ **Work In Progress** - This project is currently under active development.
-
 A high-performance URL shortener API built with modern technologies including Elysia, Bun runtime, PostgreSQL, Redis, and Better Auth.
 
 ## 🚀 Tech Stack
@@ -78,7 +76,11 @@ src/
 │   │   ├── controllers/       # HTTP controllers
 │   │   │   ├── auth/               # Authenticated routes
 │   │   │   │   ├── create-url-controller.ts           # Create shortened URLs
+│   │   │   │   ├── update-url-controller.ts           # Update URLs
 │   │   │   │   ├── delete-url-controller.ts           # Delete URLs
+│   │   │   │   ├── get-url-by-id-controller.ts        # Get URL by ID
+│   │   │   │   ├── like-url-controller.ts             # Like a public URL
+│   │   │   │   ├── unlike-url-controller.ts           # Unlike a URL
 │   │   │   │   ├── fetch-user-liked-urls-controller.ts # Get user's liked URLs
 │   │   │   │   └── fetch-user-urls-controller.ts      # Get user's own URLs
 │   │   │   └── public/             # Public routes
@@ -466,9 +468,26 @@ API documentation is available via OpenAPI/Scalar at:
   - Body: `{ name, destination_url, description?, is_public }`
   - Returns the created URL with generated short code
 
+- **GET** `/api/urls/:id` - Get a URL by ID
+  - Returns URL details by its UUID
+  - Returns 404 if not found
+
+- **PUT** `/api/urls/:id` - Update a URL
+  - Requires ownership verification
+  - Body: `{ name, destination_url, description?, is_public }`
+  - Returns the updated URL
+  - Returns 405 if the authenticated user is not the owner
+
 - **DELETE** `/api/urls/:id` - Delete a URL
   - Requires ownership verification
   - Returns 204 on success
+
+- **PATCH** `/api/urls/:id/like` - Like a public URL
+  - Returns 400 if already liked
+  - Returns 405 if the URL is private
+
+- **PATCH** `/api/urls/:id/unlike` - Unlike a URL
+  - Succeeds even if the URL was not previously liked
 
 #### User's URLs
 - **GET** `/api/urls/me` - Get authenticated user's URLs
