@@ -5,7 +5,7 @@ import { UrlWithAuthorPresenter } from '../../presenters/url-with-author-present
 import { urlWithAuthorSchemaResponse } from '../../utils/schemas/url-with-author-schema';
 
 export const getRankingController = new Elysia().get(
-  '/ranking',
+  '/urls/ranking',
   async ({ set }) => {
     const useCase = makeGetRankingUseCase();
 

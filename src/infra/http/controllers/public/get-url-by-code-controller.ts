@@ -4,7 +4,7 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
 import { makeGetUrlByCodeUseCase } from '@/infra/factories/make-get-url-by-code-use-case';
 
 export const getUrlByCodeController = new Elysia().get(
-  '/:code',
+  '/urls/:code',
   async ({ set, params, redirect }) => {
     const useCase = makeGetUrlByCodeUseCase();
 

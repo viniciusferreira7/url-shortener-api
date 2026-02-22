@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { app } from '@/infra';
 import { createAuthenticatedUser } from '@/test/e2e/auth-helpers';
 
-describe('[GET]: /api/public/:code', () => {
+describe('[GET]: /api/public/urls/:code', () => {
   const client = treaty(app);
 
   test('should redirect to destination URL with status 302', async () => {
@@ -26,7 +26,7 @@ describe('[GET]: /api/public/:code', () => {
 
     if (urlData && 'code' in urlData) {
       const response = await fetch(
-        `http://localhost:3333/api/public/${urlData.code}`,
+        `http://localhost:3333/api/public/urls/${urlData.code}`,
         {
           redirect: 'manual',
         }
@@ -41,7 +41,7 @@ describe('[GET]: /api/public/:code', () => {
     const nonExistentCode = 'nonexistent123';
 
     const response = await fetch(
-      `http://localhost:3333/api/public/${nonExistentCode}`,
+      `http://localhost:3333/api/public/urls/${nonExistentCode}`,
       {
         redirect: 'manual',
       }
@@ -69,16 +69,16 @@ describe('[GET]: /api/public/:code', () => {
     );
 
     if (urlData && 'code' in urlData) {
-      await fetch(`http://localhost:3333/api/public/${urlData.code}`, {
+      await fetch(`http://localhost:3333/api/public/urls/${urlData.code}`, {
         redirect: 'manual',
       });
 
-      await fetch(`http://localhost:3333/api/public/${urlData.code}`, {
+      await fetch(`http://localhost:3333/api/public/urls/${urlData.code}`, {
         redirect: 'manual',
       });
 
       const response = await fetch(
-        `http://localhost:3333/api/public/${urlData.code}`,
+        `http://localhost:3333/api/public/urls/${urlData.code}`,
         {
           redirect: 'manual',
         }
@@ -107,7 +107,7 @@ describe('[GET]: /api/public/:code', () => {
 
     if (urlData && 'code' in urlData) {
       const response = await fetch(
-        `http://localhost:3333/api/public/${urlData.code}`,
+        `http://localhost:3333/api/public/urls/${urlData.code}`,
         {
           redirect: 'manual',
         }
@@ -137,7 +137,7 @@ describe('[GET]: /api/public/:code', () => {
 
     if (urlData && 'code' in urlData) {
       const response = await fetch(
-        `http://localhost:3333/api/public/${urlData.code}`,
+        `http://localhost:3333/api/public/urls/${urlData.code}`,
         {
           redirect: 'manual',
         }

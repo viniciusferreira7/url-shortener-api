@@ -6,7 +6,7 @@ import { UrlPresenter } from '../../presenters/url-presenter';
 import { urlSchemaResponse } from '../../utils/schemas/url-schema-response';
 
 export const getUrlByIdController = new Elysia().get(
-  '/:id',
+  '/urls/:id',
   async ({ set, params }) => {
     const useCase = makeGetUrlByIdUseCase();
 
@@ -35,10 +35,13 @@ export const getUrlByIdController = new Elysia().get(
       tags: ['URL'],
     },
     params: z.object({
-      id: z.string().describe('ID of URL'),
+      id: z.uuid().describe('ID of URL'),
     }),
     response: {
       200: urlSchemaResponse,
+      400: z.object({
+        message: z.string().describe('Bad request'),
+      }),
       404: z.object({
         message: z.string().describe('Resource not found'),
       }),

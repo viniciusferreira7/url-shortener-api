@@ -4,11 +4,11 @@ import { faker } from '@faker-js/faker';
 import { app } from '@/infra';
 import { createAuthenticatedUser } from '@/test/e2e/auth-helpers';
 
-describe('[GET]: /api/public/ranking', () => {
+describe('[GET]: /api/public/urls/ranking', () => {
   const client = treaty(app);
 
   test('should get ranking without authentication', async () => {
-    const { status, data } = await client.api.public.ranking.get();
+    const { status, data } = await client.api.public.urls.ranking.get();
 
     expect(status).toBe(200);
     expect(data).toBeDefined();
@@ -72,7 +72,7 @@ describe('[GET]: /api/public/ranking', () => {
         redirect: 'manual',
       });
 
-      const { status, data } = await client.api.public.ranking.get();
+      const { status, data } = await client.api.public.urls.ranking.get();
 
       expect(status).toBe(200);
       expect(data).toBeDefined();
@@ -85,7 +85,7 @@ describe('[GET]: /api/public/ranking', () => {
   });
 
   test('should return top 10 URLs maximum', async () => {
-    const { status, data } = await client.api.public.ranking.get();
+    const { status, data } = await client.api.public.urls.ranking.get();
 
     expect(status).toBe(200);
 
@@ -95,7 +95,7 @@ describe('[GET]: /api/public/ranking', () => {
   });
 
   test('should return empty array when no URLs exist in ranking', async () => {
-    const { status, data } = await client.api.public.ranking.get();
+    const { status, data } = await client.api.public.urls.ranking.get();
 
     expect(status).toBe(200);
     expect(data).toBeDefined();
@@ -106,7 +106,7 @@ describe('[GET]: /api/public/ranking', () => {
   });
 
   test('should only return public URLs in ranking', async () => {
-    const { status, data } = await client.api.public.ranking.get();
+    const { status, data } = await client.api.public.urls.ranking.get();
 
     expect(status).toBe(200);
 
@@ -146,7 +146,7 @@ describe('[GET]: /api/public/ranking', () => {
       }
     }
 
-    const { status, data } = await client.api.public.ranking.get();
+    const { status, data } = await client.api.public.urls.ranking.get();
 
     expect(status).toBe(200);
 
