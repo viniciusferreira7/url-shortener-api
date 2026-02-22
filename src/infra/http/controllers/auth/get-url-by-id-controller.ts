@@ -31,7 +31,7 @@ export const getUrlByIdController = new Elysia().get(
   },
   {
     detail: {
-      summary: 'Redirect to destination URL by short code (Public)',
+      summary: 'Get URL by ID',
       tags: ['URL'],
     },
     params: z.object({
