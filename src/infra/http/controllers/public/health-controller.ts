@@ -1,7 +1,6 @@
 import Elysia from 'elysia';
 import z from 'zod';
 import { makeCheckServicesHealthUseCase } from '@/infra/factories/make-check-services-health-use-case';
-import { jwtAuthPlugin } from '../../../jwt/jwt-auth-plugin';
 
 export const healthController = new Elysia()
   .get(
@@ -26,7 +25,6 @@ export const healthController = new Elysia()
       },
     }
   )
-  .use(jwtAuthPlugin)
   .get(
     '/readyz',
     async ({ set }) => {
@@ -51,11 +49,9 @@ export const healthController = new Elysia()
       };
     },
     {
-      auth: true,
       detail: {
         summary: 'Ready check (Requires API Key)',
         tags: ['Health'],
-        security: [{ bearerAuth: [] }],
       },
       response: {
         200: z.object({

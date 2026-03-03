@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { treaty } from '@elysiajs/eden';
 import { app } from '@/infra';
-import { env } from '@/infra/env';
 
 describe('Health controller E2E', () => {
   const client = treaty(app);
@@ -14,13 +13,7 @@ describe('Health controller E2E', () => {
   });
 
   test('[GET]: /api/public/readyz ', async () => {
-    const apiToken = env.API_KEY;
-
-    const { status, data } = await client.api.public.readyz.get({
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-      },
-    });
+    const { status, data } = await client.api.public.readyz.get();
 
     expect(status).toBe(200);
     expect(data?.services).toEqual(
