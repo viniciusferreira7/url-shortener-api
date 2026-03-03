@@ -1,3 +1,10 @@
+## [1.30.1](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.30.0...v1.30.1) (2026-03-03)
+
+
+### Bug Fixes
+
+* remove jwt from readyz route ([bf8b512](https://github.com/viniciusferreira7/url-shortener-api/commit/bf8b512ece23d508be283717de69ad6ae61ab34c))
+
 # [1.30.0](https://github.com/viniciusferreira7/url-shortener-api/compare/v1.29.0...v1.30.0) (2026-02-22)
 
 
