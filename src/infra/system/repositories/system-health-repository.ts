@@ -22,7 +22,8 @@ export class InfraSystemHealthRepository implements SystemHealthRepository {
     try {
       const result = await this.redis.ping();
       return result === 'PONG';
-    } catch {
+    } catch (err) {
+      console.error('[Redis] checkCacheConnection error:', err);
       return false;
     }
   }
